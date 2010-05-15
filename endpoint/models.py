@@ -49,5 +49,9 @@ FollowerNodePermissions(models.Model):
 	"""Permissions we have granted to follower nodes."""
 
 	node = models.ForeignKey('Node')
-	
+
+# XXX: There's a lot more complexity in permissions than I think there is
+#		I need to carefully analyze this, perrhaps develop this after the
+#		first networking iteration. 
+
 

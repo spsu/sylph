@@ -1,0 +1,23 @@
+RATING SYSTEM IS TODO.
+
+Ratings will be resources too? 
+	Yes, initially we need to do that!
+	If it's too resource cumbersome, we can scale back. 
+That's going to be one freaking huge resource database. 
+
+
+Ratings System
+==============
+	* Thumbs up / down? - Probably
+	* One-to-five? 
+	* Option to star?
+		* If so, will it be limited?
+
+Exchange System
+===============
+	* How do we aggregate ratings?
+		* Get from each user?
+		* Get from an aggregator?
+	* How do we combat bad ratings?
+
+
