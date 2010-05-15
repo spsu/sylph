@@ -10,17 +10,10 @@ from django.db import models
 class Resource(models.Model):
 	url = models.URLField(max_length=200)
 
-class User(models.Model):
-	"""User resources. Represent people in the graph."""
-	username = models.CharField(max_length=30)
-	first_name = models.CharField(max_length=30)
-	last_name = models.CharField(max_length=30)
-	email = models.EmailField()
-
 class Post(models.Model):
 	"""Post resources. Represent articles, posts, replies, etc."""
 	#resource = models.ForeignKey('Resource')
-	resource = models.OneToOneField('Resource')
+	resource = models.OneToOneField('endpoint.Resource')
 	reply_to = models.ForeignKey('self')
 
 	title = models.CharField(max_length=140)
