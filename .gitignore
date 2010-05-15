@@ -1,0 +1,6 @@
+*~
+*pyc
+
+# Django
+settings.py
+manage.py
