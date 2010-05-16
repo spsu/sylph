@@ -5,6 +5,10 @@ from django.db import models
 class Resource(models.Model):
 	url = models.URLField(max_length=200)
 	
+	# XXX: Do I need a keep or expire flag?
+	# Maybe the semantics of this flag can differ depending on type?
+
+	stale = models.PositiveIntegerField() # Delete or refresh sementics.
 
 class Node(models.Model):
 	# Node access path
@@ -35,17 +39,17 @@ class Node(models.Model):
     )
 	status = = models.CharField(max_length=1, choices=STATUS_TYPES)
 
-FollowingNodes(models.Model):
+class FollowingNodes(models.Model):
 	"""The nodes that we are following."""
 	pass
 
-FollowerNodes(models.Model):
+class FollowerNodes(models.Model):
 	"""The nodes that are following us."""
 
-FollowingNodePermissions(models.Model):
+class FollowingNodePermissions(models.Model):
 	"""Permissions we were granted for the nodes we are following."""
 
-FollowerNodePermissions(models.Model):
+class FollowerNodePermissions(models.Model):
 	"""Permissions we have granted to follower nodes."""
 
 	node = models.ForeignKey('Node')
