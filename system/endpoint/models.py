@@ -10,20 +10,34 @@ class Resource(models.Model):
 
 	stale = models.PositiveIntegerField() # Delete or refresh sementics.
 
+	# XXX: Is this necessary?
+	#RESOURCE_TYPES = (
+	#	('U', 'User Resource'),
+	#	('P', 'Post Resource'),
+	#	('I', 'Image Resource'),
+    #)
+	#resource_type = models.CharField(max_length=1, choices=RESOURCE_TYPES)
+
+
 class Node(models.Model):
 	# Node access path
 	endpoint_url = models.URLField(max_length=200)
+
+	# TODO: Media access suburl (is that even necessary?)
 	media_url = models.URLField(max_length=200)
 
-	# XXX: A user has a node, not a node has a user!
+	# XXX NOTE: A user has a node, not a node has a user!
 
-	# The type of node. 
+	# TODO: The type of node.
+	# Maybe just User Nodes and Utility Nodes, whereby utility nodes will
+	# provide a certain number of services.  
 	NODE_TYPES = (
 		('U', 'User Node'),
 		('C', 'Cache Node'), # Usually static files
 		('G', 'Group Node'),
-    )
-    node_type = models.CharField(max_length=1, choices=NODE_TYPES)
+		('D', 'Directory Node'), # Look up people or resources
+	)
+	node_type = models.CharField(max_length=1, choices=NODE_TYPES)
 
 	# First time nodes are added, they must be resolved. 
 	is_to_resolve = models.BooleanField()
@@ -37,7 +51,7 @@ class Node(models.Model):
 		('E', 'Server Error'),
 		('U', 'Unresolvable'),
     )
-	status = = models.CharField(max_length=1, choices=STATUS_TYPES)
+	status = models.CharField(max_length=1, choices=STATUS_TYPES)
 
 class FollowingNodes(models.Model):
 	"""The nodes that we are following."""
@@ -45,9 +59,11 @@ class FollowingNodes(models.Model):
 
 class FollowerNodes(models.Model):
 	"""The nodes that are following us."""
+	pass
 
 class FollowingNodePermissions(models.Model):
 	"""Permissions we were granted for the nodes we are following."""
+	pass
 
 class FollowerNodePermissions(models.Model):
 	"""Permissions we have granted to follower nodes."""

@@ -1,4 +1,5 @@
 
+
 class Post(models.Model):
 	"""Post resources. Represent articles, posts, replies, etc."""
 
