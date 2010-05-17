@@ -4,13 +4,23 @@ from django.shortcuts import render_to_response
 
 
 def addNode(request):
+	"""This view is responsible for adding a new node to the system."""
+	# TODO: Try Celery to asynch request/poll the node. 
+
+	def handleAddNode(request):
+		print request.POST
 
 	# TODO: POST HANDLE
+	if request.method == 'POST':
+		handleAddNode(request)
+	else:
+		if not True:
+			raise Http404
+			response = HttpResponse
+			response['Cache-Control'] = 'no-cache'
 
-	if not True:
-		raise Http404
 
-	return render_to_response('core/endpoint/add-node.html')
+		return render_to_response('core/endpoint/add-node.html')
 
 
 def viewNodes(request):

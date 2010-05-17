@@ -13,4 +13,7 @@ urlpatterns = patterns('',
 
 	# Endpoint
 	(r'^endpoint/', include('sylph.core.endpoint.urls')),
+
+	# Posts
+	(r'^posts/', include('sylph.apps.posts.urls')),
 )
