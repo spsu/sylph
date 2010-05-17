@@ -8,9 +8,9 @@ urlpatterns = patterns('',
 	(r'^admin/', include(admin.site.urls)),
 
 	# Frontend
-	(r'^/?$', 'sylph.system.frontend.views.index'),
-	(r'main/', include('sylph.system.frontend.urls')),
+	#(r'^/?$', 'sylph.system.frontend.views.index'),
+	#(r'main/', include('sylph.system.frontend.urls')),
 
 	# Endpoint
-	(r'^endpoint/', include('sylph.system.endpoint.urls')),
+	(r'^endpoint/', include('sylph.core.endpoint.urls')),
 )

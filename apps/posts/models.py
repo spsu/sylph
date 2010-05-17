@@ -1,12 +1,13 @@
+from django.db import models
+from sylph.core.endpoint.models import Resource
 
-
-class Post(models.Model):
+class Post(Resource):
 	"""Post resources. Represent articles, posts, replies, etc."""
 
 	# XXX: Is-a or has-a resource?
-	resource = models.OneToOneField('endpoint.Resource')
+	#resource = models.OneToOneField('endpoint.Resource')
 
-	reply_to = models.ForeignKey('self') # Can be null. 
+	#reply_to = models.ForeignKey('self') # Can be null. 
 
 	title = models.CharField(max_length=140)
 	contents = models.TextField() # TODO: Plaintext? Markup?
@@ -28,7 +29,7 @@ class Feed(models.Model):
 
 	# Note: This is fetching the main feed. 
 	# Represented in seconds. 
-	fetch_every = PositiveIntegerField()
+	fetch_every = models.PositiveIntegerField()
 
 class Site(models.Model):
 	"""Sites we bootstrap.
@@ -41,7 +42,7 @@ class Site(models.Model):
 
 	# Note: This is fetching the main feed. 
 	# Represented in seconds. 
-	fetch_every = PositiveIntegerField()
+	fetch_every = models.PositiveIntegerField()
 
 	
 # XXX XXX: Problem! Do we limit threads to 10,000 posts? What happens if a 
