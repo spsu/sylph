@@ -3,13 +3,57 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>{% block title %}NO TITLE{% endblock %}</title>
-  <style>
+  <style>	
+	#main { 
+		border: 1px solid #ccc; 
+		margin: 0px auto 0px auto;
+		width: 700px;
+	}
+	#topbar {
+		margin-bottom: 8px;
+		border: 1px solid #0d0;
+	}
+	#sidebar {
+		width: 175px;
+		float: left;
+		border-right: 1px solid #d00;
+		padding: 0px 10px 0px 0px;
+	}
+	#content {
+		border: 1px solid #00d;
+		margin: 0px;
+		width: 500px;
+		float: right;
+	}
+	#aftercontent {
+		clear: both;
+	}
     .error { color: #f00; }
   </style>
 </head>
   <body>
     <div id="main">
-{% block content %}{% endblock %}
+		<div id="topbar">
+			{% block topbar %}
+			Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar 
+			Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar 
+			Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar 
+			{% endblock topbar %}
+		</div>
+		<div id="sidebar">
+			{% block sidebar %}
+			Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar 
+			Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar 
+			Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar 
+			{% endblock sidebar %}
+		</div>
+		<div id="content">
+			{% block content %}<h1>Main Content Goes Here</h1>{% endblock %}
+		</div>
+		<div id="aftercontent"></div>
+		<div id="footer">
+			{% block footer %}Footer Content Goes Here{% endblock %}
+		</div>
     </div>
   </body>
 </html>
