@@ -4,23 +4,28 @@
 <head>
   <title>{% block title %}NO TITLE{% endblock %}</title>
   <style>	
+	<!-- For now, these do not belong in a css file. -->
 	#main { 
-		border: 1px solid #ccc; 
+		border: 1px solid #aaa; 
 		margin: 0px auto 0px auto;
 		width: 700px;
 	}
 	#topbar {
 		margin-bottom: 8px;
-		border: 1px solid #0d0;
 	}
 	#sidebar {
-		width: 175px;
+		width: 160px;
 		float: left;
-		border-right: 1px solid #d00;
-		padding: 0px 10px 0px 0px;
+		border-right: 1px solid #aaa;
+		padding: 0px 10px 10px 7px;
+	}
+	#sidebar ul { padding: 0px 0px 0px 20px; }
+	#sidebar li {
+		padding: 0px 0px 5px 0px;
+		list-style-type: square;
+		font-size: 0.8em;
 	}
 	#content {
-		border: 1px solid #00d;
 		margin: 0px;
 		width: 500px;
 		float: right;
@@ -29,6 +34,14 @@
 		clear: both;
 	}
     .error { color: #f00; }
+
+	a:link, a:visited { color: #00e; }
+	a:active, a:hover { color: #aae; }
+
+	{% block extracss %}
+		<!-- Define extra css in block 'extracss' --> 
+	{% endblock extracss %}
+
   </style>
 </head>
   <body>
@@ -42,9 +55,7 @@
 		</div>
 		<div id="sidebar">
 			{% block sidebar %}
-			Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar 
-			Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar 
-			Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar Sidebar 
+				{% include "sidebar.html" %}
 			{% endblock sidebar %}
 		</div>
 		<div id="content">
