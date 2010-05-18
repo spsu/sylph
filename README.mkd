@@ -1,0 +1,8 @@
+[What is &ldquo;Sylph&rdquo;?](http://possibilistic.org/docs/sylph/)
+
+Also: _This code sucks_
+------------------------
+
+I don't know Django very well, so the code sucks right now. I'm trying to build 
+a rapid prototype of the most basic architecture in order to recruit other 
+developers to work with me. 
