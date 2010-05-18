@@ -1,34 +1,52 @@
 # Post Views
 
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
+from django.forms import ModelForm
+from models import *
 
 def createPost(request):
 	"""Create a new post."""
 	# TODO: Try Celery to asynch request/poll the node. 
 
-	# TODO: POST HANDLE
-	def handleCreatePost(request):
-		print request.POST
-
-	def todoCreatePost(request):
-		return render_to_response('apps/posts/create-post.html')
+	class NewPostForm(ModelForm):
+		"""Form for creating posts"""
+		class Meta:
+			model = Post
+			fields = ['title', 'contents']
 
 	if request.method == 'POST':
-		return handleCreatePost(request)
-	else:
-		return todoCreatePost(request)
+		form = NewPostForm(request.POST)
+		if form.is_valid():
+			post = form.save()
+			return HttpResponseRedirect('/posts/')
 
+		return render_to_response('apps/posts/create-post.html',
+								 	{'form': form})
+
+	else:
+		form = NewPostForm()
+		return render_to_response('apps/posts/create-post.html',
+								 	{'form': form})
+
+
+def index(request):
+	posts = Post.objects.all()
+
+
+	return render_to_response('apps/posts/index.html', {
+									'posts':	posts,
+							},
+							mimetype='application/xhtml+xml')
 
 
 def viewPost(request, postId):
-	nodes = []
-
+	posts = Post.objects.all()
 
 
 
 	return render_to_response('core/endpoint/view-nodes.html', {
-									'nodes':	nodes,
+									'posts':	posts,
 							},
 							mimetype='application/xhtml+xml')
 

@@ -16,4 +16,8 @@ urlpatterns = patterns('',
 
 	# Posts
 	(r'^posts/', include('sylph.apps.posts.urls')),
+
+	# Maintenance
+	(r'reset/?$', 'sylph.core.backend.views.resetDb'), # Reset the DB
+	#(r'populate/?$', 'sylph.core.backend.views.populateDb'), # Populate the DB
 )

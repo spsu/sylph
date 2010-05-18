@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}View Post{% endblock %}
+
+{%block content %}
+	<h1> View Posts </h1>
+	<a href="/posts/create/">Create Post</a>
+	{% for post in posts %}
+	<div class="row">
+		<p>{{ post.title }}</p>
+		<p>{{ post.content }}</p>
+	</div>
+	{% endfor %}
+{% endblock %}

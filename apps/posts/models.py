@@ -1,7 +1,8 @@
 from django.db import models
 from sylph.core.endpoint.models import Resource
 
-class Post(Resource):
+class Post(models.Model):
+#class Post(Resource):
 	"""Post resources. Represent articles, posts, replies, etc."""
 
 	# XXX: Is-a or has-a resource?
@@ -9,15 +10,30 @@ class Post(Resource):
 
 	#reply_to = models.ForeignKey('self') # Can be null. 
 
-	title = models.CharField(max_length=140)
-	contents = models.TextField() # TODO: Plaintext? Markup?
+	title = models.CharField(
+				max_length=140, 
+				blank=True, # Programatically, first posts can't be false
+				null=False 
+	)
 
-	datetime_posted = models.DateTimeField()
-	datetime_edited = models.DateTimeField()
-	datetime_retrieved = models.DateTimeField()
-	datetime_read = models.DateTimeField()
+	contents = models.TextField(
+				blank=True)
 
-	access_uri = models.SlugField()
+	# XXX: Doesn't matter yet...
+	#contents_markup = models.TextField(
+	#			blank=True)
+
+	# XXX: ALL ARE TEMP NULL/BLANK
+	datetime_posted = models.DateTimeField(null=True, blank=True) 
+	datetime_edited = models.DateTimeField(null=True, blank=True) 
+	datetime_retrieved = models.DateTimeField(null=True, blank=True) 
+	datetime_read = models.DateTimeField(null=True, blank=True) 
+
+	#access_uri = models.SlugField()
+
+	def __unicode__(self):
+		return self.title
+
 
 
 class Feed(models.Model):
