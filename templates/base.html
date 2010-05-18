@@ -3,10 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>{% block title %}NO TITLE{% endblock %}</title>
+  <!-- For now, these do not belong in a css file. -->
   <style>	
-	<!-- For now, these do not belong in a css file. -->
 	#main { 
-		border: 1px solid #aaa; 
+		border: 1px solid #ccc; 
 		margin: 0px auto 0px auto;
 		width: 700px;
 	}
@@ -39,7 +39,6 @@
 	a:active, a:hover { color: #aae; }
 
 	{% block extracss %}
-		<!-- Define extra css in block 'extracss' --> 
 	{% endblock extracss %}
 
   </style>
