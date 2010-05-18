@@ -8,14 +8,16 @@ urlpatterns = patterns('',
 	(r'^admin/', include(admin.site.urls)),
 
 	# Frontend
-	#(r'^/?$', 'sylph.system.frontend.views.index'),
+	(r'^/?$', 'sylph.core.frontend.views.index'),
 	#(r'main/', include('sylph.system.frontend.urls')),
 
-	# Endpoint
-	(r'^endpoint/', include('sylph.core.endpoint.urls')),
-
-	# Posts
+	# Applications the user can use
 	(r'^posts/', include('sylph.apps.posts.urls')),
+	(r'^nodes/', include('sylph.apps.nodes.urls')), # User-accessible management
+	(r'^social/', include('sylph.apps.social.urls')),
+
+	# Endpoint - NOT FOR USERS.
+	(r'^endpoint/', include('sylph.core.endpoint.urls')),
 
 	# Maintenance
 	(r'reset/?$', 'sylph.core.backend.views.resetDb'), # Reset the DB

@@ -5,6 +5,9 @@
   <title>{% block title %}NO TITLE{% endblock %}</title>
   <!-- For now, these do not belong in a css file. -->
   <style>	
+	body {
+		font-family: helvetica;
+	}
 	#main { 
 		border: 1px solid #ccc; 
 		margin: 0px auto 0px auto;
@@ -12,6 +15,15 @@
 	}
 	#topbar {
 		margin-bottom: 8px;
+	}
+	#topbar h1 {
+		margin: 0px 0px 0px 5px;
+		color: #666;
+		font-family: arial;
+	}
+	#topbar hr {
+		margin: 5px 0px 0px 0px;
+		color: #fff;
 	}
 	#sidebar {
 		width: 160px;
@@ -24,6 +36,12 @@
 		padding: 0px 0px 5px 0px;
 		list-style-type: square;
 		font-size: 0.8em;
+	}
+	#sidebar a {
+		text-decoration: none;
+	}
+	#sidebar p {
+		margin: 0px 0px 8px;
 	}
 	#content {
 		margin: 0px;
@@ -46,10 +64,9 @@
   <body>
     <div id="main">
 		<div id="topbar">
+			<h1>sylph prototype</h1>
+			<hr />
 			{% block topbar %}
-			Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar 
-			Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar 
-			Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar Topbar 
 			{% endblock topbar %}
 		</div>
 		<div id="sidebar">
@@ -62,7 +79,7 @@
 		</div>
 		<div id="aftercontent"></div>
 		<div id="footer">
-			{% block footer %}Footer Content Goes Here{% endblock %}
+			{% block footer %}{% endblock %}
 		</div>
     </div>
   </body>
