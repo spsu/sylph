@@ -6,10 +6,15 @@ urlpatterns = patterns('sylph.core.backend.views',
  
 	# User Functions
 	(r'signup/?$', 'signup'),
-	(r'login/?$', 'loginView'),
 	(r'logout/?$', 'logoutView'),
 
 	# Management Functions
 	(r'reset/?$', 'reset'),
 	#(r'populate/?$', 'populateDb'), # Populate the DB with test/dummy data
+)
+
+# Use builtin login system
+urlpatterns += patterns('',
+	(r'login/?$', 'django.contrib.auth.views.login', 
+				  {'template_name': 'core/backend/login.html'}),
 )

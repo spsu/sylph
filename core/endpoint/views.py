@@ -1,6 +1,7 @@
 # Endpoint Views
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 
 def addNode(request):
@@ -20,14 +21,16 @@ def addNode(request):
 			response['Cache-Control'] = 'no-cache'
 
 
-		return render_to_response('core/endpoint/add-node.html')
+		return render_to_response('core/endpoint/add-node.html',
+								  context_instance=RequestContext(request))
 
 
 def viewNodes(request):
 	nodes = []
 	return render_to_response('core/endpoint/view-nodes.html', {
 									'nodes':	nodes,
-							},
+							}, 
+							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
 
 def removeNode(request):

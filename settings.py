@@ -9,6 +9,8 @@ TEMPLATE_DIRS = (os.path.join(os.path.abspath('.'), 'templates'),)
 MEDIA_ROOT = os.path.join(os.path.abspath('.'), 'public')
 MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/'
+LOGIN_URL = '/system/login/'
+LOGIN_REDIRECT_URL = '/'
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -21,6 +23,16 @@ TEMPLATE_LOADERS = (
 	'django.template.loaders.filesystem.load_template_source', 
 	'django.template.loaders.app_directories.load_template_source',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+	'django.core.context_processors.auth',
+	'django.core.context_processors.debug',
+	'django.core.context_processors.i18n',
+	'django.core.context_processors.media',
+	#'django.contrib.messages.context_processors.messages',
+)
+
+
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
