@@ -5,7 +5,9 @@ from django.shortcuts import render_to_response
 from django.forms import ModelForm
 from models import *
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def createPost(request):
 	"""Create a new post."""
 	# TODO: Try Celery to asynch request/poll the node. 
