@@ -1,28 +1,68 @@
-from django.core import management
-from django.db import connection
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render_to_response
+from django.contrib.auth import authenticate, login, logout
+from django import forms
 
-def resetDb(request):
+from utilities import resetDatabase
+from UserAccount import UserAccount
+
+def index(request):
+	"""Just supply a list of tasks."""
+	return render_to_response('core/backend/index.html')
+
+# /system/reset
+def reset(request):
 	"""This method resets the entire database. Everything is dropped and
 	rebuilt."""
 
-	# CODE FROM 
-	# http://groups.google.com/group/django-users/browse_thread/
-	# thread/456539bfad0c8a93/f7f57f3cc75eec5b?lnk=raot
+	if request.method == 'POST':
+		resetDatabase()
+		return HttpResponseRedirect('/')
 
-	cursor = connection.cursor()
-	saveTables = [] # Tables to save
+	return render_to_response('core/backend/reset-database.html')
 
-	currentTables = connection.introspection.table_names()
+# /system/signup
+# TODO: Rename: /system/install
+def signup(request):
+	"""Signup for this sylph node."""
+	acc = UserAccount()
 
-	for table in currentTables:
-		if table not in saveTables:
-			try:
-				cursor.execute("drop table %s" % table)
-			except Exception,e:
-				raise e
+	# Don't allow sign up again!
+	if acc.exists():
+		return HttpResponseRedirect('/') 
+		
+	class CreateAccountForm(forms.Form):
+		"""Form for creating user account"""
+		username = forms.CharField(max_length=30)
+		password = forms.CharField(
+						max_length=30,
+						label=(u'Password'),
+						widget=forms.PasswordInput(render_value=False))
+		email = forms.EmailField(max_length=30)
 
-	management.call_command('syncdb') 
+	if request.method == 'POST':
+		form = CreateAccountForm(request.POST)
+		if form.is_valid():
+			acc.create(form.cleaned_data['username'], 
+					   form.cleaned_data['password'], 
+					   form.cleaned_data['email'])
 
-	return HttpResponse("Database reset")
+			# TODO: Login here! 
+			return HttpResponseRedirect('/') # ACCOUNT CREATED!
 
+		return render_to_response('core/backend/create-account.html',
+								 	{'form': form})
+
+	else:
+		form = CreateAccountForm()
+		return render_to_response('core/backend/create-account.html',
+								 	{'form': form})
+
+# /system/login
+def loginView(request):
+	return HttpResponse('test')
+
+def logoutView(request):
+	logout(request)
+	return HttpResponseRedirect('/')
+	

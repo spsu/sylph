@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Reset Database{% endblock %}
+
+{%block content %}
+	<p><strong><em>Are you sure you want to reset the database?</strong></em></p>
+	<p>This utility is useful for re-synching the django models, but it has to 
+	drop everything. <strong><em>All data will be lost!</strong></em></p>
+	<form action="" method="post">
+		<input type="submit" value="Reset Database" />
+	</form>
+{% endblock content %}

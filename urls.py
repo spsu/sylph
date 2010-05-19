@@ -13,13 +13,12 @@ urlpatterns = patterns('',
 
 	# Applications the user can use
 	(r'^posts/', include('sylph.apps.posts.urls')),
-	(r'^nodes/', include('sylph.apps.nodes.urls')), # User-accessible management
-	(r'^social/', include('sylph.apps.social.urls')),
+	#(r'^nodes/', include('sylph.apps.nodes.urls')), # User-accessible management
+	#(r'^social/', include('sylph.apps.social.urls')),
 
 	# Endpoint - NOT FOR USERS.
 	(r'^endpoint/', include('sylph.core.endpoint.urls')),
 
-	# Maintenance
-	(r'reset/?$', 'sylph.core.backend.views.resetDb'), # Reset the DB
-	#(r'populate/?$', 'sylph.core.backend.views.populateDb'), # Populate the DB
+	# System Usage and Maintenance
+	(r'^system/', include('sylph.core.backend.urls')), # Manage the system
 )

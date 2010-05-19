@@ -25,6 +25,16 @@
 		margin: 5px 0px 0px 0px;
 		color: #fff;
 	}
+	#userbar {
+		width: 350px;
+		text-align: right;
+		float: right;
+		padding: 8px 30px 0px 30px;
+	}
+	#logo {
+		float: left;
+		width: 250px;
+	}
 	#sidebar {
 		width: 160px;
 		float: left;
@@ -64,10 +74,7 @@
   <body>
     <div id="main">
 		<div id="topbar">
-			<h1>sylph prototype</h1>
-			<hr />
-			{% block topbar %}
-			{% endblock topbar %}
+			{% include "header.html" %}
 		</div>
 		<div id="sidebar">
 			{% block sidebar %}

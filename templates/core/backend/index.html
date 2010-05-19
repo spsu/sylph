@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}System Tasks{% endblock %}
+
+{%block content %}
+	<p>This is a list of system management tasks.</p>
+	<ul>
+		<li><a href="/system/account/">Manage your account</a>. TODO</li>
+		<li><a href="/system/signup/">Signup</a> (only once).</li>
+		<li><a href="/system/login/">Login</a>. TODO</li>
+		<li><a href="/system/logout/">Logout</a>.</li>
+	</ul>
+	<p>This is a list of database management tasks.</p>
+	<ul>
+		<li><a href="/system/populate/">Populate database with test data</a>.</li>
+		<li><a href="/system/reset/">Reset the database</a>. 
+			Drops <em>everything</em>.</li>
+	</ul>
+{% endblock content %}
