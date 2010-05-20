@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Add Node{% endblock %}
+
+{%block content %}
+	<h1> Add Node </h1>
+	<p> Submit the URL of the node you want to add. Sylph will do the rest of 
+		the work for you. </p>
+
+	<form action="" method="post">
+		{% for field in form %}
+		<div class="field">
+			<span class="error">{{ field.errors }}</span>
+			{{ field.label_tag }} {{ field }}
+		</div>
+		{% endfor %}
+
+		<input type="submit" value="Add" />
+	</form>
+{% endblock content %}

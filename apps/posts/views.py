@@ -24,13 +24,13 @@ def createPost(request):
 			post = form.save()
 			return HttpResponseRedirect('/posts/')
 
-		return render_to_response('apps/posts/create-post.html',
+		return render_to_response('apps/posts/create.html',
 								 	{'form': form}, 
 									context_instance=RequestContext(request))
 
 	else:
 		form = NewPostForm()
-		return render_to_response('apps/posts/create-post.html',
+		return render_to_response('apps/posts/create.html',
 								 	{'form': form}, 
 									context_instance=RequestContext(request))
 
@@ -47,7 +47,7 @@ def index(request):
 def viewPost(request, postId):
 	posts = Post.objects.all()
 
-	return render_to_response('core/endpoint/view-nodes.html', {
+	return render_to_response('apps/posts/view.html', {
 									'posts':	posts,
 							}, 
 							context_instance=RequestContext(request),

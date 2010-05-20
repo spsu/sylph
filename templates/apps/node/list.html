@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Node List{% endblock %}
+
+{%block content %}
+	<h1>Node List</h1>
+
+	<a href="/node/add/">Add Node</a>
+
+	{% for node in nodes %}
+
+		{{ node.url }}
+
+	{% endfor %}
+
+{% endblock %}

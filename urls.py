@@ -11,14 +11,11 @@ urlpatterns = patterns('',
 	(r'^/?$', 'sylph.core.frontend.views.index'),
 	#(r'main/', include('sylph.system.frontend.urls')),
 
-	# Applications the user can use
+	# Application level
 	(r'^posts/', include('sylph.apps.posts.urls')),
-	#(r'^nodes/', include('sylph.apps.nodes.urls')), # User-accessible management
 	#(r'^social/', include('sylph.apps.social.urls')),
 
-	# Endpoint - NOT FOR USERS.
-	(r'^endpoint/', include('sylph.core.endpoint.urls')),
-
-	# System Usage and Maintenance
+	# System Level
+	(r'^node/', include('sylph.core.endpoint.urls')),
 	(r'^system/', include('sylph.core.backend.urls')), # Manage the system
 )
