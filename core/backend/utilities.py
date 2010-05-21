@@ -19,4 +19,4 @@ def resetDatabase():
 			except Exception,e:
 				raise e
 
-	management.call_command('syncdb') 
+	management.call_command('syncdb', interactive=False) 

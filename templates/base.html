@@ -66,9 +66,53 @@
 	a:link, a:visited { color: #00e; }
 	a:active, a:hover { color: #aae; }
 
+	.buttons a:link, .buttons a:visited { 
+		border: 1px solid #333; 
+		font-size: 1.2em;
+		font-family: arial;
+		color: #333;
+		background-color: #ccc;
+		padding: 3px 4px 3px 4px;
+		margin: 4px;
+	}
+	.buttons a:active, .buttons a:hover { 
+		border: 1px solid #444; 
+		font-size: 1.2em;
+		font-family: arial;
+		color: #444;
+		background-color: #aaa;
+		padding: 3px 4px 3px 4px;
+		margin: 4px;
+	}
+
+	.buttons {
+		margin: 2px 20px 10px 10px;
+		text-align: right;
+	}
+
 	#content h1 { font-size: 1.8em; }
 	#content h2 { font-size: 1.5em; }
 	#content h3 { font-size: 1.3em; }
+
+	.table {
+		border: 1px solid #ccc;
+		padding: 0px;
+	}
+	.table div {
+		padding: 4px;
+		font-size: 1.2em;
+	}
+	.table div a {
+		font-weight: bold;
+	}
+
+	.row_odd {
+		background-color: #ddd;
+	}
+
+	.row_even {
+		background-color: #ccc;
+	}
 
 	{% block extracss %}
 	{% endblock extracss %}

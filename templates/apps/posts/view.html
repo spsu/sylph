@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}___Viewing Post{% endblock %}
+{% block title %}Viewing Post{% endblock %}
 
 {%block content %}
-	Here's the post: <hr />
-	{{ post }}
+	<h1><a href="/posts/">Index</a> &gt; {{ post.title }}</h1>
+	{{ post.contents_markdown|safe }}
+	<p><small>(Posted on {{ post.datetime_created }}.)</small></p>
 {% endblock content %}

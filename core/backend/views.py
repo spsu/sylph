@@ -18,7 +18,7 @@ def test(request):
 	return sylph.test.test(request)
 
 # /system/reset
-@login_required
+#@login_required
 def reset(request):
 	"""This method resets the entire database. Everything is dropped and
 	rebuilt."""

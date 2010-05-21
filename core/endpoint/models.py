@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Models for the endpoints
 
@@ -14,14 +15,15 @@ class Resource(models.Model):
 	# XXX: Do I need a keep or expire flag?
 	# Maybe the semantics of this flag can differ depending on type?
 	# TODO: Can this be inferred from elsewhere in the system?
-	stale = models.PositiveIntegerField() 
+	stale = models.PositiveIntegerField(blank=True, default=0) 
 
 	# Resource can be response to other resource.
 	# Usually NULL. 
 	reply_to = models.ForeignKey('self', null=True, blank=True)
 
 	# Dates corresponding to the producer
-	datetime_created = models.DateTimeField() 
+	# XXX: Enforce date semantics in the code!
+	datetime_created = models.DateTimeField(null=True, blank=True) 
 	datetime_edited = models.DateTimeField(null=True, blank=True) 
 
 	# Dates corresponding to the consumer

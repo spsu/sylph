@@ -3,12 +3,18 @@
 {% block title %}View Post{% endblock %}
 
 {%block content %}
-	<h1> View Posts </h1>
-	<a href="/posts/create/">Create Post</a>
-	{% for post in posts %}
-	<div class="row">
-		<p>{{ post.title }}</p>
-		<p>{{ post.content }}</p>
+	<h1> Post Index </h1>
+	<div class="buttons">
+		<a href="/posts/create/" class="button">Create Post</a>
 	</div>
-	{% endfor %}
+	<div class="table">
+		{% for post in posts %}
+		<div class="row_{% cycle 'odd' 'even' %}">
+			<a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+			{% if post.datetime_created %}
+				<small>posted {{ post.datetime_created }}</small>
+			{% endif %}
+		</div>
+		{% endfor %}
+	</div>
 {% endblock %}

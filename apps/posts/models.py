@@ -1,8 +1,8 @@
 from django.db import models
 from sylph.core.endpoint.models import Resource
+from markdown2 import markdown
 
-class Post(models.Model):
-#class Post(Resource):
+class Post(Resource):
 	"""Post resources. Represent articles, posts, replies, etc."""
 
 	# XXX: Is-a or has-a resource?
@@ -31,6 +31,11 @@ class Post(models.Model):
 
 	def __unicode__(self):
 		return self.title
+
+	def contents_markdown(self):
+		"""View a markdown-version of the contents."""
+		# TODO: Cache this
+		return markdown(self.contents)
 
 
 

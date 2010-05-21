@@ -7,7 +7,22 @@ from models import *
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 
-@login_required
+from datetime import datetime
+
+# ============ Post Index =======================
+
+def index(request):
+	posts = Post.objects.all()
+	return render_to_response('apps/posts/index.html', {
+									'posts':	posts,
+							}, 
+							context_instance=RequestContext(request),
+							mimetype='application/xhtml+xml')
+
+
+# ============ Create Post ======================
+
+#@login_required
 def createPost(request):
 	"""Create a new post."""
 	# TODO: Try Celery to asynch request/poll the node. 
@@ -21,7 +36,9 @@ def createPost(request):
 	if request.method == 'POST':
 		form = NewPostForm(request.POST)
 		if form.is_valid():
-			post = form.save()
+			post = form.save(commit=False)
+			post.datetime_created = datetime.today()
+			post.save()
 			return HttpResponseRedirect('/posts/')
 
 		return render_to_response('apps/posts/create.html',
@@ -35,24 +52,23 @@ def createPost(request):
 									context_instance=RequestContext(request))
 
 
-def index(request):
-	posts = Post.objects.all()
-	return render_to_response('apps/posts/index.html', {
-									'posts':	posts,
-							}, 
-							context_instance=RequestContext(request),
-							mimetype='application/xhtml+xml')
-
+# ============ View Post ========================
 
 def viewPost(request, postId):
-	posts = Post.objects.all()
+	"""View a post by its id"""
+	try:
+		post = Post.objects.get(pk=postId)
+	except Post.DoesNotExist:
+		raise Http404
 
 	return render_to_response('apps/posts/view.html', {
-									'posts':	posts,
+									'post':	post,
 							}, 
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
 
+
+# ============ Delete Post ======================
 
 def deletePost(request, postId):
 	# TODO: POST HANDLE
