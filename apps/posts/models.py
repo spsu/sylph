@@ -26,6 +26,9 @@ class Post(models.Model):
 
 	#access_uri = models.SlugField()
 
+	def get_absolute_url(self):
+		return "/posts/view/%i/" % self.id
+
 	def __unicode__(self):
 		return self.title
 

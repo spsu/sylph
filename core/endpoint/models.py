@@ -30,6 +30,9 @@ class Resource(models.Model):
 	datetime_retrieved = models.DateTimeField(null=True, blank=True) 
 	datetime_read = models.DateTimeField(null=True, blank=True) 
 
+	def get_absolute_url(self):
+		return "/resource/view/%i/" % self.id
+
 
 # ============ Node =============================
 
@@ -86,5 +89,7 @@ class Node(models.Model):
     )
 	status = models.CharField(max_length=1, choices=STATUS_TYPES)
 
+	def get_absolute_url(self):
+		return "/node/view/%i/" % self.id
 
 

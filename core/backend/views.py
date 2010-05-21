@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-
+import sylph.test
 
 from utilities import resetDatabase
 from UserAccount import UserAccount
@@ -13,6 +13,9 @@ def index(request):
 	"""Just supply a list of tasks."""
 	return render_to_response('core/backend/index.html',
 							  context_instance=RequestContext(request))
+def test(request):
+	"""A view to test code. Simplifies testing process."""
+	return sylph.test.test(request)
 
 # /system/reset
 @login_required

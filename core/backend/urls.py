@@ -11,6 +11,9 @@ urlpatterns = patterns('sylph.core.backend.views',
 	# Management Functions
 	(r'reset/?$', 'reset'),
 	#(r'populate/?$', 'populateDb'), # Populate the DB with test/dummy data
+
+	# Test 
+	(r'test/?$', 'test'),
 )
 
 # Use builtin login system
