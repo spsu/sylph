@@ -23,11 +23,6 @@ class Post(models.Model):
 	#contents_markup = models.TextField(
 	#			blank=True)
 
-	# XXX: ALL ARE TEMP NULL/BLANK
-	datetime_posted = models.DateTimeField(null=True, blank=True) 
-	datetime_edited = models.DateTimeField(null=True, blank=True) 
-	datetime_retrieved = models.DateTimeField(null=True, blank=True) 
-	datetime_read = models.DateTimeField(null=True, blank=True) 
 
 	#access_uri = models.SlugField()
 

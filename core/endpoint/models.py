@@ -1,18 +1,37 @@
 from django.db import models
 
-# Endpoint-oriented models. 
+# Models for the endpoints
+
+# ============ Resource =========================
 
 class Resource(models.Model):
+	# The URL corresponding to the resource. 
+	# It is unique, and this can be enforced by ensuring only the producer can 
+	# make a certain subset of URLs at their own domain / path. 
 	url = models.URLField(max_length=200)
 	
+	# Delete or refresh sementics.
 	# XXX: Do I need a keep or expire flag?
 	# Maybe the semantics of this flag can differ depending on type?
-
-	stale = models.PositiveIntegerField() # Delete or refresh sementics.
+	# TODO: Can this be inferred from elsewhere in the system?
+	stale = models.PositiveIntegerField() 
 
 	# Resource can be response to other resource.
 	# Usually NULL. 
-	reply_to = models.ForeignKey('self')
+	reply_to = models.ForeignKey('self', null=True, blank=True)
+
+	# Dates corresponding to the producer
+	datetime_created = models.DateTimeField() 
+	datetime_edited = models.DateTimeField(null=True, blank=True) 
+
+	# Dates corresponding to the consumer
+	# XXX: Consumer-only. Cannot send these!!
+	# TODO: Strip any resource metadata being sent marked 'consumer-only'
+	datetime_retrieved = models.DateTimeField(null=True, blank=True) 
+	datetime_read = models.DateTimeField(null=True, blank=True) 
+
+
+# ============ Node =============================
 
 # TODO: UserNodes and MachineNodes
 # TODO: FollowerNodes and FollowingNodes
