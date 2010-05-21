@@ -11,6 +11,7 @@ MEDIA_URL = ''
 ADMIN_MEDIA_PREFIX = '/media/'
 LOGIN_URL = '/system/login/'
 LOGIN_REDIRECT_URL = '/'
+APPEND_SLASH = True
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -46,6 +47,7 @@ INSTALLED_APPS = (
 	'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.sites',
+	'django.contrib.humanize',
 
 	'sylph.core.endpoint',
 	#'sylph.system.backend',

@@ -35,6 +35,10 @@ class Resource(models.Model):
 	def get_absolute_url(self):
 		return "/resource/view/%i/" % self.id
 
+	class Meta:
+		verbose_name = 'resource'
+		verbose_name_plural = 'resources'
+
 
 # ============ Node =============================
 
@@ -93,5 +97,10 @@ class Node(models.Model):
 
 	def get_absolute_url(self):
 		return "/node/view/%i/" % self.id
+
+	# XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+	# TODO: Use a model method to describe which fields cannot be transported
+	# over RDF. (This is a bit hackish/primative, but it'll do.)
+	# XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX 
 
 

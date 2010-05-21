@@ -12,6 +12,7 @@ from sylph.apps.posts.models import Post
 
 def test(request):
 
-	print "test"
+	print dir(Resource)
+
 
 	return HttpResponse("Test success.")

@@ -37,7 +37,17 @@ class Post(Resource):
 		# TODO: Cache this
 		return markdown(self.contents)
 
+	class Meta:
+		"""Model metadata"""
+		verbose_name = 'post'
+		verbose_name_plural = 'posts'
+		#order_with_respect_to = 'reply_to'
+		#ordering
 
+	# XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX
+	# TODO: Use a model method to describe which fields cannot be transported
+	# over RDF. (This is a bit hackish/primative, but it'll do.)
+	# XXX XXX XXX XXX XXX XXX XXX XXX XXX XXX 
 
 class Feed(models.Model):
 	"""RSS/Atom feeds we bootstrap. 
