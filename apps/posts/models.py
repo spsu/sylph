@@ -5,23 +5,16 @@ from markdown2 import markdown
 class Post(Resource):
 	"""Post resources. Represent articles, posts, replies, etc."""
 
-	# XXX: Is-a or has-a resource?
-	#resource = models.OneToOneField('endpoint.Resource')
-
-	#reply_to = models.ForeignKey('self') # Can be null. 
-
 	title = models.CharField(
 				max_length=140, 
 				blank=True, # Programatically, first posts can't be false
 				null=False 
 	)
 
-	contents = models.TextField(
-				blank=True)
+	contents = models.TextField(blank=True)
 
-	# XXX: Doesn't matter yet...
-	#contents_markup = models.TextField(
-	#			blank=True)
+	# TODO: Cache markup. 
+	contents_markup_cache = models.TextField(blank=True)
 
 
 	#access_uri = models.SlugField()
@@ -34,8 +27,24 @@ class Post(Resource):
 
 	def contents_markdown(self):
 		"""View a markdown-version of the contents."""
-		# TODO: Cache this
-		return markdown(self.contents)
+		if not self.contents_markup_cache:
+			markup = markdown(self.contents) # TODO: More markup methods
+			self.contents_markup_cache = markup
+			self.save()
+
+		return self.contents_markup_cache
+
+	def get_transportable(self):
+		"""Return the elements that can be transported over RDF payload."""
+		ret = super(Post, self).get_transportable()
+		cur = {
+			'title': self.title,
+			'contents': self.contents,
+		}
+		for k in cur.keys():
+			ret[k] = cur[k]
+
+		return ret
 
 	class Meta:
 		"""Model metadata"""

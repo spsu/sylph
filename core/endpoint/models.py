@@ -18,8 +18,12 @@ class Resource(models.Model):
 	stale = models.PositiveIntegerField(blank=True, default=0) 
 
 	# Resource can be response to other resource.
-	# Usually NULL. 
-	reply_to = models.ForeignKey('self', null=True, blank=True)
+	reply_to_root = models.ForeignKey('self', 
+									  related_name='resource_set_root',
+									  null=True, blank=True)
+	reply_to_parent = models.ForeignKey('self', 
+										related_name='resource_set_parent',
+										null=True, blank=True)
 
 	# Dates corresponding to the producer
 	# XXX: Enforce date semantics in the code!
@@ -34,6 +38,16 @@ class Resource(models.Model):
 
 	def get_absolute_url(self):
 		return "/resource/view/%i/" % self.id
+
+	def get_transportable(self):
+		"""Return the elements that can be transported over RDF payload."""
+		return {
+			'url': self.url,
+			#'reply_to_root': self.reply_to_root,
+			#'reply_to_parent': self.reply_to_parent,
+			'datetime_created': self.datetime_created,
+			'datetime_edited': self.datetime_edited,
+		}
 
 	class Meta:
 		verbose_name = 'resource'

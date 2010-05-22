@@ -12,7 +12,11 @@ from sylph.apps.posts.models import Post
 
 def test(request):
 
-	print dir(Resource)
+	posts = Post.objects.all()
+
+	for p in posts:
+		print p.get_transportable()
+		print "\n\n"
 
 
 	return HttpResponse("Test success.")
