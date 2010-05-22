@@ -14,9 +14,10 @@ def test(request):
 
 	posts = Post.objects.all()
 
+	ret = ""
 	for p in posts:
-		print p.get_transportable()
-		print "\n\n"
+		ret += str(p.get_transportable())
+		ret += "\n\n"
 
 
-	return HttpResponse("Test success.")
+	return HttpResponse(ret)
