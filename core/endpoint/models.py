@@ -60,12 +60,14 @@ class Resource(models.Model):
 
 	def get_transportable(self):
 		"""Return the elements that can be transported over RDF payload."""
-		return {
-			'url': self.url,
-			'datetime_created': self.datetime_created,
-			'datetime_edited': self.datetime_edited,
-		}
+		dic = dict()
+		fields = self.get_transportable_fields()
 
+		for field in fields:
+			if hasattr(self, field):
+				dic[field] = getattr(self, field)
+
+		return dic
 
 	@classmethod
 	def get_transportable_fields(cls):
