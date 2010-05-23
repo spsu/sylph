@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 
 from datetime import datetime
+import hashlib
 
 # ============ Post Index =======================
 
@@ -38,6 +39,9 @@ def createPost(request):
 		if form.is_valid():
 			post = form.save(commit=False)
 			post.datetime_created = datetime.today()
+			# FIXME TEMP URL
+			post.url = 'http://temp/post/' + \
+						hashlib.md5(str(datetime.today())).hexdigest() 
 			post.save()
 			return HttpResponseRedirect('/posts/')
 

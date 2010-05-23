@@ -8,18 +8,18 @@ from django.db import models
 
 from sylph.core.endpoint.models import Resource
 from sylph.apps.posts.models import Post
-from sylph.core.endpoint.comms.Intermediary import Intermediary
+from sylph.core.endpoint.comms.Intermediary import *
 
 # Quick code to test.
 
 def test(request):
 	ret = ""
-	
+
 	posts = Post.objects.all()
 
 	store = Intermediary()
 
-	store.addResult(posts[0])
+	store.addResult(posts[2])
 
 	for d in store.data:
 		print d.appName
@@ -38,3 +38,4 @@ def test(request):
 
 
 	return HttpResponse(ret)
+

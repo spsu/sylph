@@ -25,6 +25,9 @@ class Post(Resource):
 	def __unicode__(self):
 		return self.title
 
+
+	# ============= Content Markup ========================
+
 	def contents_markdown(self):
 		"""View a markdown-version of the contents."""
 		if not self.contents_markup_cache:
@@ -33,6 +36,9 @@ class Post(Resource):
 			self.save()
 
 		return self.contents_markup_cache
+
+
+	# ============= RDF Serilization Helpers ==============
 
 	def get_transportable(self):
 		"""Return the elements that can be transported over RDF payload."""
@@ -45,6 +51,17 @@ class Post(Resource):
 			ret[k] = cur[k]
 
 		return ret
+
+	@classmethod
+	def get_transportable_fields(cls):
+		"""Return a list of the names of the fields that can be transported."""
+		print super(Post, Post)
+		ret = super(Post, Post).get_transportable_fields()
+		ret += ['title', 'contents']
+		return ret
+
+
+	# ============= Model Meta ============================
 
 	class Meta:
 		"""Model metadata"""

@@ -3,13 +3,23 @@ import datetime
 
 # Models for the endpoints
 
+# ============ Resource Manager =================
+
+class ResourceManager(models.Manager):
+	"""Custom manager for Resources"""
+	def get_by_natural_key(self, res_url):
+		return self.get(url=res_url)
+
+
 # ============ Resource =========================
 
 class Resource(models.Model):
+	objects = ResourceManager()
+
 	# The URL corresponding to the resource. 
 	# It is unique, and this can be enforced by ensuring only the producer can 
 	# make a certain subset of URLs at their own domain / path. 
-	url = models.URLField(max_length=200)
+	url = models.URLField(max_length=200, unique=True)
 	
 	# Delete or refresh sementics.
 	# XXX: Do I need a keep or expire flag?
@@ -39,15 +49,31 @@ class Resource(models.Model):
 	def get_absolute_url(self):
 		return "/resource/view/%i/" % self.id
 
+
+	# ============= RDF Serilization Helpers ==============
+
 	def get_transportable(self):
 		"""Return the elements that can be transported over RDF payload."""
 		return {
 			'url': self.url,
-			'reply_to_root': self.reply_to_root,
-			'reply_to_parent': self.reply_to_parent,
+			'reply_to_root': self.reply_to_root,		# FIXME: Won't work
+			'reply_to_parent': self.reply_to_parent,	# FIXME: Need URL.
 			'datetime_created': self.datetime_created,
 			'datetime_edited': self.datetime_edited,
 		}
+
+
+	@classmethod
+	def get_transportable_fields(cls):
+		"""Return a list of the names of the fields that can be transported."""
+		return [
+			'url',
+			'reply_to_root',
+			'reply_to_parent',
+			'datetime_created',
+			'datetime_edited'
+		]
+
 
 	def get_ontology_name(self):
 		"""Generates the ontology name (THIS ONLY FITS SHORT-TERM OBJECTIVE!)"""
@@ -56,6 +82,12 @@ class Resource(models.Model):
 		name = '/' + name[8:-2] + '#'
 		return name.replace('.', '/').replace('/models/', '_')
 
+	def get_rdf_class(self):
+		return self.__class__.__name__
+
+
+	# ============= Model Meta ============================
+	
 	class Meta:
 		verbose_name = 'resource'
 		verbose_name_plural = 'resources'

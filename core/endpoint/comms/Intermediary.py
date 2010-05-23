@@ -6,7 +6,7 @@ from django.db.models.query import QuerySet
 # RDF Lib
 import rdflib
 from rdflib.Graph import ConjunctiveGraph as Graph
-from rdflib import Namespace, URIRef, Literal, BNode
+from rdflib import Namespace, URIRef, Literal, BNode, RDF
 #from rdflib.store import Store
 
 # Describes an Incoming or Outgoing payload
@@ -105,15 +105,20 @@ class Intermediary(object):
 			self.data = model.get_transportable()
 			self.graph = None
 
-			self.toRdf()
+			self.toRdf(model)
 
-		def toRdf(self):
+		def toRdf(self, model):
 			# TODO: Temp test
 
 			ns = Namespace(self.appName)
+			ns_rdf = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+
 			graph = Graph()
 
 			node = BNode()
+			node = URIRef(model.url)
+			graph.add((node, RDF.type, ns[model.get_rdf_class()]))
+
 			#graph.add(sub, pred, obj)
 			for k, v in self.data.iteritems():
 				prd = ns[k]
