@@ -3,17 +3,20 @@ import datetime
 
 # Models for the endpoints
 
-# ============ Resource Manager =================
-
+# ============= Resource Manager ================
+	
 class ResourceManager(models.Manager):
-	"""Custom manager for Resources"""
+	"""Custom manager for resources"""
 	def get_by_natural_key(self, res_url):
 		return self.get(url=res_url)
-
 
 # ============ Resource =========================
 
 class Resource(models.Model):
+	"""Models the most basic type of resource.
+	You may want to subclass ResourceList or ResourceTree if the needs are more
+	complex."""
+
 	objects = ResourceManager()
 
 	# The URL corresponding to the resource. 
@@ -26,14 +29,6 @@ class Resource(models.Model):
 	# Maybe the semantics of this flag can differ depending on type?
 	# TODO: Can this be inferred from elsewhere in the system?
 	stale = models.PositiveIntegerField(blank=True, default=0) 
-
-	# Resource can be response to other resource.
-	reply_to_root = models.ForeignKey('self', 
-									  related_name='resource_set_root',
-									  null=True, blank=True)
-	reply_to_parent = models.ForeignKey('self', 
-										related_name='resource_set_parent',
-										null=True, blank=True)
 
 	# Dates corresponding to the producer
 	# XXX: Enforce date semantics in the code!
@@ -91,6 +86,33 @@ class Resource(models.Model):
 	class Meta:
 		verbose_name = 'resource'
 		verbose_name_plural = 'resources'
+
+
+# ============ Resource List ====================
+
+class ResourceList(Resource):
+	"""A type of resource that is capable of building a list."""
+
+	# The absolute root of the response tree
+	reply_to = models.ForeignKey('self', 
+								 related_name='resource_set_reply',
+								 null=True, blank=True)
+
+
+# ============ Resource Tree ====================
+
+class ResourceTree(Resource):
+	"""A type of resource that is capable of building a tree."""
+
+	# The absolute root of the response tree
+	reply_to_root = models.ForeignKey('self', 
+									  related_name='resource_set_root',
+									  null=True, blank=True)
+
+	# The immediate parent of the response
+	reply_to_parent = models.ForeignKey('self', 
+										related_name='resource_set_parent',
+										null=True, blank=True)
 
 
 # ============ Node =============================

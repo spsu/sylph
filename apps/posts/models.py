@@ -1,8 +1,8 @@
 from django.db import models
-from sylph.core.endpoint.models import Resource
+from sylph.core.endpoint.models import *
 from markdown2 import markdown
 
-class Post(Resource):
+class Post(ResourceTree):
 	"""Post resources. Represent articles, posts, replies, etc."""
 
 	title = models.CharField(
