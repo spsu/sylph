@@ -41,6 +41,17 @@ class Resource(models.Model):
 	datetime_retrieved = models.DateTimeField(null=True, blank=True) 
 	datetime_read = models.DateTimeField(null=True, blank=True) 
 
+	# XXX: Is this proper?
+	# A non-tranportable cache of reply count.
+	# reply_count_cache = models.PositiveIntegerField(blank=True, default=0) 
+
+	# A list of transportable RDF fields
+	rdf_fields = [
+			'url',
+			'datetime_created',
+			'datetime_edited'
+		]
+
 	def get_absolute_url(self):
 		return "/resource/view/%i/" % self.id
 
@@ -51,8 +62,6 @@ class Resource(models.Model):
 		"""Return the elements that can be transported over RDF payload."""
 		return {
 			'url': self.url,
-			'reply_to_root': self.reply_to_root,		# FIXME: Won't work
-			'reply_to_parent': self.reply_to_parent,	# FIXME: Need URL.
 			'datetime_created': self.datetime_created,
 			'datetime_edited': self.datetime_edited,
 		}
@@ -61,13 +70,16 @@ class Resource(models.Model):
 	@classmethod
 	def get_transportable_fields(cls):
 		"""Return a list of the names of the fields that can be transported."""
-		return [
-			'url',
-			'reply_to_root',
-			'reply_to_parent',
-			'datetime_created',
-			'datetime_edited'
-		]
+		
+		if hasattr(cls.__bases__[0], 'rdf_fields'):
+			fields = cls.__bases__[0].get_transportable_fields()
+			for field in cls.rdf_fields:
+				if field in fields:
+					continue
+				fields.append(field)
+			return fields
+
+		return cls.rdf_fields
 
 
 	def get_ontology_name(self):
@@ -81,7 +93,7 @@ class Resource(models.Model):
 		return self.__class__.__name__
 
 
-	# ============= Model Meta ============================
+	# ============= Model Meta =====================
 	
 	class Meta:
 		verbose_name = 'resource'
@@ -102,7 +114,15 @@ class ResourceList(Resource):
 # ============ Resource Tree ====================
 
 class ResourceTree(Resource):
-	"""A type of resource that is capable of building a tree."""
+	"""A type of resource that is capable of building a tree.
+
+	Example, posts:
+
+		* Rooted Post
+			* Reply to root
+			* Reply to root
+				* Reply to non-root
+	"""
 
 	# The absolute root of the response tree
 	reply_to_root = models.ForeignKey('self', 
@@ -113,6 +133,26 @@ class ResourceTree(Resource):
 	reply_to_parent = models.ForeignKey('self', 
 										related_name='resource_set_parent',
 										null=True, blank=True)
+
+	# A list of transportable RDF fields
+	rdf_fields = [
+			'reply_to_root',
+			'reply_to_parent',
+		]
+
+	# ============= RDF Serilization Helpers ==============
+
+	def get_transportable(self):
+		"""Return the elements that can be transported over RDF payload."""
+		ret = super(ResourceTree, self).get_transportable()
+		cur = {
+			'reply_to_root': self.reply_to_root,
+			'reply_to_parent': self.reply_to_parent,
+		}
+		for k in cur.keys():
+			ret[k] = cur[k]
+
+		return ret
 
 
 # ============ Node =============================

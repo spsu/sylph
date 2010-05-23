@@ -13,7 +13,17 @@ class Post(ResourceTree):
 
 	contents = models.TextField(blank=True)
 
-	# TODO: Cache markup. 
+	# Markup type choices. 
+	MARKUP_TYPES = (
+		('X', 'Unknown'),
+		('P', 'Plaintext'),
+		('M', 'Markdown'),
+		('W', 'Wiki markup'),
+		('H', 'HTML (lite)'), # Any HTML will be filtered extensively. 
+	)
+	#markup_type = models.CharField(max_length=1, choices=MARKUP_TYPES)
+
+	# Cannot send marked-up contents
 	contents_markup_cache = models.TextField(blank=True)
 
 
@@ -25,6 +35,11 @@ class Post(ResourceTree):
 	def __unicode__(self):
 		return self.title
 
+	# A list of transportable RDF fields
+	rdf_fields = [
+			'title',
+			'contents',
+		]
 
 	# ============= Content Markup ========================
 
@@ -52,13 +67,6 @@ class Post(ResourceTree):
 
 		return ret
 
-	@classmethod
-	def get_transportable_fields(cls):
-		"""Return a list of the names of the fields that can be transported."""
-		print super(Post, Post)
-		ret = super(Post, Post).get_transportable_fields()
-		ret += ['title', 'contents']
-		return ret
 
 
 	# ============= Model Meta ============================
