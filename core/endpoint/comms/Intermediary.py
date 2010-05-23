@@ -1,7 +1,8 @@
 # Sylph
-from sylph.core.endpoint.models import Resource
+from sylph.core.endpoint.models import Resource, ResourceTree
 
 # Django
+from django.db import models
 from django.db.models.query import QuerySet
 
 # RDF Lib
@@ -20,6 +21,19 @@ class Intermediary(object):
 		# TODO
 		self.data = [] 
 
+		# Each result set as it is added
+		self.resultSets = []
+
+		# Individual records
+		self.records = [] 
+
+		# Resource FKs that need urls
+		self.needUrls = []
+
+		# Output graph
+		self.graph = None
+		self.subgraphs = []
+
 
 	# ============= Add Result ============================
 
@@ -29,8 +43,9 @@ class Intermediary(object):
 			if not isinstance(queryRet, Resource):
 				raise TypeError, "Query Result must be a Resource!\n"
 
-			mod = self.ModelData(queryRet)
-			self.data.append(mod)
+			#mod = self.ModelData(queryRet)
+			#self.data.append(mod)
+			self.__addTriples(queryRet)
 			return 
 
 		if type(queryRet) in [list, tuple, QuerySet]:
@@ -38,45 +53,53 @@ class Intermediary(object):
 				self.addResult(qr)
 
 
-	def __doAddModel(self, model):
-		"""Add the checked model to the payload."""
+	def __addTriples(self, model):
+		# TODO TEST
+		
+		ns = Namespace(model.get_ontology_name())
+		ns_rdf = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
+
+		data = model.get_transportable()
+
+		graph = Graph()
+		graphNum = len(self.subgraphs)
+
+		node = URIRef(model.url) # The Resource
+		graph.add((node, RDF.type, ns[model.get_rdf_class()])) # RDF Datatype
+
+		needUrls = []
+
+		#graph.add(sub, pred, obj)
+		classes = (models.Model, Resource, ResourceTree)
+		for k, v in data.iteritems():
+			if isinstance(v, classes):
+				self.needUrls.append((graphNum, k, v))
+				continue
+			if k == 'url':
+				continue # already done
+
+			if not v:
+				continue # TODO: This shouldn't always be the case!
+
+			prd = ns[k]
+			obj = Literal(v)
+			graph.add((node, prd, obj))
+
+		self.subgraphs.append(graph)
+
+	def __addNamespace(self, namespace):
 		pass
 		
 
+	def toRdf(self):
+		self.graph = Graph()
+		ns = Namespace('/sylph/apps/posts_Post#')
+		self.graph.bind('sylphPost', ns)
 
+		for graph in self.subgraphs:
+			self.graph += graph
 
-	# ============= Embedded: ModelWrap ===================
-
-	class ModelData(object):
-		"""Wraps a query result to include only outgoing data."""
-
-		def __init__(self, model):
-			self.appName = model.get_ontology_name()
-			self.modName = None
-			self.data = model.get_transportable()
-			self.graph = None
-
-			self.toRdf(model)
-
-		def toRdf(self, model):
-			# TODO: Temp test
-
-			ns = Namespace(self.appName)
-			ns_rdf = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-
-			graph = Graph()
-
-			node = BNode()
-			node = URIRef(model.url)
-			graph.add((node, RDF.type, ns[model.get_rdf_class()]))
-
-			#graph.add(sub, pred, obj)
-			for k, v in self.data.iteritems():
-				prd = ns[k]
-				obj = Literal(v)
-				graph.add((node, prd, obj))
-
-			self.graph = graph.serialize()
+		return self.graph.serialize(format='n3')
 
 
 

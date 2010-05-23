@@ -13,38 +13,22 @@ from sylph.core.endpoint.comms.Intermediary import *
 # Quick code to test.
 
 def test(request):
-	ret = ""
+	ret = "asdf\nasdf"
 
-	print Post.get_transportable_fields()
+	#print Post.get_transportable_fields()
 
 	posts = Post.objects.all()
 
-	for post in posts:
-		print post.get_transportable()
-		print "=======================\n\n"
+	#for post in posts:
+	#	print post.get_transportable()
+	#	print "=======================\n\n"
 
 
 	store = Intermediary()
 
-	store.addResult(posts[2])
+	store.addResult(posts)
 
-	for d in store.data:
-		#print d.appName
-		#print d.modName
-		#print d.data
-		#print "\n\n"
+	ret = str(store.toRdf())
 
-		########print d.graph
-		pass
-
-
-	#for p in posts:
-	#	ret += str(p.get_transportable())
-	#	#ret += str(type(p))
-	#	print type(p)
-	#	print isinstance(p, Resource)
-	#	ret += "\n\n"
-
-
-	return HttpResponse(ret)
+	return HttpResponse(ret, mimetype='text/plain')
 
