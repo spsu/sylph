@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Reply to Post{% endblock %}
+
+{%block content %}
+	<h1> Reply to Post </h1>
+	<form action="" method="post">
+		{% for field in form %}
+			{% if field.is_hidden %}
+				{{ field }}
+			{% else %}
+				<div class="field">
+					<span class="error">{{ field.errors }}</span>
+					{{ field.label_tag }} {{ field }}
+				</div>
+			{% endif %}
+		{% endfor %}
+
+		<input type="submit" value="Submit" />
+	</form>
+{% endblock content %}

@@ -2,9 +2,11 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('sylph.apps.posts.views',
 	# Endpoint
-	(r'^/?$', 'index'),
+	(r'^$', 'indexParentless'),
+	(r'^all/$', 'indexAll'),
 	(r'create/$', 'createPost'),
 	(r'view/(?P<postId>\d+)/$', 'viewPost'),
+	(r'reply/(?P<postId>\d+)/$', 'replyPost'),
 	(r'delete/(?P<postId>\d+)/$', 'deletePost'),
 
 )
