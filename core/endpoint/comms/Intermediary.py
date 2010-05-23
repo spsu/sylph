@@ -1,3 +1,13 @@
+from sylph.core.endpoint.models import Resource
+
+# Django
+from django.db.models.query import QuerySet
+
+# RDF Lib
+import rdflib
+from rdflib.Graph import ConjunctiveGraph as Graph
+from rdflib import Namespace, URIRef, Literal, BNode
+#from rdflib.store import Store
 
 # Describes an Incoming or Outgoing payload
 # Great, but this HAS TO BE TURNED INTO POSTDATA. 
@@ -27,7 +37,30 @@ class Intermediary(object):
 		self.communicationType = '' # XXX: CONCENTRATE ON THIS.
 
 		# RDF or media or something. 
-		self.data = '' 
+		self.data = [] # TODO: Not an appropriate store
+
+
+	# ============= Add Result ============================
+
+	def addResult(self, queryRet):
+		"""Add a query result to the intermediary."""
+		if type(queryRet) not in [list, tuple, QuerySet]:
+			if not isinstance(queryRet, Resource):
+				raise TypeError, "Query Result must be a Resource!\n"
+
+			mod = self.ModelData(queryRet)
+			self.data.append(mod)
+			return 
+
+		if type(queryRet) in [list, tuple, QuerySet]:
+			for qr in queryRet:
+				self.addResult(qr)
+
+
+	def __doAddModel(self, model):
+		"""Add the checked model to the payload."""
+		pass
+		
 
 	def addOriginHeader(self, header_or_key, value = None):
 		"""Set an origin header with object or values."""
@@ -59,5 +92,35 @@ class Intermediary(object):
 		"""Gets the RdfPayload of the current intermediary."""
 		from RdfPayload import RdfPayload
 		return RdfPayload(self)
+
+
+	# ============= Embedded: ModelWrap ===================
+
+	class ModelData(object):
+		"""Wraps a query result to include only outgoing data."""
+
+		def __init__(self, model):
+			self.appName = model.get_ontology_name()
+			self.modName = None
+			self.data = model.get_transportable()
+			self.graph = None
+
+			self.toRdf()
+
+		def toRdf(self):
+			# TODO: Temp test
+
+			ns = Namespace(self.appName)
+			graph = Graph()
+
+			node = BNode()
+			#graph.add(sub, pred, obj)
+			for k, v in self.data.iteritems():
+				prd = ns[k]
+				obj = Literal(v)
+				graph.add((node, prd, obj))
+
+			self.graph = graph.serialize()
+
 
 

@@ -43,11 +43,18 @@ class Resource(models.Model):
 		"""Return the elements that can be transported over RDF payload."""
 		return {
 			'url': self.url,
-			#'reply_to_root': self.reply_to_root,
-			#'reply_to_parent': self.reply_to_parent,
+			'reply_to_root': self.reply_to_root,
+			'reply_to_parent': self.reply_to_parent,
 			'datetime_created': self.datetime_created,
 			'datetime_edited': self.datetime_edited,
 		}
+
+	def get_ontology_name(self):
+		"""Generates the ontology name (THIS ONLY FITS SHORT-TERM OBJECTIVE!)"""
+		# TODO: Temp fix
+		name = str(type(self))
+		name = '/' + name[8:-2] + '#'
+		return name.replace('.', '/').replace('/models/', '_')
 
 	class Meta:
 		verbose_name = 'resource'
