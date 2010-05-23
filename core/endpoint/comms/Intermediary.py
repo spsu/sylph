@@ -72,17 +72,26 @@ class Intermediary(object):
 		#graph.add(sub, pred, obj)
 		classes = (models.Model, Resource, ResourceTree)
 		for k, v in data.iteritems():
-			if isinstance(v, classes):
-				self.needUrls.append((graphNum, k, v))
-				continue
+			obj = None
+
 			if k == 'url':
 				continue # already done
 
 			if not v:
 				continue # TODO: This shouldn't always be the case!
 
+			if isinstance(v, classes):
+				# FIXME: This is slow as hell. Hits the database every single 
+				# time this codepath is reached. 
+				# XXX: For now, forget performance. Work on this later...
+				#self.needUrls.append((graphNum, k, v)) 
+				#continue
+				obj = URIRef(v.url) 
+
+			if not obj:
+				obj = Literal(v)
+
 			prd = ns[k]
-			obj = Literal(v)
 			graph.add((node, prd, obj))
 
 		self.subgraphs.append(graph)
@@ -91,6 +100,18 @@ class Intermediary(object):
 		pass
 		
 
+	def __getNeededUrls(self): # XXX: For now, forget performance. 
+		urls = []
+		for graphNum, k, v in self.needUrls:
+			print k
+			print v.url
+
+
+		#for self.needUrls:
+
+		#objs = Resource.objects.get(pk__in = urls).only("url")
+
+
 	def toRdf(self):
 		self.graph = Graph()
 		ns = Namespace('/sylph/apps/posts_Post#')
@@ -98,6 +119,8 @@ class Intermediary(object):
 
 		for graph in self.subgraphs:
 			self.graph += graph
+
+		#self.__getNeededUrls() # XXX: For now, forget performance. 
 
 		return self.graph.serialize(format='n3')
 
