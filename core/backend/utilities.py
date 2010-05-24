@@ -1,7 +1,23 @@
 from django.core import management
 from django.db import connection
 
-def resetDatabase():
+from sylph.core.endpoint.models import Resource
+
+def sync_database():
+	"""Simple call to sync the database."""
+	management.call_command('syncdb', interactive=False) 
+
+def sync_empty_database():
+	"""Calls sync database if the Resource relation is found not to exist."""
+	# This is a lame attempt at catching an empty database. 
+	try:
+		r = len(Resource.objects.all())
+
+	except Exception: # XXX: Not exactly sure where 'ProgrammingError' is from.
+		print "Models not found, syncing database..."
+		sync_database()
+
+def reset_database():
 	"""Resets the django database, dropping and re-adding each table."""
 	# CODE FROM 
 	# http://groups.google.com/group/django-users/browse_thread/
@@ -20,3 +36,5 @@ def resetDatabase():
 				raise e
 
 	management.call_command('syncdb', interactive=False) 
+
+

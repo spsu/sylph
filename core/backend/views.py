@@ -4,13 +4,19 @@ from django.contrib.auth import authenticate, login, logout
 from django import forms
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-import sylph.test
 
-from utilities import resetDatabase
+import sylph.test
+from sylph.core.endpoint.models import Resource
+
+from utilities import reset_database, sync_empty_database
 from UserAccount import UserAccount
 
 def index(request):
 	"""Just supply a list of tasks."""
+
+	# This is a lame attempt at catching an empty database. 
+	sync_empty_database()
+
 	return render_to_response('core/backend/index.html',
 							  context_instance=RequestContext(request))
 def test(request):
@@ -24,7 +30,7 @@ def reset(request):
 	rebuilt."""
 
 	if request.method == 'POST':
-		resetDatabase()
+		reset_database()
 		return HttpResponseRedirect('/')
 
 	return render_to_response('core/backend/reset-database.html',

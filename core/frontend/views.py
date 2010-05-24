@@ -1,13 +1,19 @@
 # "Frontend" Views
 # Whatever that means in terms of short-term architecture...
+
 from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-# XXX: This is just prototyping...
+from sylph.core.endpoint.models import Resource
+from sylph.core.backend.utilities import sync_empty_database
 
 def index(request):
-	# TODO: Perhaps make this report a TODO list!
+	"""Index view for Sylph. Not much here"""
+
+	# This is a lame attempt at catching an empty database. 
+	sync_empty_database()
+
 	return render_to_response('index.html', 
 							  context_instance=RequestContext(request))
 
