@@ -1,0 +1,21 @@
+{# <!-- Returns different CSS based on which port Sylph is running on. --> #}
+
+{% ifequal settings.PORT 8000 %}
+		body { background-color: #fff; }
+{% else %}
+	{% ifequal settings.PORT 7000 %}
+			body { background-color: #eef; }
+	{% else %}
+		{% ifequal settings.PORT 6000 %}
+				body { background-color: #efe; }
+		{% else %}
+			{% ifequal settings.PORT 9000 %}
+					body { background-color: #fee; }
+			{% else %}
+					body { background-color: #ccc; }
+			{% endifequal %}
+		{% endifequal %}
+	{% endifequal %}
+{% endifequal %}
+
+

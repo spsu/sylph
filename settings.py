@@ -22,6 +22,8 @@ SITE_ID = 1
 
 USE_I18N = False
 
+INTERNAL_IPS = ('127.0.0.1')
+
 TEMPLATE_LOADERS = (
 	'django.template.loaders.filesystem.load_template_source', 
 	'django.template.loaders.app_directories.load_template_source',
@@ -33,6 +35,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'django.core.context_processors.i18n',
 	'django.core.context_processors.media',
 	#'django.contrib.messages.context_processors.messages',
+
+	# Custom context processors
+	'sylph.core.backend.utils.context_processors.settings',
+	#'sylph.core.backend.utils.context_processors.ip_address',
 )
 
 
@@ -104,6 +110,8 @@ def get_db(prefix = "sylph", port = None):
 		return prefix
 	return prefix + str(port)
 
+
+PORT = get_port() # XXX: Temporary for templates
 
 # ============ IMPORT SPECIFIC CONFIGS ==========
 		

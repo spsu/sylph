@@ -3,8 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>{% block title %}NO TITLE{% endblock %}</title>
-  <style>{% block extracss %}{% endblock %}</style>
   <link rel="stylesheet" href="/static/style.css" type="text/css" />
+  <style>
+	{% include "instance_css.html" %}
+	{% block extracss %}{% endblock %}
+  </style>
 </head>
   <body>
     <div id="main">
