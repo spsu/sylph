@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
-
+from django.conf import settings
 from django.contrib import admin
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
@@ -19,3 +20,12 @@ urlpatterns = patterns('',
 	(r'^node/', include('sylph.core.endpoint.urls')),
 	(r'^system/', include('sylph.core.backend.urls')), # Manage the system
 )
+
+# Static media serving (ONLY IN DEVELOPMENT!)
+if settings.DEBUG:
+	urlpatterns += patterns('',
+		(r'^static/(?P<path>.*)$',
+			'django.views.static.serve', 
+			{'document_root': settings.MEDIA_ROOT}),
+	)
+

@@ -6,7 +6,7 @@ import sys
 ROOT_URLCONF = 'sylph.urls'
 
 TEMPLATE_DIRS = (os.path.join(os.path.abspath('.'), 'templates'),)
-MEDIA_ROOT = os.path.join(os.path.abspath('.'), 'public')
+MEDIA_ROOT = os.path.join(os.path.abspath('.'), 'public_static')
 
 APPEND_SLASH = True
 LOGIN_URL = '/system/login/'
