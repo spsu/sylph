@@ -58,8 +58,8 @@ INSTALLED_APPS = (
 	'django.contrib.humanize',
 
 	'sylph.core.endpoint',
-	#'sylph.system.backend',
-	#'sylph.system.frontend',
+	'sylph.core.backend',
+	#'sylph.core.frontend',
 
 	'sylph.apps.posts',
 	#'sylph.apps.social',

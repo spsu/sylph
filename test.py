@@ -9,10 +9,27 @@ from django.db import models
 from sylph.core.endpoint.models import Resource
 from sylph.apps.posts.models import Post
 from sylph.core.endpoint.comms.Intermediary import *
+from sylph.core.backend.models import BackendConfig
+from sylph.core.backend.utils.Configs import Configs
 
 # Quick code to test.
 
 def test(request):
+	ret = ""
+
+	configs = Configs()
+
+	if 'test' in configs:
+		print "Test in configs"
+
+	configs['test'] = 'asdf'
+	configs.save()
+
+	return HttpResponse(ret, mimetype='text/plain')
+	
+
+
+def test2(request):
 	ret = "asdf\nasdf"
 
 	#print Post.get_transportable_fields()
