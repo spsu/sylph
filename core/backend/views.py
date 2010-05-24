@@ -8,7 +8,7 @@ from django.template import RequestContext
 import sylph.test
 from sylph.core.endpoint.models import Resource
 
-from utilities import reset_database, sync_empty_database
+from utils.database import reset_database, sync_empty_database # Relative import
 from UserAccount import UserAccount
 
 def index(request):

@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from sylph.core.endpoint.models import Resource
-from sylph.core.backend.utilities import sync_empty_database
+from sylph.core.backend.utils.database import sync_empty_database
 
 def index(request):
 	"""Index view for Sylph. Not much here"""

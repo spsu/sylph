@@ -3,9 +3,17 @@ from django.db import connection
 
 from sylph.core.endpoint.models import Resource
 
+# TODO: perhaps mv utilities.py db_utilities.py or similar..
+
+
+# ============ Sync Database ====================
+
 def sync_database():
 	"""Simple call to sync the database."""
 	management.call_command('syncdb', interactive=False) 
+
+
+# ============ Sync On Empty Schema =============
 
 def sync_empty_database():
 	"""Calls sync database if the Resource relation is found not to exist."""
@@ -17,14 +25,17 @@ def sync_empty_database():
 		print "Models not found, syncing database..."
 		sync_database()
 
+
+# ============ Drop/Reset Database ==============
+
 def reset_database():
 	"""Resets the django database, dropping and re-adding each table."""
-	# CODE FROM 
+	# MODIFIED FROM CODE FOUND AT:
 	# http://groups.google.com/group/django-users/browse_thread/
 	# thread/456539bfad0c8a93/f7f57f3cc75eec5b?lnk=raot
 
 	cursor = connection.cursor()
-	saveTables = [] # Tables to save
+	saveTables = [] # List of tables to spare execution
 
 	currentTables = connection.introspection.table_names()
 
