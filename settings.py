@@ -1,17 +1,19 @@
 # Django settings for sylph project.
 
 import os
+import sys
 
 ROOT_URLCONF = 'sylph.urls'
 
 TEMPLATE_DIRS = (os.path.join(os.path.abspath('.'), 'templates'),)
-
 MEDIA_ROOT = os.path.join(os.path.abspath('.'), 'public')
-MEDIA_URL = ''
-ADMIN_MEDIA_PREFIX = '/media/'
+
+APPEND_SLASH = True
 LOGIN_URL = '/system/login/'
 LOGIN_REDIRECT_URL = '/'
-APPEND_SLASH = True
+
+MEDIA_URL = '' # XXX: Overridden in settings_local.py
+ADMIN_MEDIA_PREFIX = '/media/'
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -57,6 +59,54 @@ INSTALLED_APPS = (
 	#'sylph.apps.social',
 )
 
+# ============ VIRTUALIZATION HELPERS ===========
+
+"""
+These functions make it easy to run multiple instances of Sylph to test the 
+communication abilities of the code. They allow binding of different URLs and 
+database schemas depending on which port the server is told to run on, eg:
+
+	python manage.py runserver [port]
+
+Port 8000 is considered the default.
+
+"""
+
+def get_port():
+	"""Gets the port that python runserver was told to run on."""
+	# FIXME: Very crude, only works if ONE argument is given!
+	if len(sys.argv) < 3:
+		return 8000
+	return int(sys.argv[2])
+
+def get_url(path = ""):
+	"""Returns the URL with the port the server is running on, optionally with a
+	path segment appended."""
+	# FIXME: Not capable of binding different IP addresses!
+	port = get_port()
+	p = 'http://127.0.0.1%s/' % ("" if port == 80 else ":"+str(port))
+	if path[0] == '/':
+		p += path[1:]
+	else:
+		p += path
+
+	if path[-1] != '/':
+		p += '/'
+
+	return p
+
+def get_db(prefix = "sylph", port = None):
+	"""Return the database name that the running instance will bind to. This
+	varies based on the port django is told to run on."""
+	if not port:
+		port = get_port()
+	if port == 8000:
+		return prefix
+	return prefix + str(port)
+
+
+# ============ IMPORT SPECIFIC CONFIGS ==========
+		
 try:
     from settings_local import *
 except ImportError:
