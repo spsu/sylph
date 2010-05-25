@@ -1,7 +1,11 @@
 from django.db import models
 import datetime
 
-# Models for the endpoints
+"""
+	'Endpoint Models' describe the data that is necessary for the protocol to
+	function at all. These include some of the most fundamental datatypes in
+	the system.
+"""
 
 # ============= Resource Manager ================
 	
@@ -13,9 +17,39 @@ class ResourceManager(models.Manager):
 # ============ Resource =========================
 
 class Resource(models.Model):
-	"""Models the most basic type of resource.
-	You may want to subclass ResourceList or ResourceTree if the needs are more
-	complex."""
+	"""
+		The _Resource_ is the most fundamental datatype of the early and 
+		prototypical Sylph architecture. It is absolutely key that we all agree
+		on this and establish it as such. 
+
+			>> Understanding the Resource is understanding Sylph. <<
+
+		Resources in a sense represent 'network data files' that are uniquely
+		identified by a URL and can be shared, updated, looked up at a cache if
+		they go missing, etc. 
+
+		Resources are built upon in an OO-hierarchy, adding the features 
+		and fields required by the type of data we are modeling. 
+
+		Currently, a model may be one of these types:
+
+			* Resource -- A single "file" that doesn't reference other resources
+						  unless it is built upon.
+
+				* TreeResource -- A network "file" that can reference a root 
+								  document as well as an immediate parent. Think
+								  of post or email threads as being a use case
+								  that would be well-represented here.
+
+
+			> More resource-types will likely be added as need is found.
+
+		Some of the data modeled in the system will NOT be a resource. Such an
+		example is the 1:n email relation. Email addresses do not constitute 
+		data that changes. They are immutable and will be replaced if changed,
+		not 'edited'.
+
+	"""
 
 	objects = ResourceManager()
 
@@ -72,7 +106,8 @@ class Resource(models.Model):
 	@classmethod
 	def get_transportable_fields(cls):
 		"""Return a list of the names of the fields that can be transported."""
-		
+
+		# TODO: Won't multiple-inheritance be an issue?
 		if hasattr(cls.__bases__[0], 'rdf_fields'):
 			fields = cls.__bases__[0].get_transportable_fields()
 			for field in cls.rdf_fields:

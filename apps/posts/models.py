@@ -5,29 +5,34 @@ from markdown2 import markdown
 class Post(ResourceTree):
 	"""Post resources. Represent articles, posts, replies, etc."""
 
+	# Title of the post. Required if a 'first' post.
 	title = models.CharField(
 				max_length=140, 
-				blank=True, # Programatically, first posts can't be false
+				blank=True, # XXX: Programatically, first posts can't be false
 				null=False 
 	)
 
+	# The person who created the post. Can be null if anonymous or unknown.
+	# TODO: Differentiate between 'anonymous' and 'unknown'. Or maybe not?
+	# Maybe it should just be under the umbrella 'unknown'.
+	created_by = models.ForeignKey('social.User', null=True)
+
+	# Contents of the post
 	contents = models.TextField(blank=True)
 
 	# Markup type choices. 
-	MARKUP_TYPES = (
-		('X', 'Unknown'),
+	MARKUP_TYPE_CHOICES = (
 		('P', 'Plaintext'),
 		('M', 'Markdown'),
-		('W', 'Wiki markup'),
-		('H', 'HTML (lite)'), # Any HTML will be filtered extensively. 
+		#('W', 'Wiki markup'),
+		('H', 'HTML (lite)'), # XXX: HTML must be filtered extensively. 
+		('X', 'Unknown'),
 	)
-	#markup_type = models.CharField(max_length=1, choices=MARKUP_TYPES)
+	markup_type = models.CharField(max_length=1, choices=MARKUP_TYPE_CHOICES, 
+								   null=False, default='M')
 
 	# Cannot send marked-up contents
 	contents_markup_cache = models.TextField(blank=True)
-
-
-	#access_uri = models.SlugField()
 
 	def get_absolute_url(self):
 		return "/posts/view/%i/" % self.id
@@ -45,29 +50,15 @@ class Post(ResourceTree):
 
 	def contents_markdown(self):
 		"""View a markdown-version of the contents."""
+		if self.markup_type in ['P', 'X']:
+			return self.contents
+
 		if not self.contents_markup_cache:
 			markup = markdown(self.contents) # TODO: More markup methods
 			self.contents_markup_cache = markup
 			self.save()
 
 		return self.contents_markup_cache
-
-
-	# ============= RDF Serilization Helpers ==============
-
-	def get_transportable(self):
-		"""Return the elements that can be transported over RDF payload."""
-		ret = super(Post, self).get_transportable()
-		cur = {
-			'title': self.title,
-			'contents': self.contents,
-		}
-		for k in cur.keys():
-			ret[k] = cur[k]
-
-		return ret
-
-
 
 	# ============= Model Meta ============================
 
