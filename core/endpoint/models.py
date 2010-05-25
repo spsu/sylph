@@ -57,9 +57,13 @@ class Resource(models.Model):
 	# It is unique, and this can be enforced by ensuring only the producer can 
 	# make a certain subset of URLs at their own domain / path. 
 	url = models.URLField(max_length=200, unique=True)
+
+	# Describes the ultimate datatype of the resource. In OO perspectives, this
+	# is the most child type.
+	resource_type = models.ForeignKey('ResourceType')
 	
 	# Delete or refresh sementics.
-	# XXX: Do I need a keep or expire flag?
+	# TODO: Do I need a keep or expire flag?
 	# Maybe the semantics of this flag can differ depending on type?
 	# TODO: Can this be inferred from elsewhere in the system?
 	stale = models.PositiveIntegerField(blank=True, default=0) 
@@ -75,7 +79,7 @@ class Resource(models.Model):
 	datetime_retrieved = models.DateTimeField(null=True, blank=True) 
 	datetime_read = models.DateTimeField(null=True, blank=True) 
 
-	# XXX: Is this proper?
+	# TODO: Is this proper? (Should the type itself be responsible?)
 	# A non-tranportable cache of reply count.
 	# reply_count_cache = models.PositiveIntegerField(blank=True, default=0) 
 
@@ -191,6 +195,20 @@ class ResourceTree(Resource):
 
 		return ret
 
+# ============ ResourceTypes ====================
+
+class ResourceType(models.Model):
+
+	"""Represents the resource types installed in the system."""
+
+	key
+
+	name
+
+	app
+
+	description
+	
 
 # ============ Node =============================
 
