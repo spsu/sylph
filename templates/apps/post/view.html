@@ -5,9 +5,9 @@
 {%block content %}
 	{% for post in posts %}
 		{% if forloop.first %}
-			<h1><a href="/posts/">Index</a> &gt; {{ post.title }}</h1>
+			<h1><a href="/post/">Index</a> &gt; {{ post.title }}</h1>
 			<div class="buttons">
-				<a href="/posts/reply/{{ post.pk }}/" class="button">Reply to Post</a>
+				<a href="/post/reply/{{ post.pk }}/" class="button">Reply to Post</a>
 			</div>
 		{% endif %}
 

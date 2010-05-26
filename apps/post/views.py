@@ -15,7 +15,7 @@ import hashlib
 
 def indexParentless(request):
 	posts = Post.objects.filter(reply_to_root__isnull = True)
-	return render_to_response('apps/posts/index.html', {
+	return render_to_response('apps/post/index.html', {
 									'posts':	posts,
 							}, 
 							context_instance=RequestContext(request),
@@ -26,7 +26,7 @@ def indexParentless(request):
 
 def indexAll(request):
 	posts = Post.objects.all()
-	return render_to_response('apps/posts/index.html', {
+	return render_to_response('apps/post/index.html', {
 									'posts':	posts,
 							}, 
 							context_instance=RequestContext(request),
@@ -55,15 +55,15 @@ def createPost(request):
 			post.url = 'http://temp/post/' + \
 						hashlib.md5(str(datetime.today())).hexdigest() 
 			post.save()
-			return HttpResponseRedirect('/posts/')
+			return HttpResponseRedirect('/post/')
 
-		return render_to_response('apps/posts/create.html',
+		return render_to_response('apps/post/create.html',
 								 	{'form': form}, 
 									context_instance=RequestContext(request))
 
 	else:
 		form = NewPostForm()
-		return render_to_response('apps/posts/create.html',
+		return render_to_response('apps/post/create.html',
 								 	{'form': form}, 
 									context_instance=RequestContext(request))
 
@@ -80,7 +80,7 @@ def viewPost(request, postId):
 
 	print posts
 
-	return render_to_response('apps/posts/view.html', {
+	return render_to_response('apps/post/view.html', {
 									'posts': posts,
 							}, 
 							context_instance=RequestContext(request),
@@ -122,15 +122,15 @@ def replyPost(request, postId):
 			post.url = 'http://temp/post/' + \
 						hashlib.md5(str(datetime.today())).hexdigest() 
 			post.save()
-			return HttpResponseRedirect('/posts/')
+			return HttpResponseRedirect('/post/')
 
-		return render_to_response('apps/posts/reply.html',
+		return render_to_response('apps/post/reply.html',
 								 	{'form': form}, 
 									context_instance=RequestContext(request))
 
 	else:
 		form = NewReplyForm()
-		return render_to_response('apps/posts/reply.html',
+		return render_to_response('apps/post/reply.html',
 								 	{'form': form}, 
 									context_instance=RequestContext(request))
 

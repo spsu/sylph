@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 	#(r'main/', include('sylph.system.frontend.urls')),
 
 	# Application level
-	(r'^posts/', include('sylph.apps.posts.urls')),
+	(r'^post/', include('sylph.apps.post.urls')),
 	#(r'^social/', include('sylph.apps.social.urls')),
 
 	# System Level

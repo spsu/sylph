@@ -75,7 +75,7 @@ INSTALLED_APPS = (
 	'sylph.core.backend',
 	#'sylph.core.frontend',
 
-	'sylph.apps.posts',
+	'sylph.apps.post',
 	'sylph.apps.blog',
 	#'sylph.apps.social',
 )

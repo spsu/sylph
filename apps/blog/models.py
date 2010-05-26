@@ -1,5 +1,5 @@
 from django.db import models
-from sylph.apps.posts import Post
+from sylph.apps.post import Post
 
 class BlogItem(Post):
 	"""
