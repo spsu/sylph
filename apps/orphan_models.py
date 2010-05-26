@@ -1,4 +1,4 @@
-# ==================== core.endpoint.models ====================================
+# ==================== core.endpoint.models ===================================
 
 # TODO: UserNodes and MachineNodes
 # TODO: FollowerNodes and FollowingNodes
@@ -65,7 +65,7 @@ class Node(models.Model):
 
 
 
-#===============================================================================
+#==============================================================================
 
 # XXX/TODO: This is a list of orphaned models. 
 

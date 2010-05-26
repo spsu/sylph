@@ -1,5 +1,6 @@
 from django.db import models
 from sylph.apps.post import Post
+from sylph.core.endpoint import Resource
 
 class BlogItem(Post):
 	"""
@@ -35,5 +36,5 @@ class BlogItem(Post):
 
 
 # TODO: Should BlogResponse be created?
-	
-	
+
+

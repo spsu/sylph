@@ -79,3 +79,24 @@ class Post(ResourceTree):
 	def __unicode__(self):
 		return self.title
 
+
+class PostReferences(models.Model):
+	"""
+	NOT A RESOURCE
+
+	Aggregate the links to other resources, either computationally via
+	the assistance of a backend job, or delivered along with a payload, 
+	eg: <references>URI</references>.
+
+	This allows fast querying and graph search (theoretically).\
+
+	Nomenclature (work in progress):
+		* A _link_ is an html/web anchor.
+		* A _reference_ is a Sylph connection between resources. 
+	"""
+	
+	post = models.ForeignKey('Post')
+	linked_resource = models.ForeignKey('endpoint.Resource')
+
+	# TODO: dynamic = models.CharField() # explain the semantics of the linkage
+
