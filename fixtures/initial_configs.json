@@ -1,0 +1,13 @@
+[
+{
+  "model": "backend.BackendConfig",
+  "pk": 1,
+  "fields": {
+	"key": "installation_status",
+	"description": "Integer representing state progression of the install",
+	"datatype": "I",
+	"value": "0",
+	"value_large": ""
+  }
+}
+]

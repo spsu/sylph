@@ -96,7 +96,10 @@ def get_port():
 	# FIXME: Very crude, only works if ONE argument is given!
 	if len(sys.argv) < 3:
 		return 8000
-	return int(sys.argv[2])
+	try:
+		return int(sys.argv[2])
+	except ValueError:
+		return 8000
 
 def get_url(path = ""):
 	"""Returns the URL with the port the server is running on, optionally with a

@@ -95,7 +95,7 @@ class PostReferences(models.Model):
 		* A _reference_ is a Sylph connection between resources. 
 	"""
 	
-	post = models.ForeignKey('Post')
+	post = models.ForeignKey('Post', related_name='set_post')
 	linked_resource = models.ForeignKey('endpoint.Resource')
 
 	# TODO: dynamic = models.CharField() # explain the semantics of the linkage

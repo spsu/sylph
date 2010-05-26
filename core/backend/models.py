@@ -12,8 +12,12 @@ class BackendConfig(models.Model):
 	# Key 
 	key = models.CharField(max_length=30, blank=False, null=False)
 
-	# Datatype
+	# Human-readable description of the config value.
+	description = models.CharField(max_length=255, blank=True, null=False)
+
+	# Datatype to handle as / cast to
 	DATATYPES = (
+		('B', 'Boolean'),
 		('I', 'Integer'),
 		('F', 'Float'),
 		('S', 'String'),
@@ -27,8 +31,4 @@ class BackendConfig(models.Model):
 
 	# Large value (eg. serialized Python objects, etc.) Usually BLANK. 
 	value_large = models.TextField(blank=True, null=False)
-
-	# Human-readable description of the config value.
-	description = models.CharField(max_length=255, blank=True, null=False)
-
 
