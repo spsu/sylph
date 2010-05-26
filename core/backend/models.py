@@ -12,6 +12,16 @@ class BackendConfig(models.Model):
 	# Key 
 	key = models.CharField(max_length=30, blank=False, null=False)
 
+	# Datatype
+	DATATYPES = (
+		('I', 'Integer'),
+		('F', 'Float'),
+		('S', 'String'),
+		('H', 'String (with HTML)'),
+		('P', 'Python'), # XXX: Be careful... 
+	)
+	datatype = models.CharField(max_length=1, choices=DATATYPES)
+
 	# Value
 	value = models.CharField(max_length=255, blank=True, null=False)
 

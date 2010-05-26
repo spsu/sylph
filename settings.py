@@ -3,6 +3,20 @@
 import os
 import sys
 
+# ================= Version Information ===================
+"""
+	Both the software and Sylph protocol (which multiple softwares implement)
+	utilize a similar versioning scheme:
+
+		major.minor.bugfix.month.day (as MM and DD respectively)
+"""
+
+SOFTWARE_NAME = 'Sylph.py Client'
+SOFTWARE_VERSION = '0.1.0.05.25'
+PROTOCOL_VERSION = '0.1.0.05.25' 
+
+# ================= Common Configuration ==================
+
 ROOT_URLCONF = 'sylph.urls'
 
 TEMPLATE_DIRS = (os.path.join(os.path.abspath('.'), 'templates'),)
@@ -65,17 +79,15 @@ INSTALLED_APPS = (
 	#'sylph.apps.social',
 )
 
-# ============ VIRTUALIZATION HELPERS ===========
-
+# ================= Virtualization Helpers ================
 """
-These functions make it easy to run multiple instances of Sylph to test the 
-communication abilities of the code. They allow binding of different URLs and 
-database schemas depending on which port the server is told to run on, eg:
+	These functions make it easy to run multiple instances of Sylph to test the 
+	communication abilities of the code. They allow binding of different URLs 
+	and database schemas depending on which port the server is told to run on:
 
-	python manage.py runserver [port]
+		python manage.py runserver [port]
 
-Port 8000 is considered the default.
-
+	Port 8000 is considered the default.
 """
 
 def get_port():
@@ -113,7 +125,7 @@ def get_db(prefix = "sylph", port = None):
 
 PORT = get_port() # XXX: Temporary for templates
 
-# ============ IMPORT SPECIFIC CONFIGS ==========
+# ================= Import Specific Configs ===============
 		
 try:
     from settings_local import *
