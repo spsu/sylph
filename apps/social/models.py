@@ -1,17 +1,18 @@
+from django.db import models
+from sylph.core.endpoint.models import Resource
 
-
-class User(endpoint.Resource):
+class User(Resource):
 	"""
-		Users fit the requirement for being a resource:
-			* They can be shared with you
-			* They can be updated by the owner
-			* A stub may exist in our system until we query the owner.
+	User resources represent people in the graph. They support being
+	largely incomplete as data is missing by default. 
 
-		User resources. Represent people in the graph.
-
+	Users fit the requirement for being a resource:
+		* They can be shared with you
+		* They can be updated by the owner
+		* A stub may exist in our system until we query the owner.
 	"""
 
-	# Username of the person (MANDATORY!)
+	# Username of the person (The only mandatory field!)
 	username = models.CharField(blank=False, null=False, max_length=30)
 
 	# Name of the person (Optional)
@@ -30,28 +31,29 @@ class User(endpoint.Resource):
 	title = models.CharField(max_length=1, choices=TITLE_CHOICES)
 	suffix = models.CharField(max_length=10, null=False, blank=True)
 
-	# Photo the user chooses for their profile
-	photo = models.ForeignKey('images.Photo')
+	# TODO: Photo the user chooses for their profile
+	#photo = models.ForeignKey('images.Photo')
 
-	# Avatar the user chooses for their posts
-	avatar = models.ForeignKey('images.Avatar')
+	# TODO: Avatar the user chooses for their posts
+	#avatar = models.ForeignKey('images.Avatar')
 
-
-
-	node = models.ForeignKey('endpoint.Node')
+	# TODO: Node the user owns
+	#node = models.ForeignKey('endpoint.Node')
 
 class UserEmail(models.Model):
-	"""Emails are not resources, just a 1:m field for users."""
+	"""Emails are not resources, this is just a 1:m field for users."""
 
 	# Owner of the email address.
 	owner = models.ForeignKey('User')
 
-	# TODO: organization = (as opposed to person)
-	# OR perhaps just use a different table strictly for organizations.
+	# Email account. Uniqueness not enforced, just in case people report false
+	# information. 
+	email = models.EmailField(unique=False, null=False, blank=False)
 
-	# Email account
-	email = models.EmailField(unique=True, null=False, blank=False)
-
-	# Let the user describe the email inbox if they choose
+	# Let the user briefly describe the email inbox if they choose
 	description = models.CharField(max_length=30, blank=True)
+
+	# TODO: organization = models.ForeignKey('Org') (as opposed to User)
+	# OR perhaps just use a different table strictly for organizations!
+
 

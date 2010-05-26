@@ -77,7 +77,7 @@ INSTALLED_APPS = (
 
 	'sylph.apps.post',
 	'sylph.apps.blog',
-	#'sylph.apps.social',
+	'sylph.apps.social',
 )
 
 # ================= Virtualization Helpers ================
