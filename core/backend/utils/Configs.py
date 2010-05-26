@@ -42,6 +42,7 @@ class Configs(object):
 
 		def set_val(self, key, val):
 			if key in self.configs:
+				conf = self.configs[key]
 				if len(val) <= 255:
 					conf.value = val
 					conf.value_large = ""

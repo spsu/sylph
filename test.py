@@ -7,10 +7,10 @@ from django.template import RequestContext
 from django.db import models
 
 from sylph.core.endpoint.models import Resource
-from sylph.apps.posts.models import Post
 from sylph.core.endpoint.comms.Intermediary import *
 from sylph.core.backend.models import BackendConfig
 from sylph.core.backend.utils.Configs import Configs
+from sylph.apps.post.models import Post
 
 # Quick code to test.
 
