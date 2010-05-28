@@ -17,11 +17,13 @@ class Configs(object):
 
 	# ============= Public Interface ======================
 
-	def __init__(self):
+	def __init__(self, do_reload=False):
 		"""Inner class will only be instantiated once."""
 		if not Configs.__INSTANCE:
 			Configs.__INSTANCE = Configs.Container() 
 
+		if do_reload:
+			Configs.__INSTANCE.reload_from_db()
 
 	# ============= Acessors & Mutators ===================
 
@@ -71,6 +73,10 @@ class Configs(object):
 	def delete(self, key):
 		"""Delete a config by key."""
 		Configs.__INSTANCE.delete(key)
+
+	def reload_from_db(self):
+		"""Reload the configs from the database."""
+		Configs.__INSTANCE.reload()
 
 	def __str__(self):
 		return str(Configs.__INSTANCE)
@@ -180,6 +186,12 @@ class Configs(object):
 			for conf in self.configs.values():
 				conf.save() # SLOW!
 
+		def reload_from_db(self):
+			"""Reload the configs from the database."""		
+			self.configs = {}
+			for config in BackendConfig.objects.all():
+				self.configs[config.key] = config
+
 		def delete(self, key):
 			if key not in self.configs:
 				raise KeyError, "Config does not exist: %s." % key
@@ -188,5 +200,8 @@ class Configs(object):
 			conf.delete()
 
 		def __str__(self):
-			return str(self.configs)
+			ret = {}
+			for k, v in self.configs.iteritems():
+				ret[k] = self.get_val(k)
+			return str(ret)
 

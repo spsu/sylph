@@ -26,7 +26,7 @@ APPEND_SLASH = True
 LOGIN_URL = '/system/login/'
 LOGIN_REDIRECT_URL = '/'
 
-MEDIA_URL = '' # XXX: Overridden in settings_local.py
+MEDIA_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/media/'
 
 TIME_ZONE = 'America/New_York'
@@ -56,11 +56,14 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 
-
+# Middleware is applied in top-down order in request, reverse in response
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
+	# Custom middlware
+	'sylph.core.backend.middleware.EnsureInstalledMiddleware',
 )
 
 INSTALLED_APPS = (

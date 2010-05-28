@@ -15,6 +15,9 @@ from utils.database import reset_database, sync_empty_database
 from utils.Configs import Configs
 
 from UserAccount import UserAccount
+from sylph.utils.file import touch
+
+import time
 
 def index(request):
 	"""Just supply a list of tasks."""
@@ -36,6 +39,7 @@ def reset(request):
 
 	if request.method == 'POST':
 		reset_database()
+
 		return HttpResponseRedirect('/')
 
 	return render_to_response('core/backend/reset-database.html',
@@ -158,6 +162,9 @@ def install_reset(request):
 
 	if request.method == 'POST':
 		reset_database()
+
+		# Wait, because we'll just redirect here if the database is slow...
+		time.sleep(3) # TODO XXX XXX XXX: Is this dangerous?
 		return HttpResponseRedirect('/')
 
 	return render_to_response('core/backend/install/reset.html',

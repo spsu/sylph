@@ -17,9 +17,8 @@ def is_installed():
 	of the system as well as login credentials. 
 	"""	
 	try:
-		configs = Configs()
+		configs = Configs(do_reload=True)
 		if configs.installation_status == INSTALLED:
-			print "INSTALLLLLLLED" # TODO XXX REMOVE DBG
 			return True
 		return False
 
