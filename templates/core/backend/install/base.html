@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>{% block title %}NO TITLE{% endblock %}</title>
+  <link rel="stylesheet" href="/static/style.css" type="text/css" />
+  <style>
+	{% include "instance_css.html" %}
+	{% block extracss %}{% endblock %}
+  </style>
+</head>
+  <body>
+    <div id="main">
+		<div id="topbar">
+			{% include "header.html" %}
+		</div>
+		<div id="content">
+			{% block content %}<h1>Main Content Goes Here</h1>{% endblock %}
+		</div>
+		<div id="aftercontent"></div>
+		<div id="footer">
+			{% block footer %}{% endblock %}
+		</div>
+    </div>
+  </body>
+</html>

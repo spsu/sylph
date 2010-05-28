@@ -8,6 +8,7 @@ from django.template import RequestContext
 import sylph.test
 from sylph.core.endpoint.models import Resource
 
+from utils.install_state import is_installed
 from utils.database import reset_database, sync_empty_database # Relative import
 from UserAccount import UserAccount
 
@@ -74,6 +75,32 @@ def signup(request):
 		return render_to_response('core/backend/create-account.html',
 								 	{'form': form},
 									context_instance=RequestContext(request))
+
+
+# ============ Installation ===============================
+
+def install_main(request):
+	"""	This view constitutes the installer process for Sylph."""
+	if request.method == 'POST':
+		pass
+	return render_to_response('core/backend/install/index.html',
+							  context_instance=RequestContext(request))
+
+
+def install_reset(request):	
+	"""Reset everything during the install process."""
+	if is_installed():
+		raise Exception, "Cannot reset the database with installer."
+
+	if request.method == 'POST':
+		reset_database()
+		return HttpResponseRedirect('/')
+
+	return render_to_response('core/backend/install/reset.html',
+							  context_instance=RequestContext(request))
+
+
+# ============ Misc =======================================
 
 # /system/login
 def loginView(request):

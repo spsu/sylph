@@ -68,8 +68,9 @@ class Resource(models.Model):
 	Describes the ultimate datatype of the resource. In OO 
 	perspectives, this is the most child type.
 	"""
-	resource_type = models.ForeignKey('ResourceType')
-	
+	#resource_type = models.ForeignKey('ResourceType')
+	resource_type = models.CharField(max_length=30, null=False, blank=False,
+									 default='TODO') # TODO
 	# Delete or refresh sementics.
 	# TODO: Do I need a keep or expire flag?
 	# Maybe the semantics of this flag can differ depending on type?

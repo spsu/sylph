@@ -1,1 +1,8 @@
-Should we make PK 1 in the user table the Sylph user?
+[{
+	"model": "social.User",
+	"pk": 1,
+	"fields": {
+		"uri": "http://sylph/new-user/",
+		"username": "new user"
+	}
+}]

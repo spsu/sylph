@@ -102,8 +102,8 @@ def get_port():
 		return 8000
 
 def get_url(path = ""):
-	"""Returns the URL with the port the server is running on, optionally with a
-	path segment appended."""
+	"""Returns the URL with the port the server is running on, optionally with 
+	a path segment appended."""
 	# FIXME: Not capable of binding different IP addresses!
 	port = get_port()
 	p = 'http://127.0.0.1%s/' % ("" if port == 80 else ":"+str(port))

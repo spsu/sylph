@@ -25,8 +25,9 @@ class User(Resource):
 		('B', 'Ms.'),
 		('C', 'Mrs.'),
 		('D', 'Dr.'),
-		('S', 'Sir'),
+		('S', 'Sir.'),
 		('H', 'Hon.'),
+		('R', 'Rev.'),
 	)
 	title = models.CharField(max_length=1, choices=TITLE_CHOICES)
 	suffix = models.CharField(max_length=10, null=False, blank=True)
