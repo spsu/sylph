@@ -5,6 +5,7 @@ from django.db import models
 
 # ============ Backend Config ===================
 
+# TODO: Rename 'SystemConfig'
 class BackendConfig(models.Model):
 	"""Configuration options for the Sylph instance.
 	Configurations can be used in a wide variety of circumstances."""
@@ -16,15 +17,15 @@ class BackendConfig(models.Model):
 	description = models.CharField(max_length=255, blank=True, null=False)
 
 	# Datatype to handle as / cast to
-	DATATYPES = (
+	DATATYPE_CHOICES = (
 		('B', 'Boolean'),
 		('I', 'Integer'),
 		('F', 'Float'),
 		('S', 'String'),
-		('H', 'String (with HTML)'),
-		('P', 'Python'), # XXX: Be careful... 
+		#('H', 'String (with HTML)'),
+		#('P', 'Python'), # XXX: Be careful... 
 	)
-	datatype = models.CharField(max_length=1, choices=DATATYPES)
+	datatype = models.CharField(max_length=1, choices=DATATYPE_CHOICES)
 
 	# Value
 	value = models.CharField(max_length=255, blank=True, null=False)

@@ -1,7 +1,4 @@
-// Initial Configuration
-
-[
-{
+[{
   "model": "backend.BackendConfig",
   "pk": 1,
   "fields": {
@@ -11,5 +8,4 @@
 	"value": "0",
 	"value_large": ""
   }
-}
-]
+}]

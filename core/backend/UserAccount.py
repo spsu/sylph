@@ -25,12 +25,12 @@ class UserAccount(object):
 		return False
 
 	@classmethod
-	def create(cls, username, password, email = 'email@example.com'):
+	def create(cls, username, password):
 		"""Create the initial user account. This can only be done once."""
 		if cls.exists():
 			return False
 
-		user = User.objects.create_user(username, email, password)
+		user = User.objects.create_user(username, email, 'noemail@noemail.com')
 		user.is_staff = True
 		user.save()
 

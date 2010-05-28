@@ -15,6 +15,66 @@ class Configs(object):
 
 	__INSTANCE = None
 
+	# ============= Public Interface ======================
+
+	def __init__(self):
+		"""Inner class will only be instantiated once."""
+		if not Configs.__INSTANCE:
+			Configs.__INSTANCE = Configs.Container() 
+
+
+	# ============= Acessors & Mutators ===================
+
+	def __contains__(self, key):
+		"""Test membership for a config key."""
+		return Configs.__INSTANCE.contains(key)
+
+	def __getattr__(self, key):
+		"""Acessor. Throws exception if key doesn't exist."""
+		return Configs.__INSTANCE.get_val(key)
+
+	def __getitem__(self, key):
+		"""Acessor. Throws exception if key doesn't exist."""
+		return Configs.__INSTANCE.get_val(key)
+
+	def __setattr__(self, key, value):
+		"""Mutator. Creates new config if key doesn't exist."""
+		return Configs.__INSTANCE.set_val(key, value)
+
+	def __setitem__(self, key, value):
+		"""Mutator. Creates new config if key doesn't exist."""
+		return Configs.__INSTANCE.set_val(key, value)
+
+
+	# ============= More Public API =======================
+
+	def get_description(self, key):
+		"""Description accessor. Throws an exception if key doesn't 
+		exist."""
+		return Configs.__INSTANCE.get_description(key)
+
+	def set_description(self, key, value):
+		"""Description mutator. Throws an exception if key doesn't 
+		exist."""
+		return Configs.__INSTANCE.set_description(key, value)
+
+	def get_full(self, key):
+		"""Get value and description in a tuple.
+		Throws an exception if key doesn't exist."""
+		return Configs.__INSTANCE.get_full(key)
+
+	def save(self):
+		"""Save any changes made. Must be called for any changes to be
+		kept. At present, this is also VERY SLOW."""
+		Configs.__INSTANCE.save()
+
+	def delete(self, key):
+		"""Delete a config by key."""
+		Configs.__INSTANCE.delete(key)
+
+	def __str__(self):
+		return str(Configs.__INSTANCE)
+
 	# ============= Inner Implementation ==================
 
 	class Container(object):
@@ -34,29 +94,60 @@ class Configs(object):
 				raise KeyError, "Config does not exist: %s." % key
 
 			conf = self.configs[key]
+			typ = conf.datatype
 
-			# Can only store value OR value_large (programmatically controlled)
+			if typ == 'B':
+				return bool(int(conf.value))
+			elif typ == 'I':
+				return int(conf.value)
+			elif typ == 'F':
+				return float(conf.value)
+
+			# Can only store value OR value_large 
+			# (This is programmatically controlled.)
 			if conf.value_large:
 				return conf.value_large
 			return conf.value
 
 		def set_val(self, key, val):
-			if key in self.configs:
-				conf = self.configs[key]
-				if len(val) <= 255:
-					conf.value = val
-					conf.value_large = ""
-				else:
-					conf.value = ""
-					conf.value_large = val
+			if key not in self.configs:
+				raise KeyError, "Config does not exist: %s." % key
 
-			# Create a new one.
+			conf = self.configs[key]
+			valid = {'B': bool, 'I': int, 'F': float, 'S': str}
+	
+			if type(val) is not valid[conf.datatype]:
+				raise TypeError, "Setting config as wrong datatype: " \
+								 "needed type: %s actual type: %s" % \
+								 (valid[conf.datatype].__name__, 
+								  type(val).__name__)
+
+			conf.value_large = ""
+	
+			if conf.datatype is 'B':
+				conf.value = str(int(val))
+				return
+
+			if conf.datatype in ['I', 'F']:
+				conf.value = str(val)
+				return
+
+			# Can only store value OR value_large 
+			# (This is programmatically controlled.)
 			if len(val) <= 255:
-				self.configs[key] = BackendConfig(value=val, value_large="", 
-									  description="")
+				conf.value = val
+				conf.value_large = ""
 			else:
-				self.configs[key] = BackendConfig(value="", value_large=val, 
-									  description="")
+				conf.value = ""
+				conf.value_large = val
+
+			# TODO: Create a new one.
+			#if len(val) <= 255:
+			#	self.configs[key] = BackendConfig(value=val, value_large="", 
+			#						  description="")
+			#else:
+			#	self.configs[key] = BackendConfig(value="", value_large=val, 
+			#						  description="")
 
 		def get_description(self, key):
 			if key not in self.configs:
@@ -83,8 +174,9 @@ class Configs(object):
 			return (value, conf.description)
 
 		def save(self):
-			"""Save every object in the configuration set. SLOW. VERY SLOW"""
-			# FIXME: There has to be a faster way of doing this!
+			"""Save every object in the configuration set. SLOW. 
+			VERY SLOW"""
+			# FIXME: There is a faster, non-lazy way to do this.
 			for conf in self.configs.values():
 				conf.save() # SLOW!
 
@@ -95,45 +187,6 @@ class Configs(object):
 			conf = self.configs[key]
 			conf.delete()
 
-
-	# ============= Public Interface ======================
-
-	def __init__(self):
-		"""Inner class will only be instantiated once."""
-		if not Configs.__INSTANCE:
-			Configs.__INSTANCE = Configs.Container() 
-
-	def __contains__(self, key):
-		"""Test membership for a config key."""
-		return Configs.__INSTANCE.contains(key)
-
-	def __getitem__(self, key):
-		"""Acessor. Throws exception if key doesn't exist."""
-		return Configs.__INSTANCE.get_val(key)
-
-	def __setitem__(self, key, value):
-		"""Mutator. Creates new config if key doesn't exist."""
-		return Configs.__INSTANCE.set_val(key, value)
-
-	def get_description(self, key):
-		"""Description accessor. Throws an exception if key doesn't exist."""
-		return Configs.__INSTANCE.get_description(key)
-
-	def set_description(self, key, value):
-		"""Description mutator. Throws an exception if key doesn't exist."""
-		return Configs.__INSTANCE.set_description(key, value)
-
-	def get_full(self, key):
-		"""Get value and description in a tuple.
-		Throws an exception if key doesn't exist."""
-		return Configs.__INSTANCE.get_full(key)
-
-	def save(self):
-		"""Save any changes made."""
-		Configs.__INSTANCE.save()
-
-	def delete(self, key):
-		"""Delete a config by key."""
-		Configs.__INSTANCE.delete(key)
-
+		def __str__(self):
+			return str(self.configs)
 

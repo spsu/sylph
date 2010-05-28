@@ -1,17 +1,19 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login, logout
-from django import forms
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
+from django import forms
 
 import sylph.test
 
 from sylph.core.endpoint.models import Resource
 from sylph.apps.social.models import User
 
-from utils.install_state import is_installed
-from utils.database import reset_database, sync_empty_database # Relative import
+from utils.install_state import is_installed, INSTALLED
+from utils.database import reset_database, sync_empty_database
+from utils.Configs import Configs
+
 from UserAccount import UserAccount
 
 def index(request):
@@ -96,13 +98,13 @@ def install_main(request):
 	# TODO: This should be broken down into a multi-step creation process
 	class NewUserInstallForm(forms.Form):
 		"""Form for creating user account"""
-		login_username = forms.CharField(max_length=30, required=True)
+		#login_username = forms.CharField(max_length=30, required=True)
 		public_username = forms.CharField(max_length=24, required=True)
-		password = forms.CharField(
-						max_length=30,
-						label=(u'Password'),
-						widget=forms.PasswordInput(render_value=False),
-						required=True)
+		#password = forms.CharField(
+		#				max_length=30,
+		#				label=(u'Password'),
+		#				widget=forms.PasswordInput(render_value=False),
+		#				required=True)
 		f_name = forms.CharField(max_length=30, required=False,
 						label=(u'First name'))
 		m_name = forms.CharField(max_length=30, required=False,
@@ -127,6 +129,12 @@ def install_main(request):
 			user.uri = 'http://TODO/username/' # TODO: Generate username URI
 
 			user.save()
+
+			# TODO: Create site login account
+
+			configs = Configs()
+			configs.installation_status = INSTALLED
+			configs.save()
 
 			# TODO: Login here! 
 			return HttpResponseRedirect('/') # ACCOUNT CREATED!
