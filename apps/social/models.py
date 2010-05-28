@@ -13,7 +13,7 @@ class User(Resource):
 	"""
 
 	# Username of the person (The only mandatory field!)
-	username = models.CharField(blank=False, null=False, max_length=30)
+	username = models.CharField(blank=False, null=False, max_length=24)
 
 	# Name of the person (Optional)
 	first_name = models.CharField(max_length=30, null=False, blank=True)
@@ -40,6 +40,9 @@ class User(Resource):
 
 	# TODO: Node the user owns
 	#node = models.ForeignKey('endpoint.Node')
+
+	def __unicode__(self):
+		return self.username
 
 class UserEmail(models.Model):
 	"""Emails are not resources, this is just a 1:m field for users."""

@@ -5,11 +5,25 @@
 {%block content %}
 	<h1>You're about to enter the decentralized web!</h1>
 	<p>This will guide you through the install process. Nothing you configure 
-	is permanent, so don't worry&mdash;you can get back to it later!</p>
+	is permanent, so don't worry&mdash;you can get back to it later!
+	<small>(<a href="/reset/">test reset</a>)</small></p>
 
+	<h2> Installing Sylph &gt; Create Account </h2>
 
+	{% ifequal step 1 %}
+	{% else %}{% ifequal step 2 %}
+	{% endifequal %}{% endifequal %}
 
-	<br />
+	<form action="" method="post">
+		{% for field in form %}
+		<div class="field">
+			<span class="error">{{ field.errors }}</span>
+			{{ field.label_tag }} {{ field }}
+		</div>
+		{% endfor %}
+
+		<input type="submit" value="Submit" />
+	</form>
 	<br />
 	<br />
 {% endblock content %}
