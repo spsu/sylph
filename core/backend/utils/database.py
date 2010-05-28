@@ -47,5 +47,9 @@ def reset_database():
 				raise e
 
 	management.call_command('syncdb', interactive=False) 
+	management.call_command('loaddata', 'fixtures/initial_configs.json', 
+					verbosity=1, interactive=False) 
+	management.call_command('loaddata', 'fixtures/initial_social.json', 
+					verbosity=1, interactive=False) 
 
 
