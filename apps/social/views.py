@@ -38,7 +38,7 @@ def edit_own_profile(request):
 		class Meta:
 			model = User
 			fields = ['username', 'first_name', 'middle_name', 'last_name',
-					  'title']
+					  'title', 'bio']
 
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=user)

@@ -20,6 +20,10 @@ def owner_user_ref(request):
 	if not is_installed():
 		return {}
 
+	# If the user model is changed, reset form becomes inaccessible
+	if request.META['PATH_INFO'].startswith('/reset'):
+		return {}
+
 	try:
 		user = User.objects.get(id=1)
 	except User.DoesNotExist:

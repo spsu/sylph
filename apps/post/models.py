@@ -1,6 +1,8 @@
 from django.db import models
 from sylph.core.endpoint.models import ResourceTree
-from markdown2 import markdown
+from sylph.utils.markdown2 import markdown
+
+from datetime import datetime
 
 class Post(ResourceTree):
 	"""
@@ -51,17 +53,28 @@ class Post(ResourceTree):
 
 	# Cannot send marked-up contents
 	contents_markup_cache = models.TextField(blank=True)
+	contents_cache_datetime = models.DateTimeField(null=True, blank=True) 
 
 	# ============= Model-specific methods ================
 
 	def contents_markdown(self):
-		"""View a markdown-version of the contents."""
+		# XXX: DEPRECATED 
+		return self.contents_with_markup()
+
+	def contents_with_markup(self):
+		"""Get the contents with markup."""
 		if self.markup_type in ['P', 'X']:
 			return self.contents
 
-		if not self.contents_markup_cache:
+		stale = False
+		if not self.contents_markup_cache or \
+			self.datetime_edited >= self.contents_cache_datetime:
+				stale = True
+
+		if stale:
 			markup = markdown(self.contents) # TODO: More markup methods
-			self.contents_markup_cache = markup
+			self.bio_markup_cache = markup
+			self.contents_cache_datetime = datetime.today()
 			self.save()
 
 		return self.contents_markup_cache

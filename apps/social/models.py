@@ -1,6 +1,10 @@
 from django.db import models
 from sylph.core.endpoint.models import Resource, ResourceDigraphEdge
 
+from sylph.utils.markdown2 import markdown
+
+from datetime import datetime
+
 class User(Resource):
 	"""
 	User resources represent people in the graph. They support being
@@ -11,6 +15,21 @@ class User(Resource):
 		* They can be updated by the owner
 		* A stub may exist in our system until we query the owner.
 	"""
+
+	# ============= Sylph Metadata ========================
+
+	# A list of transportable RDF fields
+	rdf_fields = [
+			'username',
+			'first_name',
+			'middle_name',
+			'last_name',
+			'title',
+			'suffix',
+			'bio'
+	]
+
+	# ============= Model Fields ==========================
 
 	# Username of the person (The only mandatory field!)
 	username = models.CharField(blank=False, null=False, max_length=24)
@@ -33,6 +52,12 @@ class User(Resource):
 							 null=False, blank=True)
 	suffix = models.CharField(max_length=10, null=False, blank=True)
 
+	bio = models.TextField(blank=True)
+
+	# Cannot send marked-up bio
+	bio_markup_cache = models.TextField(blank=True)
+	bio_cache_datetime = models.DateTimeField(null=True, blank=True) 
+
 	# TODO: Photo the user chooses for their profile
 	#photo = models.ForeignKey('images.Photo')
 
@@ -41,6 +66,9 @@ class User(Resource):
 
 	# TODO: Node the user owns
 	#node = models.ForeignKey('endpoint.Node')
+
+
+	# ============= Model-specific methods ================
 
 	def get_name(self):
 		"""Get a western-formatted name (if available) or the 
@@ -72,6 +100,28 @@ class User(Resource):
 			name = title + " " + name
 
 		return name
+
+	def bio_with_markup(self):
+		"""Get the bio with markup."""
+		# TODO: Markup type
+		stale = False
+		if not self.bio_markup_cache or \
+			self.datetime_edited >= self.bio_cache_datetime:
+				stale = True
+
+		if stale:
+			markup = markdown(self.bio) # TODO: More markup methods
+			self.bio_markup_cache = markup
+			self.bio_cache_datetime = datetime.today()
+			self.save()
+
+		return self.bio_markup_cache
+
+	# ============= Django Methods and Metadata ===========
+
+	class Meta:
+		verbose_name = 'user'
+		verbose_name_plural = 'users'
 
 	def __unicode__(self):
 		return self.username

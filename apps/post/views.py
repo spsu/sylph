@@ -54,11 +54,13 @@ def createPost(request):
 			post = form.save(commit=False)
 			post.datetime_created = datetime.today()
 			# FIXME TEMP URL
-			post.url = 'http://temp/post/' + \
+			post.uri = 'http://temp/post/' + \
 						hashlib.md5(str(datetime.today())).hexdigest() 
 
 			user = User.objects.get(pk=1)
 			post.author = user
+
+			print post.id
 
 			post.save()
 			return HttpResponseRedirect('/post/')
@@ -125,7 +127,7 @@ def replyPost(request, postId):
 			post.title = "Re: " + parent.title
 			# FIXME TEMP URL
 			post.reply_to_root = parent
-			post.url = 'http://temp/post/' + \
+			post.uri = 'http://temp/post/' + \
 						hashlib.md5(str(datetime.today())).hexdigest() 
 			post.save()
 			return HttpResponseRedirect('/post/')
