@@ -3,14 +3,19 @@
 	</div>
 	<div id="userbar">
 		<!-- TODO: Hide entirely when in "to_install" state. -->
-		{% if user.is_authenticated %}
+		{% comment %} <!-- {% if user.is_authenticated %}
 			<strong>{{ user.username }}</strong> 
 			| <a href="/system/logout/">Logout</a>
 		{% else %}
 			<a href="/system/login/">Login</a> |
 			<a href="/system/signup/">Signup</a> 
 		{% endif %}
-		| <strong><a href="/reset/">Reset</a></strong>
+		| --> {% endcomment %}
+		{% if owner %}
+			<strong><a 
+				href="{{ owner.get_absolute_url }}">{{ owner.get_name }}</a></strong> |
+		{% endif %}
+		<strong><a href="/reset/">Reset</a></strong>
 	</div>
 	<hr style="clear:both" />
 	{% block topbar %}

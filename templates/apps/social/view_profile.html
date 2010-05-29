@@ -3,6 +3,12 @@
 {% block title %}Viewing Profile{% endblock %}
 
 {%block content %}
+	{% ifequal user owner %}
+		<div class="buttons">
+			<a href="/profile/edit/" class="button">Edit Profile</a>
+		</div>
+	{% endifequal %}
+
 	<h1> <a href="/profile/">Index</a> &gt; {{ user.get_name_and_title }} </h1>
 	TODO
 {% endblock content %}

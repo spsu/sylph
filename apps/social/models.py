@@ -1,5 +1,5 @@
 from django.db import models
-from sylph.core.endpoint.models import Resource
+from sylph.core.endpoint.models import Resource, ResourceDigraphEdge
 
 class User(Resource):
 	"""
@@ -95,4 +95,16 @@ class UserEmail(models.Model):
 	# TODO: organization = models.ForeignKey('Org') (as opposed to User)
 	# OR perhaps just use a different table strictly for organizations!
 
+class Knows(ResourceDigraphEdge):
+	"""
+	Knows represents a connection between two users, but is realized as 
+	a digraph instead of a forced, edgeless connection that must be 
+	maintained at both ends.
+
+	This is in a way similar to foaf:knows and will be built as such. 
+	"""
+
+	# TODO: Programatically enforce 'origin' and 'destination' to be users
+
+	description = models.CharField(max_length=255, null=False, blank=True)
 

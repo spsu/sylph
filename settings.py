@@ -51,8 +51,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	#'django.contrib.messages.context_processors.messages',
 
 	# Custom context processors
-	'sylph.core.backend.utils.context_processors.settings',
-	#'sylph.core.backend.utils.context_processors.ip_address',
+	'sylph.core.backend.context_processors.inject_settings',
+	'sylph.core.backend.context_processors.owner_user_ref',
+	#'sylph.core.backend.context_processors.ip_address',
 )
 
 

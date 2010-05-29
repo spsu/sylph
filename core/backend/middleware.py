@@ -11,7 +11,7 @@ class EnsureInstalledMiddleware(object):
 	"""
 
 	def __init__(self):
-		# Be aware that init only runs once, at the webserver start!
+		# If used, be aware that init only runs once, at the webserver start!
 		pass
 
 	def process_view(self, request, view_func, view_args, view_kwargs):

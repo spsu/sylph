@@ -7,7 +7,7 @@ import datetime
 	fundamental datatypes in the system.
 """
 
-# ============ Resource =========================
+# ============ Resource ===================================
 
 class Resource(models.Model):
 	"""
@@ -27,13 +27,18 @@ class Resource(models.Model):
 	Currently, a model may be one of these types:
 
 		* Resource -- A single "file" that doesn't reference other 
-					  resources unless it is built upon.
+					  resources unless it is subclassed.
 
-			* TreeResource -- A network "file" that can reference a 
+			* ResourceTree -- A linked "file" that can reference a 
 							  root document as well as an immediate 
 							  parent. Think of post or email threads as 
 							  being a use case that would be well-
 							  represented here.
+
+			* ResourceDigraphEdge -- An edge in a digraph relationship.
+									 It points to the origin and 
+									 destination Resources and can be
+									 subclassed as necessary.
 
 		> More resource-types will likely be added as need is found.
 
@@ -153,7 +158,7 @@ class Resource(models.Model):
 		return self.url
 
 
-# ============ Resource Tree ====================
+# ============ Resource Tree ==============================
 
 class ResourceTree(Resource):
 	"""
@@ -198,6 +203,40 @@ class ResourceTree(Resource):
 	reply_to_parent = models.ForeignKey('self', 
 										related_name='resource_set_parent',
 										null=True, blank=True)
+
+# ============ Resource Digraph Edge ======================
+
+class ResourceDigraphEdge(Resource):
+	"""
+	ResourceDigraphEdge is a representation of a directed graph edge
+	that is itself a resource. It has an origin and a destination 
+	resource. 
+
+	An example is the social.Knows model, which is a direct decendant
+	of ResourceDigraphEdge. 
+	"""
+
+	# ============= Sylph Metadata ========================
+
+	# A list of transportable RDF fields
+	rdf_fields = [
+			'origin',
+			'destination',
+	]
+
+	class_name = 'endpoint.ResourceDigraphEdge'
+
+	# ============= Model Fields ==========================
+
+	# The origin resource
+	origin = models.ForeignKey('Resource', 
+								related_name='resource_set_origin',
+								null=False, blank=False)
+
+	# The destination resource
+	destination = models.ForeignKey('Resource', 
+									related_name='resource_set_destination',
+									null=True, blank=True)
 
 # ============ ResourceTypes ====================
 
