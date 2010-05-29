@@ -29,7 +29,8 @@ class User(Resource):
 		('H', 'Hon.'),
 		('R', 'Rev.'),
 	)
-	title = models.CharField(max_length=1, choices=TITLE_CHOICES)
+	title = models.CharField(max_length=1, choices=TITLE_CHOICES, 
+							 null=False, blank=True)
 	suffix = models.CharField(max_length=10, null=False, blank=True)
 
 	# TODO: Photo the user chooses for their profile
@@ -40,6 +41,37 @@ class User(Resource):
 
 	# TODO: Node the user owns
 	#node = models.ForeignKey('endpoint.Node')
+
+	def get_name(self):
+		"""Get a western-formatted name (if available) or the 
+		username."""
+		# TODO: g11n
+		name = "(nameless)" 
+		if self.username:
+			name = self.username
+		if self.first_name:
+			name = self.first_name
+			if self.middle_name:
+				name += " " + self.middle_name
+			if self.last_name:
+				name += " " + self.last_name
+
+		return name
+
+	def get_name_and_title(self):
+		"""Get the name and the title."""
+		name = self.get_name()
+		title = None
+		if self.title:
+			for t in self.TITLE_CHOICES:
+				if self.title == t[0]:
+					title = t[1]
+					break
+
+		if self.first_name and title:
+			name = title + " " + name
+
+		return name
 
 	def __unicode__(self):
 		return self.username

@@ -34,7 +34,7 @@ class Post(ResourceTree):
 	# The person who created the post. Can be null if anonymous or unknown.
 	# TODO: Differentiate between 'anonymous' and 'unknown'. Or maybe not?
 	# Maybe both should fall under the umbrella term 'unknown'.
-	#created_by = models.ForeignKey('social.User', null=True)
+	created_by = models.ForeignKey('social.User', null=True)
 
 	# Contents of the post
 	contents = models.TextField(blank=True)

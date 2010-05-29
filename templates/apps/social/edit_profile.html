@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{%block content %}
+	<h1> Edit Profile </h1>
+	<form action="" method="post">
+		{% for field in form %}
+		<div class="field">
+			<span class="error">{{ field.errors }}</span>
+			{{ field.label_tag }} {{ field }}
+		</div>
+		{% endfor %}
+
+		<input type="submit" value="Submit" />
+	</form>
+{% endblock content %}

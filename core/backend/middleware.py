@@ -29,6 +29,9 @@ class EnsureInstalledMiddleware(object):
 		if path not in ['', '/', '/reset', '/reset/']:
 			return HttpResponseRedirect('/')
 
+		if path.startswith('/reset'):
+			return False
+
 		# Call installation view instead!
 		return install_main(request)
 

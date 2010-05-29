@@ -25,11 +25,12 @@ urlpatterns = patterns('',
 
 	# Application level
 	(r'^post/', include('sylph.apps.post.urls')),
-	#(r'^social/', include('sylph.apps.social.urls')),
+	(r'^profile/', include('sylph.apps.social.urls')),
 
 	# System Level
 	(r'^node/', include('sylph.core.endpoint.urls')),
 	(r'^system/', include('sylph.core.backend.urls')), # Manage the system
+	(r'^reset/$', 'sylph.core.backend.views.reset'),
 )
 
 # Static media serving happens regardless (THIS IS ONLY FOR DEVELOPMENT!)

@@ -31,19 +31,6 @@ def test(request):
 	"""A view to test code. Simplifies testing process."""
 	return sylph.test.test(request)
 
-# /system/reset
-#@login_required
-def reset(request):
-	"""This method resets the entire database. Everything is dropped and
-	rebuilt."""
-
-	if request.method == 'POST':
-		reset_database()
-
-		return HttpResponseRedirect('/')
-
-	return render_to_response('core/backend/reset-database.html',
-							  context_instance=RequestContext(request))
 
 # /system/signup
 # TODO: Rename: /system/install
@@ -153,21 +140,21 @@ def install_main(request):
 							  context_instance=RequestContext(request))
 
 
-# ============ Installation Reset =========================
+# ============ Reset Everything ===========================
 
-def install_reset(request):	
-	"""Reset everything during the install process."""
+def reset(request):	
+	"""Reset everything, tear down and rebuild database, and begin the
+	install process all over. Obviously this will need to be locked 
+	down when the software is complete."""
+	template = 'core/backend/install/reset.html'
 	if is_installed():
-		raise Exception, "Cannot reset the database with installer."
+		template = 'core/backend/reset-database.html'
 
 	if request.method == 'POST':
 		reset_database()
-
-		# Wait, because we'll just redirect here if the database is slow...
-		time.sleep(3) # TODO XXX XXX XXX: Is this dangerous?
 		return HttpResponseRedirect('/')
 
-	return render_to_response('core/backend/install/reset.html',
+	return render_to_response(template,
 							  context_instance=RequestContext(request))
 
 
