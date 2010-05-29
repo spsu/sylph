@@ -1,8 +1,47 @@
-[What is &ldquo;Sylph&rdquo;?](http://possibilistic.org/docs/sylph/)
+Sylph: No More Websites (Part I)
+================================
+This project is part of my research to build a web without websites. No party
+should be able to exert control over how we produce/consume/share information.
+The only way to make this happen is to decentralize _everything_. 
 
-Also: _This code sucks_
-------------------------
+I've been slowly working on this research for four years, but after 
+[Diaspora](http://www.nytimes.com/2010/05/12/nyregion/12about.html) unveiled 
+their plans, I began working nonstop to beat them to it. Distributed 
+informatics is bigger and far grander what the Diaspora team is trying to 
+accomplish, but we have to start now. 
 
-I don't know Django very well, so the code sucks right now. I'm trying to build 
-a rapid prototype of the most basic architecture in order to recruit other 
-developers to work with me. 
+Sylph envisions a world with an infinite signal to noise ratio: 1:0. A platform
+of infinite potential that can be evolved in any way. Imagine:
+
+* No more ads
+* No more marketers
+* No more paywalls
+* Sort & filter content with data mining algorithms **designed for you**
+* Trackerless filesharing with _friends and known peers_
+* News will be highly relevant: never read an off-topic headline again
+
+And what about edge-cases, such as programmers and researchers?
+
+* Even more distributed development practices and collaboration
+* Find people working in your research area immediately
+* Share files, papers, literature&mdash;no one can stop you.
+* Algorithms can study how you collaborate in the graph to advise you of
+  what you need to learn, who you should meet/mentor, and developments of
+  concern. 
+
+I want everyone to be involved in making this. 
+[Read more](http://possibilistic.org/docs/sylph/).
+
+Now back to earth for a second
+------------------------------
+Building such a platform will take _a very long time_ to get right. We have to 
+start with the basics and build our way up. This prototype client is written 
+using Python/Django (and soon to include 
+[Celery](http://github.com/ask/celery)). I'm still in the process of learning 
+Django, but I'm getting better.
+
+License
+-------
+The code is currently under the AGPL 3. As soon as I get more developers, we'll
+probably license it under the MIT/BSD. 
+
