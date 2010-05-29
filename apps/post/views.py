@@ -15,7 +15,7 @@ import hashlib
 
 # ============ Post Index (Parentless) ==========
 
-def indexParentless(request):
+def index_parentless(request):
 	posts = Post.objects.filter(reply_to_root__isnull = True)
 	return render_to_response('apps/post/index.html', {
 									'posts':	posts,
@@ -26,7 +26,7 @@ def indexParentless(request):
 
 # ============ Post Index (All) =================
 
-def indexAll(request):
+def index_all(request):
 	posts = Post.objects.all()
 	return render_to_response('apps/post/index.html', {
 									'posts':	posts,
@@ -35,10 +35,29 @@ def indexAll(request):
 							mimetype='application/xhtml+xml')
 
 
+# ============ View Post ========================
+
+def view_post(request, post_id):
+	"""View a post by its id"""
+	posts = []
+	try:
+		posts = Post.objects.filter(Q(pk=post_id) | Q(reply_to_root=post_id))
+	except Post.DoesNotExist:
+		raise Http404
+
+	print posts
+
+	return render_to_response('apps/post/view.html', {
+									'posts': posts,
+							}, 
+							context_instance=RequestContext(request),
+							mimetype='application/xhtml+xml')
+
+
 # ============ Create Post ======================
 
 #@login_required
-def createPost(request):
+def create_post(request):
 	"""Create a new post."""
 	# TODO: Try Celery to asynch request/poll the node. 
 
@@ -60,8 +79,6 @@ def createPost(request):
 			user = User.objects.get(pk=1)
 			post.author = user
 
-			print post.id
-
 			post.save()
 			return HttpResponseRedirect('/post/')
 
@@ -76,32 +93,13 @@ def createPost(request):
 									context_instance=RequestContext(request))
 
 
-# ============ View Post ========================
-
-def viewPost(request, postId):
-	"""View a post by its id"""
-	posts = []
-	try:
-		posts = Post.objects.filter(Q(pk=postId) | Q(reply_to_root=postId))
-	except Post.DoesNotExist:
-		raise Http404
-
-	print posts
-
-	return render_to_response('apps/post/view.html', {
-									'posts': posts,
-							}, 
-							context_instance=RequestContext(request),
-							mimetype='application/xhtml+xml')
-
-
 # ============ Reply Post =======================
 
-def replyPost(request, postId):
+def reply_post(request, post_id):
 	"""Reply to a post"""
 	parent = None
 	try:
-		parent = Post.objects.get(pk=postId)
+		parent = Post.objects.get(pk=post_id)
 	except Post.DoesNotExist:
 		raise Http404
 
@@ -129,6 +127,10 @@ def replyPost(request, postId):
 			post.reply_to_root = parent
 			post.uri = 'http://temp/post/' + \
 						hashlib.md5(str(datetime.today())).hexdigest() 
+
+			user = User.objects.get(pk=1)
+			post.author = user
+
 			post.save()
 			return HttpResponseRedirect('/post/')
 
@@ -143,10 +145,15 @@ def replyPost(request, postId):
 									context_instance=RequestContext(request))
 
 
-# ============ Delete Post ======================
+# ============ Edit Post ======================
 
-def deletePost(request, postId):
+def edit_post(request, post_id):
 	# TODO: POST HANDLE
 	pass
 
+# ============ Delete Post ======================
+
+def delete_post(request, post_id):
+	# TODO: POST HANDLE
+	pass
 
