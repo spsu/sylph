@@ -16,6 +16,8 @@
 			{% if post.datetime_created %}
 				<small>posted {{ post.datetime_created }}</small>
 			{% endif %}
+			by <a 
+				href="{{post.author.get_absolute_url }}">{{ post.author }}</a>
 		</div>
 		{% endfor %}
 	</div>

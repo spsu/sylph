@@ -8,6 +8,8 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
+from sylph.apps.social.models import User
+
 from datetime import datetime
 import hashlib
 
@@ -54,6 +56,10 @@ def createPost(request):
 			# FIXME TEMP URL
 			post.url = 'http://temp/post/' + \
 						hashlib.md5(str(datetime.today())).hexdigest() 
+
+			user = User.objects.get(pk=1)
+			post.author = user
+
 			post.save()
 			return HttpResponseRedirect('/post/')
 

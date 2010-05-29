@@ -76,6 +76,9 @@ class User(Resource):
 	def __unicode__(self):
 		return self.username
 
+	def get_absolute_url(self):
+		return '/profile/view/%s/' % self.id
+
 class UserEmail(models.Model):
 	"""Emails are not resources, this is just a 1:m field for users."""
 

@@ -12,6 +12,9 @@
 		{% endif %}
 
 		<div class="post">
+			<p><em>Posted by <a 
+				href="{{post.author.get_absolute_url }}">{{ post.author.get_name }}</a>
+			</em></p>
 			{{ post.contents_markdown|safe }}
 
 			<p><small>(Posted on {{ post.datetime_created }}.)</small></p>
