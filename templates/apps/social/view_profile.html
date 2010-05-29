@@ -3,6 +3,6 @@
 {% block title %}Viewing Profile{% endblock %}
 
 {%block content %}
-	<h1> {{ user.get_name_and_title }} </h1>
+	<h1> <a href="/profile/">Index</a> &gt; {{ user.get_name_and_title }} </h1>
 	TODO
 {% endblock content %}

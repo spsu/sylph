@@ -62,7 +62,7 @@ class User(Resource):
 		"""Get the name and the title."""
 		name = self.get_name()
 		title = None
-		if self.title:
+		if self.title and self.last_name:
 			for t in self.TITLE_CHOICES:
 				if self.title == t[0]:
 					title = t[1]

@@ -13,12 +13,12 @@ from datetime import datetime
 import hashlib
 
 
-# ============ Post Index (All) =================
+# ============ Social Index ===============================
 
-def indexAll(request):
-	posts = Post.objects.all()
-	return render_to_response('apps/post/index.html', {
-									'posts':	posts,
+def index(request):
+	users = User.objects.all()
+	return render_to_response('apps/social/index.html', {
+									'users': users,
 							}, 
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
