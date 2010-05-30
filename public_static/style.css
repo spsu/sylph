@@ -30,6 +30,10 @@ body {
 	float: left;
 	width: 250px;
 }
+#logo a {
+	text-decoration: none;
+	color: #333;
+}
 #sidebar {
 	width: 160px;
 	float: left;
@@ -42,6 +46,7 @@ body {
 	list-style-type: square;
 	font-size: 0.8em;
 }
+#sidebar ul ul { padding: 7px 0px 0px 20px; }
 #sidebar a {
 	text-decoration: none;
 }
