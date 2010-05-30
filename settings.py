@@ -54,6 +54,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	'sylph.core.backend.context_processors.inject_settings',
 	'sylph.core.backend.context_processors.owner_user_ref',
 	#'sylph.core.backend.context_processors.ip_address',
+
+	# Django Debug Toolbar
+	#'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 
@@ -77,11 +80,15 @@ INSTALLED_APPS = (
 
 	'sylph.core.endpoint',
 	'sylph.core.backend',
+	'sylph.core.node',
 	#'sylph.core.frontend',
 
 	'sylph.apps.post',
 	'sylph.apps.blog',
 	'sylph.apps.social',
+
+	# Django debug toolbar
+	#'debug_toolbar'
 )
 
 # ================= Virtualization Helpers ================

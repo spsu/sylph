@@ -155,7 +155,7 @@ class Resource(models.Model):
 		return "/resource/view/%i/" % self.id
 
 	def __unicode__(self):
-		return self.url
+		return self.uri
 
 
 # ============ Resource Tree ==============================
@@ -238,7 +238,7 @@ class ResourceDigraphEdge(Resource):
 									related_name='resource_set_destination',
 									null=True, blank=True)
 
-# ============ ResourceTypes ====================
+# ============ ResourceTypes ==============================
 
 class ResourceType(models.Model):
 	"""Represents the resource types installed in the system."""
@@ -250,7 +250,7 @@ class ResourceType(models.Model):
 	description = models.CharField(max_length=255, blank=True, null=False)
 
 
-# ============ Model Managers ===================
+# ============ Model Managers =============================
 
 class ResourceManager(models.Manager):
 	"""Custom manager for resources"""
@@ -258,5 +258,4 @@ class ResourceManager(models.Manager):
 		return self.get(uri=res_uri)
 
 Resource.objects = ResourceManager()
-
 

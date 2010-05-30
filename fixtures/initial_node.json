@@ -1,0 +1,14 @@
+[
+{
+	"model": "node.Node",
+	"pk": 1,
+	"fields": {
+		"uri": "http://example.org/my-new-node/",
+		"name": "My Node",
+		"description": "My new node",
+		"own_description": "",
+		"node_type": "U",
+		"is_yet_to_resolve": "False",
+		"status": "A"
+	}
+}]

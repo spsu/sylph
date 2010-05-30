@@ -117,6 +117,11 @@ class User(Resource):
 
 		return self.bio_markup_cache
 
+	def avatar_or_gravatar(self):
+		"""Fetches the avatar of the user, or gravatar if no avatar
+		is known to exist."""
+		pass # TODO
+
 	# ============= Django Methods and Metadata ===========
 
 	class Meta:

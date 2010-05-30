@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Node index{% endblock %}
+
+{%block content %}
+	<h1> Node Index </h1>
+	<div class="buttons">
+		<a href="/node/add/" class="button">Add Node</a>
+		<a href="/node/edit/" class="button">Edit Own Node</a>
+	</div>
+	
+	<div class="table">
+		{% for node in nodes %}
+		<div class="row_{% cycle 'odd' 'even' %}">
+			<a href="{{ node.get_absolute_url }}">{{ node.uri }}</a>
+			{% if node.datetime_last_resolved %}
+				<small>last resolved {{ node.datetime_last_resolved }}</small>
+			{% endif %}
+		</div>
+		{% endfor %}
+	</div>
+{% endblock %}

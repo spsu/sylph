@@ -19,18 +19,18 @@ urlpatterns = patterns('',
 	(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 	(r'^admin/', include(admin.site.urls)),
 
-	# Frontend
+	# Specific views
 	(r'^/?$', 'sylph.core.frontend.views.index'),
-	#(r'main/', include('sylph.system.frontend.urls')),
+	(r'^reset/$', 'sylph.core.backend.views.reset'),
 
 	# Application level
 	(r'^post/', include('sylph.apps.post.urls')),
 	(r'^profile/', include('sylph.apps.social.urls')),
 
 	# System Level
-	(r'^node/', include('sylph.core.endpoint.urls')),
+	(r'^node/', include('sylph.core.node.urls')),
 	(r'^system/', include('sylph.core.backend.urls')), # Manage the system
-	(r'^reset/$', 'sylph.core.backend.views.reset'),
+	#(r'main/', include('sylph.system.frontend.urls')),
 )
 
 # Static media serving happens regardless (THIS IS ONLY FOR DEVELOPMENT!)

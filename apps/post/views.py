@@ -16,12 +16,12 @@ import hashlib
 # ============ Post Index (Parentless) ==========
 
 def index_parentless(request):
-	posts = Post.objects.filter(reply_to_root__isnull = True)
+	posts = Post.objects.filter(reply_to_root__isnull=True)
 	return render_to_response('apps/post/index.html', {
-									'posts':	posts,
-							}, 
-							context_instance=RequestContext(request),
-							mimetype='application/xhtml+xml')
+									'posts': posts,
+							  }, 
+							  context_instance=RequestContext(request),
+							  mimetype='application/xhtml+xml')
 
 
 # ============ Post Index (All) =================
@@ -29,10 +29,10 @@ def index_parentless(request):
 def index_all(request):
 	posts = Post.objects.all()
 	return render_to_response('apps/post/index.html', {
-									'posts':	posts,
-							}, 
-							context_instance=RequestContext(request),
-							mimetype='application/xhtml+xml')
+									'posts': posts,
+							  }, 
+							  context_instance=RequestContext(request),
+							  mimetype='application/xhtml+xml')
 
 
 # ============ View Post ========================
@@ -49,9 +49,9 @@ def view_post(request, post_id):
 
 	return render_to_response('apps/post/view.html', {
 									'posts': posts,
-							}, 
-							context_instance=RequestContext(request),
-							mimetype='application/xhtml+xml')
+							  },
+							  context_instance=RequestContext(request),
+							  mimetype='application/xhtml+xml')
 
 
 # ============ Create Post ======================
@@ -59,7 +59,6 @@ def view_post(request, post_id):
 #@login_required
 def create_post(request):
 	"""Create a new post."""
-	# TODO: Try Celery to asynch request/poll the node. 
 
 	class NewPostForm(forms.ModelForm):
 		"""Form for creating posts"""
@@ -67,6 +66,7 @@ def create_post(request):
 			model = Post
 			fields = ['title', 'contents']
 
+	form = None
 	if request.method == 'POST':
 		form = NewPostForm(request.POST)
 		if form.is_valid():
@@ -82,15 +82,13 @@ def create_post(request):
 			post.save()
 			return HttpResponseRedirect('/post/')
 
-		return render_to_response('apps/post/create.html',
-								 	{'form': form}, 
-									context_instance=RequestContext(request))
-
 	else:
 		form = NewPostForm()
-		return render_to_response('apps/post/create.html',
-								 	{'form': form}, 
-									context_instance=RequestContext(request))
+
+	return render_to_response('apps/post/create.html', {
+									'form': form
+							  }, 
+							  context_instance=RequestContext(request))
 
 
 # ============ Reply Post =======================
@@ -117,6 +115,7 @@ def reply_post(request, post_id):
 			model = Post
 			fields = ['contents']
 
+	form = None
 	if request.method == 'POST':
 		form = NewReplyForm(request.POST)
 		if form.is_valid():
@@ -134,15 +133,13 @@ def reply_post(request, post_id):
 			post.save()
 			return HttpResponseRedirect('/post/')
 
-		return render_to_response('apps/post/reply.html',
-								 	{'form': form}, 
-									context_instance=RequestContext(request))
-
 	else:
 		form = NewReplyForm()
-		return render_to_response('apps/post/reply.html',
-								 	{'form': form}, 
-									context_instance=RequestContext(request))
+
+	return render_to_response('apps/post/reply.html', {
+									'form': form
+							  }, 
+							  context_instance=RequestContext(request))
 
 
 # ============ Edit Post ======================

@@ -8,7 +8,5 @@ urlpatterns = patterns('sylph.apps.post.views',
 	(r'view/(?P<post_id>\d+)/$', 'view_post'),
 	(r'reply/(?P<post_id>\d+)/$', 'reply_post'),
 	(r'delete/(?P<post_id>\d+)/$', 'delete_post'),
-
 )
 
-# Okay, this is all great, but it does nothing if I can't send it somewhere.
