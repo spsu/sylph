@@ -12,18 +12,16 @@ from sylph.core.backend.models import BackendConfig
 from sylph.core.backend.utils.Configs import Configs
 from sylph.apps.post.models import Post
 
+from sylph.apps.post.tasks import post_random_message
+
 # Quick code to test.
 
 def test(request):
 	ret = ""
 
-	configs = Configs()
+	result = post_random_message.delay()
 
-	if 'test' in configs:
-		print "Test in configs"
-
-	configs['test'] = 'asdf'
-	configs.save()
+	print result
 
 	return HttpResponse(ret, mimetype='text/plain')
 	

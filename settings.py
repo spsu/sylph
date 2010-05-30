@@ -78,6 +78,12 @@ INSTALLED_APPS = (
     'django.contrib.sites',
 	'django.contrib.humanize',
 
+	# Django debug toolbar
+	#'debug_toolbar',
+
+	# Celery
+	'celery',
+
 	'sylph.core.endpoint',
 	'sylph.core.backend',
 	'sylph.core.node',
@@ -86,9 +92,6 @@ INSTALLED_APPS = (
 	'sylph.apps.post',
 	'sylph.apps.blog',
 	'sylph.apps.social',
-
-	# Django debug toolbar
-	#'debug_toolbar'
 )
 
 # ================= Virtualization Helpers ================
