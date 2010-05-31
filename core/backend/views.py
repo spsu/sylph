@@ -1,13 +1,15 @@
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render_to_response
-from django.contrib.auth import authenticate, login, logout
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.template import RequestContext
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseRedirect, HttpResponse
 from django import forms
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 import sylph.test
 
 from sylph.core.endpoint.models import Resource
+from sylph.core.node.models import Node
 from sylph.apps.social.models import User
 
 from utils.install_state import is_installed, INSTALLED
@@ -15,7 +17,6 @@ from utils.database import reset_database, sync_empty_database
 from utils.Configs import Configs
 
 from UserAccount import UserAccount
-from sylph.utils.file import touch
 
 import time
 
@@ -111,25 +112,46 @@ def install_main(request):
 		if form.is_valid():
 			data = form.cleaned_data
 
+			def make_path_uri(path = ""):
+				"""Returns the URI with the port the server is running
+				on, and optionally with a path segment appended."""
+				# TODO: Actual hostname or external IP
+				port = settings.PORT
+				p = 'http://127.0.0.1%s/' % \
+					("" if port == 80 else ":"+str(port))
+				if path[0] == '/':
+					p += path[1:]
+				else:
+					p += path
+
+				if path[-1] != '/':
+					p += '/'
+
+				return p
+
+			# Save user's profile
 			user.username = data['public_username']
 			user.first_name = data['f_name']
 			user.middle_name = data['m_name']
 			user.last_name = data['l_name']
 			user.email = data['email']
-
-			user.uri = 'http://TODO/username/' # TODO: Generate username URI
-
+			user.uri = make_path_uri('/profile/') # TODO: More custom / OpenID
 			user.save()
 
 			# TODO: Create site login account
 
+			# Installation status flag is critical
 			configs = Configs()
 			configs.installation_status = INSTALLED
 			configs.save()
 
+			# Set our node endpoint URI
+			node = Node.objects.get(id=1)
+			node.uri = make_path_uri('/endpoint/') # TODO: More custom
+			node.save()
+
 			# TODO: Login here! 
 			return HttpResponseRedirect('/') # ACCOUNT CREATED!
-		
 
 	else:
 		form = NewUserInstallForm(initial={'public_username': user.username})
