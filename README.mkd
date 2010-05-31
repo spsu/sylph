@@ -48,7 +48,7 @@ probably license it under the MIT/BSD.
 Project Setup
 =============
 
-Currently relies on:
+Sylph currently requires the following:
 
 * **Python 2.6**
 * **Django 1.1**
@@ -61,12 +61,12 @@ Currently relies on:
 Running multiple instances on the same server is currently done as 
 follows&mdash;first, start the first instance:
 
-> $ python manage.py runserver
+> $ python manage.py runserver  
 > $ python manage.py celeryd
 
 To run a second instance on port 7000:
 
-> $ python manage.py runserver 7000
+> $ python manage.py runserver 7000  
 > $ python manage.py celeryd 7000
 
 This requires that the databases 'sylph' and 'sylph7000' exist, as well as the
