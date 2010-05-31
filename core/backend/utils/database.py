@@ -22,6 +22,7 @@ def sync_empty_database():
 		r = len(Resource.objects.all())
 
 	except Exception: # XXX: Not exactly sure where 'ProgrammingError' is from.
+		# XXX BLAME: commit 50dd074c5972971eeaa3d7be59b65b3903f85ed1
 		print "Models not found, syncing database..."
 		sync_database()
 
