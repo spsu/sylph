@@ -22,6 +22,32 @@ def index(request):
 							mimetype='application/xhtml+xml')
 
 
+# ============ Add Person Form ============================
+
+def add_person_form(request):
+	"""
+	(TODO)		
+	
+	We should have a _single_ text entry where the following can be 
+	added:
+		* OpenID (the page will contain metadata to an endpoint)
+		* SylphID (similar to OpenID, but is the person's Resource URI)
+		* Endpoint URI, and we query the endpoint for owner data
+		* email address (and we query a directory service and possibly friends)
+
+	This makes it _incredibly_ easy to add a person. If more search capability
+	is required, then we can search a directory w/ info such as phone number, 
+	previous school, company, etc. 
+
+	I suppose this makes us "follow" the person...
+
+	Keep this a separate view from simply adding a friend of a friend. 
+	"""
+	pass
+
+
+
+
 # ============ Edit Profile ===============================
 
 def edit_own_profile(request):

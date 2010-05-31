@@ -46,12 +46,20 @@ class Node(models.Model): # NOT A RESOURCE!
 	NODE_TYPE_CHOICES = (
 		('X', 'Unknown'),
 		('U', 'User Node'),
-		('M', 'Machine Node'),
-		#('C', 'Cache Node'), # Usually static files
-		#('G', 'Group Node'),
-		#('D', 'Directory Node'), # Look up people or resources
+		('C', 'Cache Node'), # Usually static files
+		('D', 'Directory Node'), # Look up people or resources
+		#('G', 'Group Node'), # TODO: More types... eg. software repository		
 	)
 	node_type = models.CharField(max_length=1, choices=NODE_TYPE_CHOICES)
+
+	"""Sylph Protocol version"""
+	protocol_version = models.CharField(max_length=15, null=False, blank=True)
+
+	"""Client Software name"""
+	software_name = models.CharField(max_length=20, null=False, blank=True)
+
+	"""Client Software version"""
+	software_version = models.CharField(max_length=15, null=False, blank=True)
 
 	"""First time nodes are added, they must be resolved.""" 
 	is_yet_to_resolve = models.BooleanField()
@@ -75,12 +83,15 @@ class Node(models.Model): # NOT A RESOURCE!
 
 	"""The types of status a node can have"""
 	STATUS_TYPE_CHOICES = (
-		('U', 'Unknown'),
-		('A', 'Available'),
-		('E', 'Server Error'),
-		('R', 'Unresolvable'),
+		('U', 'Unknown status'),
+		('HOST', 'Host does not resolve.'),
+		('SERR', 'Server error.'),
+		('EERR', 'Endpoint software error.'),
+		('FLOOD', 'Server flooded / bandwidth issue.'),
+		('ENDP', 'Not a valid endpoint.'),
+		('AVAIL', 'Available / OK.'),
     )
-	status = models.CharField(max_length=1, choices=STATUS_TYPE_CHOICES, 
+	status = models.CharField(max_length=5, choices=STATUS_TYPE_CHOICES, 
 							  null=False, blank=False, default='U')
 
 	# ============= Django Methods and Metadata ===========
@@ -91,6 +102,11 @@ class Node(models.Model): # NOT A RESOURCE!
 
 	def get_absolute_url(self):
 		return "/node/view/%i/" % self.id
+
+	def protocol_compatibility(self, proto_version):
+		"""Compare the protocol version with a compatibility checklist."""
+		# TODO: allow lookup against a compatibility checklist
+		return proto_version == self.protocol_version
 
 	def __unicode__(self):
 		return self.uri

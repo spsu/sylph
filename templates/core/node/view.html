@@ -4,10 +4,24 @@
 
 {%block content %}
 	<h1> <a href="/node/">Index</a> &gt; Node #{{ node.id }} </h1>
+	<div class="buttons">
+	{% ifequal node.id 1 %}
+		<a href="/node/edit/" class="button">Edit Own Node</a>
+	{% else %}
+		<a href="/node/delete/{{ node.id }}/" class="button">Delete Node</a>
+	{% endifequal %}	
+	</div>
 
 	<p><strong>{{ node.uri }}</strong></p>
 
 
 	TODO - More info
+	<ul>
+		<li>Show a feed from the node</li>
+		<li>Show an "about" block... describing the person or service.</li>
+		<li>Show status of node</li>
+		<li>Etc.</li>
+	</ul>
+
 
 {% endblock content %}

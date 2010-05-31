@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 from models import *
+import tasks
 
 from datetime import datetime
 import hashlib
@@ -91,8 +92,11 @@ def add_node(request):
 			node.datetime_added = datetime.today()
 			node.is_yet_to_resolve = True
 			node.status = 'U'
-
 			node.save()
+
+			# Task to query node
+			tasks.do_add_node_lookup.delay(form.cleaned_data['uri'])
+
 			return HttpResponseRedirect('/node/')
 	else:
 		form = AddNodeForm()
@@ -100,6 +104,24 @@ def add_node(request):
 	return render_to_response('core/node/add.html', {
 								'form': form
 							  }, 
+							  context_instance=RequestContext(request))
+
+def delete_node(request, node_id):
+	"""Delete a node from the system."""
+	if node_id in [1, '1']:
+		return HttpResponseRedirect('/node/view/1/')
+
+	node = None
+	try:
+		node = Node.objects.get(pk=node_id)
+	except Node.DoesNotExist:
+		raise Http404
+	
+	if request.method == 'POST':
+		node.delete()
+		return HttpResponseRedirect('/node/')
+
+	return render_to_response('core/node/delete.html',
 							  context_instance=RequestContext(request))
 
 
