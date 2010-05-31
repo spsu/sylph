@@ -82,11 +82,12 @@ INSTALLED_APPS = (
 	#'debug_toolbar',
 
 	# Celery
-	'celery',
+	'djcelery', # Use 'celery' for older versions
 
 	'sylph.core.endpoint',
 	'sylph.core.backend',
 	'sylph.core.node',
+	'sylph.core.jobs',
 	#'sylph.core.frontend',
 
 	'sylph.apps.post',
@@ -139,6 +140,11 @@ def get_db(prefix = "sylph", port = None):
 	if port == 8000:
 		return prefix
 	return prefix + str(port)
+
+def get_rabbit_mq_vhost(prefix="sylph", port=None):
+	"""These must be virtual hosts in /etc/hosts and installed in 
+	RabbitMQ. Essentially generated the same way database names are."""
+	return get_db(prefix, port)
 
 
 PORT = get_port() # XXX: Temporary for templates

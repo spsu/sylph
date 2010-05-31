@@ -5,13 +5,13 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from models import *
+from sylph.utils.jobs import process_n_messages, process_n_messages_pool
 
 from datetime import datetime
 import hashlib
 
 
-# ============ Social Index ===============================
+# ============ Jobs Index =================================
 
 def index(request):
 	users = User.objects.all()
@@ -22,9 +22,19 @@ def index(request):
 							mimetype='application/xhtml+xml')
 
 
-# ============ Edit Profile ===============================
+# ============ Run Jobs: VIA CRON! ========================
 
-def edit_own_profile(request):
+def run_jobs(request):
+
+	process_n_messages_pool()
+
+	return HttpResponse("Jobs Run", mimetype='text/plain')
+	
+
+
+# ============ Edit Job ===================================
+
+def edit_job(request):
 	user = None
 	try:
 		user = User.objects.get(pk=1)
@@ -54,7 +64,7 @@ def edit_own_profile(request):
 							  context_instance=RequestContext(request))
 
 
-# ============ View Profile ===============================
+# ============ View Job ===================================
 
 def view_profile(request, user_id):
 	"""View a profile by user id"""

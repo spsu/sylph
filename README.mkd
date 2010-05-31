@@ -30,15 +30,15 @@ And what about edge-cases, such as programmers and researchers?
   concern. 
 
 I want everyone to be involved in making this. 
-[Read more](http://possibilistic.org/docs/sylph/).
+[This document explains more](http://possibilistic.org/docs/sylph/).
 
 Now back to earth for a second
 ------------------------------
 Building such a platform will take _a very long time_ to get right. We have to 
 start with the basics and build our way up. This prototype client is written 
-using Python/Django (and soon to include 
-[Celery](http://github.com/ask/celery)). I'm still in the process of learning 
-Django, but I'm getting better.
+using Python/Django/[Celery](http://github.com/ask/celery). 
+
+I'm still in the process of learning Django and Celery, but I'm getting better.
 
 License
 -------
@@ -46,7 +46,7 @@ The code is currently under the AGPL 3. As soon as I get more developers, we'll
 probably license it under the MIT/BSD. 
 
 Project Setup
-=============
+-------------
 
 Sylph currently requires the following:
 
@@ -59,7 +59,7 @@ Sylph currently requires the following:
   SQLite)
 
 Running multiple instances on the same server is currently done as 
-follows&mdash;first, start the first instance:
+follows&mdash;first, start the first instance (defaults to port 8000):
 
 > $ python manage.py runserver  
 > $ python manage.py celeryd
@@ -71,8 +71,10 @@ To run a second instance on port 7000:
 
 This requires that the databases 'sylph' and 'sylph7000' exist, as well as the
 RabbitMQ virtual hosts 'sylph' and 'sylph7000'. ('8000' is always truncated, 
-but other port numbers will be appended to 'sylph' and serve as the database
-name and RabbitMQ virtual host.) Be aware of permissions in the RMDBS and 
-RabbitMQ!
+but any other port number will be appended to 'sylph' to serve as both the 
+database name and RabbitMQ virtual host.) Be aware of permissions in the RMDBS 
+and RabbitMQ!
 
+As I'm in the prototyping stages, these configuration options are geared at
+rapid development rather than long-term deployment. 
 

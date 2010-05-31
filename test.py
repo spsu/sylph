@@ -14,6 +14,7 @@ from sylph.apps.post.models import Post
 
 from sylph.apps.post.tasks import post_random_message
 
+
 # Quick code to test.
 
 def test(request):
