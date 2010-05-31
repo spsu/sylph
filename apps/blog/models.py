@@ -1,6 +1,6 @@
 from django.db import models
-from sylph.apps.post import Post
-from sylph.core.endpoint import Resource
+from sylph.apps.post.models import Post
+from sylph.core.resource.models import Resource
 
 class BlogItem(Post):
 	"""

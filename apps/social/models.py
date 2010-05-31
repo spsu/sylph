@@ -1,5 +1,5 @@
 from django.db import models
-from sylph.core.endpoint.models import Resource, ResourceDigraphEdge
+from sylph.core.resource.models import Resource, ResourceDigraphEdge
 
 from sylph.utils.markdown2 import markdown
 

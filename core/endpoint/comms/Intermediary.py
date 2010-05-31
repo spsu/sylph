@@ -1,5 +1,5 @@
 # Sylph
-from sylph.core.endpoint.models import Resource, ResourceTree
+from sylph.core.resource.models import Resource, ResourceTree
 
 # Django
 from django.db import models

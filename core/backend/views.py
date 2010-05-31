@@ -8,7 +8,7 @@ from django.template import RequestContext
 
 import sylph.test
 
-from sylph.core.endpoint.models import Resource
+from sylph.core.resource.models import Resource
 from sylph.core.node.models import Node
 from sylph.apps.social.models import User
 

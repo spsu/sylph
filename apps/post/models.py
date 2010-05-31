@@ -1,5 +1,5 @@
 from django.db import models
-from sylph.core.endpoint.models import ResourceTree
+from sylph.core.resource.models import ResourceTree
 from sylph.utils.markdown2 import markdown
 
 from datetime import datetime
@@ -109,7 +109,7 @@ class PostReferences(models.Model):
 	"""
 	
 	post = models.ForeignKey('Post', related_name='set_post')
-	linked_resource = models.ForeignKey('endpoint.Resource')
+	linked_resource = models.ForeignKey('resource.Resource')
 
 	# TODO: dynamic = models.CharField() # explain the semantics of the linkage
 

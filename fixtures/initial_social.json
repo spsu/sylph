@@ -1,6 +1,5 @@
-[
-{
-	"model": "endpoint.Resource",
+[{
+	"model": "resource.Resource",
 	"pk": 1,
 	"fields": {
 		"uri": "http://sylph/new-user/"

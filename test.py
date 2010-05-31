@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.db import models
 
-from sylph.core.endpoint.models import Resource
+from sylph.core.resource.models import Resource
 from sylph.core.endpoint.comms.Intermediary import *
 from sylph.core.backend.models import BackendConfig
 from sylph.core.backend.utils.Configs import Configs

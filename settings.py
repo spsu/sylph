@@ -85,8 +85,9 @@ INSTALLED_APPS = (
 	'djcelery', # Use 'celery' for older versions
 
 	'sylph.core.endpoint',
-	'sylph.core.backend',
+	'sylph.core.resource',
 	'sylph.core.node',
+	'sylph.core.backend',
 	'sylph.core.jobs',
 	#'sylph.core.frontend',
 

@@ -5,7 +5,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from sylph.core.endpoint.models import Resource
+from sylph.core.resource.models import Resource
 from sylph.core.backend.utils.database import sync_empty_database
 
 def index(request):

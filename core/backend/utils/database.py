@@ -1,7 +1,7 @@
 from django.core import management
 from django.db import connection
 
-from sylph.core.endpoint.models import Resource
+from sylph.core.resource.models import Resource
 
 # TODO: perhaps mv utilities.py db_utilities.py or similar..
 
