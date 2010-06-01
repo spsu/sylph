@@ -14,6 +14,7 @@ urlpatterns = patterns('sylph.core.backend.views',
 
 	# Test 
 	(r'test/?$', 'test'),
+	(r'test2/?$', 'test2'),
 )
 
 # Use builtin login system

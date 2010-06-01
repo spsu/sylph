@@ -36,7 +36,7 @@ class Node(models.Model): # NOT A RESOURCE!
 			'protocol_version',
 			'software_name',
 			'software_version',
-			'datetime_last_edited',
+			'datetime_edited',
 	]
 
 	class_name = 'Node'

@@ -83,12 +83,14 @@ Sylph currently requires the following:
 * **Django 1.1**
 * **Celery** (built from source, which also requires django-celery and billiard 
   be built.)
+* [**RDFLib**](http://www.rdflib.net/) library for RDF, which serves as the 
+  transport serialization.
 * **RabbitMQ** (eventually want to make this optional)
 * **Relational database** (I'm using MySQL, but intend to test Postgres and 
   SQLite)
 
-Running multiple instances on the same server is currently done as 
-follows&mdash;first, start the first instance (defaults to port 8000):
+Running multiple instances on the same machine is currently done as 
+follows&mdash;to begin, start the first instance (defaults to port 8000):
 
 > $ python manage.py runserver  
 > $ python manage.py celeryd

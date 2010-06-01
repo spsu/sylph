@@ -1,128 +1,128 @@
-# Sylph
-from sylph.core.resource.models import Resource, ResourceTree
-
 # Django
 from django.db import models
 from django.db.models.query import QuerySet
 
-# RDF Lib
-import rdflib
+# RdfLib
 from rdflib.Graph import ConjunctiveGraph as Graph
-from rdflib import Namespace, URIRef, Literal, BNode, RDF
+from rdflib import URIRef, Literal, BNode, RDF
+from rdflib import Namespace as NS
 
-# XXX XXX: See IntermediaryOld for removed code. 
+# Sylph
+from sylph.core.resource.models import Resource, ResourceTree
+from sylph.core.node.models import Node
+
+from types import NoneType
 
 class Intermediary(object):
 	"""
-	Just store some queried data. 
+	Intermediary transforms QueryResults and singular model instances
+	from Django's ORM into RDF payloads to send over the wire. This is
+	how we will accomplish communication in Sylph.
 	"""
 
-	def __init__(self):
-		# TODO
-		self.data = [] 
+	# ============= Namespaces ============================
 
-		# Each result set as it is added
-		self.resultSets = []
+	"""The Sylph Namespace as well as other popular RDF namespaces."""
+	NAMESPACES = {
+		# Namespace for the Sylph Protocol & Models
+		# TODO: These aren't actual URIs
+		# TODO: Models need ontologies to go with them!
+		'sylph': NS('http://digitalsubstance.com/sylph/0.1/ns#'),
+		'model': NS('http://digitalsubstance.com/model/0.1/ns#'),
 
-		# Individual records
-		self.records = [] 
+		# Other popular ontologies -- consider using/interoperating with them!
+		'rdf': NS('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
+		'rdfs': NS('http://www.w3.org/2000/01/rdf-schema#'),
+		'owl': NS('http://www.w3.org/2002/07/owl#'),
+		'dc': NS('http://purl.org/dc/elements/1.1/'),
+		'dcterms': NS('http://purl.org/dc/terms/'),
+		'foaf': NS('http://xmlns.com/foaf/0.1/'),
+	}
 
-		# Resource FKs that need urls
-		self.needUrls = []
+	# ============= CTOR ==================================
 
-		# Output graph
-		self.graph = None
+	def __init__(self, obj=None):
+		"""Intermediary constructor. May take an optional first result
+		to add to the graph."""
+
+		"""Subgraphs are held for every model/queryresult added."""
 		self.subgraphs = []
 
+		if obj:
+			self.add(obj)
 
-	# ============= Add Result ============================
 
-	def addResult(self, queryRet):
-		"""Add a query result to the intermediary."""
-		if type(queryRet) not in [list, tuple, QuerySet]:
-			if not isinstance(queryRet, Resource):
-				raise TypeError, "Query Result must be a Resource!\n"
+	# ============= Add ===================================
 
-			#mod = self.ModelData(queryRet)
+	def add(self, obj):
+		"""Add a query result or model into the intermediary."""
+		if type(obj) not in [list, tuple, QuerySet]:
+			if not isinstance(obj, Resource) and \
+			   not isinstance(obj, Node):
+					raise TypeError, \
+						  "Query Result must be a Resource or Node!\n"
+
+			#mod = self.ModelData(obj)
 			#self.data.append(mod)
-			self.__addTriples(queryRet)
+			self.__convert_to_triples(obj)
 			return 
 
-		if type(queryRet) in [list, tuple, QuerySet]:
-			for qr in queryRet:
-				self.addResult(qr)
+		# Recurse over list
+		if type(obj) in [list, tuple, QuerySet]:
+			for o in obj:
+				self.add(o)
 
 
-	def __addTriples(self, model):
-		# TODO TEST
-		
-		ns = Namespace(model.get_ontology_name())
-		ns_rdf = Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#')
-
-		data = model.get_transportable()
+	def __convert_to_triples(self, model):
+		"""Converts each model/query result into its own graph to be 
+		merged the graph returned by to_rdf()."""
+		sylph = self.NAMESPACES['sylph']
 
 		graph = Graph()
 		graphNum = len(self.subgraphs)
 
-		node = URIRef(model.url) # The Resource
-		graph.add((node, RDF.type, ns[model.get_rdf_class()])) # RDF Datatype
+		node = URIRef(model.uri) # The Resource
+		graph.add((node, RDF.type, sylph[model.get_rdf_class()])) # Datatype
 
-		needUrls = []
+		data = model.get_transportable()
 
-		#graph.add(sub, pred, obj)
-		classes = (models.Model, Resource, ResourceTree)
+		# Performs graph.add(sub, pred, obj)
 		for k, v in data.iteritems():
 			obj = None
-
-			if k == 'url':
+			if k == 'uri':
 				continue # already done
 
+			# Blank values transported because we may be 'erasing' them
 			if not v:
-				continue # TODO: This shouldn't always be the case!
+				if type(v) in [str, unicode]:
+					obj = Literal('')
+				if type(v) is NoneType:
+					obj = sylph['None']
 
-			if isinstance(v, classes):
-				# FIXME: This is slow as hell. Hits the database every single 
-				# time this codepath is reached. 
-				# XXX: For now, forget performance. Work on this later...
-				#self.needUrls.append((graphNum, k, v)) 
-				#continue
-				obj = URIRef(v.url) 
+			if isinstance(v, (models.Model, Resource, ResourceTree)):
+				# TODO/XXX: This is slow as hell. Hits the database every 
+				# single time this codepath is reached. 
+				# For now, forget performance. Work on this later...
+				obj = URIRef(v.uri) 
 
 			if not obj:
-				obj = Literal(v)
+				obj = Literal(v) # Handles int, float, etc.
 
-			prd = ns[k]
-			graph.add((node, prd, obj))
+			graph.add((node, sylph[k], obj))
 
 		self.subgraphs.append(graph)
 
-	def __addNamespace(self, namespace):
-		pass
-		
 
-	def __getNeededUrls(self): # XXX: For now, forget performance. 
-		urls = []
-		for graphNum, k, v in self.needUrls:
-			print k
-			print v.url
+	def to_rdf(self, format='n3'):
+		"""Convert the intermediary store into RDF."""
+		graph = Graph()
+		for k, v in self.NAMESPACES.iteritems():
+			graph.bind(k, v)
 
+		for g in self.subgraphs:
+			graph += g
 
-		#for self.needUrls:
-
-		#objs = Resource.objects.get(pk__in = urls).only("url")
-
-
-	def toRdf(self):
-		self.graph = Graph()
-		ns = Namespace('/sylph/apps/posts_Post#')
-		self.graph.bind('sylphPost', ns)
-
-		for graph in self.subgraphs:
-			self.graph += graph
-
-		#self.__getNeededUrls() # XXX: For now, forget performance. 
-
-		return self.graph.serialize(format='n3')
+		return graph.serialize(format=format)
 
 
 

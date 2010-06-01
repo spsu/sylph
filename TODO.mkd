@@ -1,0 +1,11 @@
+TODO File
+=========
+Basic list of things that need doing. All contributors can/should edit.
+
+Note that all items that need to be fixed are marked "TODO" in the code.
+Critical items are marked "XXX" or "TODO/XXX"
+
+Libraries to explore
+--------------------
+* [Django-South](http://south.aeracode.org/) for updating models when they 
+  change. 
