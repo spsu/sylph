@@ -25,18 +25,34 @@ class Communicator(object):
 			'Content-type': 'application/x-www-form-urlencoded',
 			'Accept': 'text/html,application/xhtml+xml,' + \
 					  'application/xml;q=0.9,*/*;q=0.8',
-			'X-Sylph-Protocol-Version': settings.PROTOCOL_VERSION,
+			#'X-Sylph-Protocol-Version': settings.PROTOCOL_VERSION,
 		}
 
 		hostname = self.endpoint_uri.hostname
-		port = self.endpoint_uri.port
+		port = 80
 		path = self.endpoint_uri.path
+		if self.endpoint_uri.port:
+			port = self.endpoint_uri.port
 
-		conn = httplib.HTTPConnection(hostname, port, timeout=self.timeout)
-		response = conn.request("POST", path, params, headers)
+		try:
+			conn = httplib.HTTPConnection(hostname, port, timeout=self.timeout)
+			conn.request("POST", path, params, headers)
+			response = conn.getresponse()
+
+			if response.status != 200:
+				print "Non-200 response!" # TODO DEBUG ONLY
+				print response.read()[0:300]
+				raise httplib.HTTPException, "Non-200 response"
+
+		except httplib.HTTPException:
+			conn.close() # TODO: In future, keep connection in some cases
+			print "An exception occurred in comms." # TODO: Log this
+			return False
 
 		data = response.read()
 		conn.close() # TODO: In future, keep connection in some cases
+
+		return data
 
 	# TODO: Send wrapped RDF payloads
 	#def send_payload(self, payload=None):

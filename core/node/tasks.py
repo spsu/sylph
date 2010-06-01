@@ -42,19 +42,44 @@ def do_add_node_lookup(uri):
 		Also, in EVERY outgoing message, tell it what node we are!
 
 	"""
+
+	print "Trying task..." # TODO DEBUG MSG
+
 	node = None
 	try:
 		node = Node.objects.get(uri=uri)
 	except Node.DoesNotExist:
 		# TODO: ERROR LOG FILE
+		print "Node does not exist!!!"
 		return
 
 	comm = Communicator(uri)
+	ret = comm.send_post({'dispatch': 'ping'})
 
-	ret = comm.send_post({'todo':0})
+	if not ret:
+		print "No communication return data!!"
+		node.status = 'EERR' # TODO
+		node.datetime_last_failed = datetime.today()
+		node.save()
+		return # TODO: Error
 
-	print ret
+	# Update the node's status
+	node.is_yet_to_resolve = False
+	node.datetime_last_resolved = datetime.today()
+	node.status = 'AVAIL'
 
+	# Data items todo:
+	node.protocol_version = 'TODO'
+	node.software_name = 'TODO'
+	node.software_version = 'TODO'
+	node.node_type = 'U' # TODO
+	node.name = 'TODO'
+	node.description = 'TODO'
+	#node.datetime_edited # TODO
+	node.save()
+
+	
+	print "COMM WORKED!!!!"
 
 def query_node_status(uri):
 	"""Query a node to see its status."""

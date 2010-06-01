@@ -1,15 +1,13 @@
-# Node Views
-
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
-from django.forms import ModelForm
-from models import *
 from django.template import RequestContext
+
+from sylph.core.endpoint.exceptions import ProtocolErrorException
 
 import datetime
 
-# ================ INDEX ========================
+# ================ ENDPOINT INDEX =========================
 
 def index(request):
 	"""All endpoint-related communications will be through this one 
@@ -50,6 +48,17 @@ def index(request):
 
 	
 	"""
+
+	# TODO: Dispatch key needs to be embedded in RDF request... I think.
+	if not request.POST or 'dispatch' not in request.POST:
+		raise ProtocolErrorException, "No dispatch postdata!" # TODO
+
+	dispatch = request.POST['dispatch']
+
+	# TODO: I need to write an actual dispatcher!!!
+	if dispatch == 'ping':
+		from sylph.core.node.api import ping_response
+		return ping_response(request)
 
 	return HttpResponse('TODO')
 

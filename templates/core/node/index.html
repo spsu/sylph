@@ -8,15 +8,36 @@
 		<a href="/node/add/" class="button">Add Node</a>
 		<a href="/node/edit/" class="button">Edit Own Node</a>
 	</div>
-	
-	<div class="table">
-		{% for node in nodes %}
-		<div class="row_{% cycle 'odd' 'even' %}">
-			<a href="{{ node.get_absolute_url }}">{{ node.uri }}</a>
-			{% if node.datetime_last_resolved %}
-				<small>last resolved {{ node.datetime_last_resolved }}</small>
-			{% endif %}
-		</div>
-		{% endfor %}
-	</div>
+	<table class="table">
+	{% for node in nodes %}
+		<tr class="row_{% cycle 'odd' 'even' %}">
+			<td style="background-color:{{ node.status_color }}" 
+				title="{{ node.get_status }}">
+				&nbsp;&nbsp;&nbsp;
+			</td>
+			<td>		
+				{% ifequal node.id 1 %}
+					<strong>
+						<a href="{{ node.get_absolute_url }}">Our Node</a>
+					</strong>
+				{% else %}
+					<a href="{{ node.get_absolute_url }}">{{ node.uri }}</a>
+				{% endifequal %}		
+			</td>
+			<td>	
+				{% if node.datetime_last_resolved %}
+					<small>last resolved {{ node.datetime_last_resolved }}
+					</small>
+				{% endif %}
+			</td>
+			<td>
+				{% ifequal node.id 1 %}
+					<a href="/node/delete/1/">edit</a>
+				{% else %}
+					<a href="/node/delete/{{ node.id }}/">delete</a>
+				{% endifequal %}
+			</td>
+		</tr>
+	{% endfor %}
+	</table>
 {% endblock %}

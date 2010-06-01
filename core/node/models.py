@@ -25,6 +25,24 @@ class Node(models.Model): # NOT A RESOURCE!
 
 	# XXX NOTE: A user has a node, not a node has a user!
 
+	# ============= Sylph Metadata ========================
+
+	# A list of transportable RDF fields
+	rdf_fields = [
+			'uri',
+			'name',
+			'description', # TODO: own_description?
+			'node_type',
+			'protocol_version',
+			'software_name',
+			'software_version',
+			'datetime_last_edited',
+	]
+
+	class_name = 'Node'
+
+	# ============= Model Fields ==========================
+
 	"""Node physical query endpoint. Required and Unique."""
 	uri = models.URLField(max_length=200, unique=True, verify_exists=False)
 	
@@ -34,7 +52,7 @@ class Node(models.Model): # NOT A RESOURCE!
 	"""A description for the node (as set by the node owner)."""
 	description = models.CharField(max_length=255, null=False, blank=True)
 
-	"""A personal description/note for the node."""
+	"""A personal description/note for the node. Never transport this!"""
 	own_description = models.CharField(max_length=255, null=False, blank=True)
 
 	# TODO: Media access suburl (is that even necessary?)
@@ -67,8 +85,14 @@ class Node(models.Model): # NOT A RESOURCE!
 	"""Date the node was first added to the server."""
 	datetime_added = models.DateTimeField(default=datetime.today)
 
-	"""Date the last communication with the node occurred on."""
+	"""Date the last successful communication with the node occurred on."""
 	datetime_last_resolved = models.DateTimeField(null=True)
+
+	"""Date the last failed communication occurred."""
+	datetime_last_failed = models.DateTimeField(null=True)
+
+	"""Date when node parameters were changed by the owner"""
+	datetime_edited = models.DateTimeField(null=True)
 
 	"""For events originating at the local node"""
 	datetime_last_pushed_to = models.DateTimeField(null=True)
@@ -77,9 +101,6 @@ class Node(models.Model): # NOT A RESOURCE!
 	"""For events originating at the remote node"""
 	datetime_last_pulled_from_us = models.DateTimeField(null=True)
 	datetime_last_pushed_to_us = models.DateTimeField(null=True)
-
-	"""Date when node parameters were changed by the owner"""
-	datetime_edited = models.DateTimeField(null=True)
 
 	"""The types of status a node can have"""
 	STATUS_TYPE_CHOICES = (
@@ -93,6 +114,71 @@ class Node(models.Model): # NOT A RESOURCE!
     )
 	status = models.CharField(max_length=5, choices=STATUS_TYPE_CHOICES, 
 							  null=False, blank=False, default='U')
+
+
+	# ============= RDF Serilization Helpers ==============
+
+	def get_transportable(self):
+		"""
+		Return the elements that can be transported over RDF payload.
+		"""
+		dic = dict()
+		fields = self.get_transportable_fields()
+
+		for field in fields:
+			if hasattr(self, field):
+				dic[field] = getattr(self, field)
+
+		return dic
+
+	@classmethod
+	def get_transportable_fields(cls):
+		"""
+		Return a list of the names of the fields that can be 
+		transported.
+		"""
+		# TODO: Won't multiple-inheritance be an issue?
+		if hasattr(cls.__bases__[0], 'rdf_fields'):
+			fields = cls.__bases__[0].get_transportable_fields()
+			for field in cls.rdf_fields:
+				if field in fields:
+					continue
+				fields.append(field)
+			return fields
+
+		return cls.rdf_fields
+
+	def get_ontology_name(self):
+		"""Heuristic to generate the ontology name."""
+		# TODO: Temp fix, and does it actually work??
+		name = str(type(self))
+		name = '/' + name[8:-2] + '#'
+		return name.replace('.', '/').replace('/models/', '_')
+
+	def get_rdf_class(self):
+		return self.__class__.__name__
+
+
+	# ============= Template Helpers ======================
+
+	def status_color(self):
+		"""Return a status color for visualization. Temporary."""
+		if self.id == 1:
+			return 'white'
+		if self.is_yet_to_resolve:
+			return 'red'
+		if self.status == 'AVAIL':
+			return 'green'
+		return 'red'
+
+	def get_status(self):
+		if self.id == 1:
+			return 'Our node'
+		if self.is_yet_to_resolve:
+			return 'Unresolved'
+		if self.status == 'AVAIL':
+			return "Good"
+		return "Bad Status"
 
 	# ============= Django Methods and Metadata ===========
 	
