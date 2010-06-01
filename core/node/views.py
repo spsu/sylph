@@ -132,8 +132,8 @@ def add_node(request):
 			node.save()
 
 			# Task to query node
-			tasks.do_add_node_lookup(form.cleaned_data['uri'])
-			#tasks.do_add_node_lookup.delay(form.cleaned_data['uri'])
+			#tasks.do_add_node_lookup(form.cleaned_data['uri'])
+			tasks.do_add_node_lookup.delay(form.cleaned_data['uri'])
 
 			return HttpResponseRedirect('/node/')
 	else:

@@ -4,6 +4,7 @@ from django.conf import settings
 from models import *
 from sylph.apps.social.models import User
 from sylph.utils.Communicator import Communicator
+from sylph.utils.RdfParser import RdfParser
 
 from datetime import datetime
 import hashlib
@@ -43,7 +44,10 @@ def do_add_node_lookup(uri):
 
 	"""
 
-	print "Trying task..." # TODO DEBUG MSG
+	def on_failure(node):
+		node.status = 'EERR' # TODO
+		node.datetime_last_failed = datetime.today()
+		node.save()
 
 	node = None
 	try:
@@ -57,11 +61,25 @@ def do_add_node_lookup(uri):
 	ret = comm.send_post({'dispatch': 'ping'})
 
 	if not ret:
-		print "No communication return data!!"
-		node.status = 'EERR' # TODO
-		node.datetime_last_failed = datetime.today()
-		node.save()
-		return # TODO: Error
+		print "No communication return data!!" # TODO: Error log
+		on_failure(node)
+		return
+
+	data = None
+	try:
+		parser = RdfParser(ret)
+		data = parser.extract('Node')
+		if not data or len(data) != 1:
+			raise Exception, "Error with data"
+
+		data = data[0]
+
+	except:
+		print "Error parsing RDF" # TODO: Error log
+		on_failure(node)
+		return
+
+	
 
 	# Update the node's status
 	node.is_yet_to_resolve = False
@@ -69,15 +87,14 @@ def do_add_node_lookup(uri):
 	node.status = 'AVAIL'
 
 	# Data items todo:
-	node.protocol_version = 'TODO'
-	node.software_name = 'TODO'
-	node.software_version = 'TODO'
+	node.protocol_version = data['protocol_version']
+	node.software_name = data['software_name']
+	node.software_version = data['software_version']
 	node.node_type = 'U' # TODO
-	node.name = 'TODO'
-	node.description = 'TODO'
+	node.name = data['name']
+	node.description = data['description']
 	#node.datetime_edited # TODO
 	node.save()
-
 	
 	print "COMM WORKED!!!!"
 

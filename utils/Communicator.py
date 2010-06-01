@@ -35,24 +35,32 @@ class Communicator(object):
 			port = self.endpoint_uri.port
 
 		try:
+			print hostname
+			print port
+			print path
+			print params
+			print headers
+
 			conn = httplib.HTTPConnection(hostname, port, timeout=self.timeout)
 			conn.request("POST", path, params, headers)
 			response = conn.getresponse()
+
+			print response
 
 			if response.status != 200:
 				print "Non-200 response!" # TODO DEBUG ONLY
 				print response.read()[0:300]
 				raise httplib.HTTPException, "Non-200 response"
 
-		except httplib.HTTPException:
+			data = response.read()
+			conn.close() # TODO: In future, keep connection in some cases
+			return data
+
+		except:
+		#except httplib.HTTPException:
 			conn.close() # TODO: In future, keep connection in some cases
 			print "An exception occurred in comms." # TODO: Log this
 			return False
-
-		data = response.read()
-		conn.close() # TODO: In future, keep connection in some cases
-
-		return data
 
 	# TODO: Send wrapped RDF payloads
 	#def send_payload(self, payload=None):

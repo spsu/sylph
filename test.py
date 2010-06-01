@@ -12,12 +12,7 @@ from sylph.apps.post.tasks import post_random_message
 from sylph.core.backend.models import BackendConfig
 from sylph.core.backend.utils.Configs import Configs
 from sylph.core.resource.models import Resource
-
-# RdfLib
-from rdflib.Graph import ConjunctiveGraph as Graph
-from rdflib import URIRef, Literal, BNode, RDF
-from rdflib import Namespace as NS
-from cStringIO import StringIO
+from sylph.utils.RdfParser import RdfParser
 
 """Quick code to test."""
 
@@ -25,19 +20,6 @@ def test(request):
 	from sylph.core.node.api import ping_response
 
 	return ping_response(request)
-	
-
-class RdfParser(object):
-	def __init__(self, rdf):
-		self.graph = Graph()
-		self.graph.load(StringIO(rdf), format="n3")
-
-	def test(self):
-
-		ns = NS('http://digitalsubstance.com/sylph/0.1/ns#')
-		for i in self.graph.transitive_subjects(RDF.type, ns['Node']):
-			print "TEST"
-			print i
 
 def test2(request):
 	from sylph.utils.Communicator import Communicator
@@ -49,7 +31,8 @@ def test2(request):
 
 
 	g = RdfParser(ret)
-	g.test()
+	data = g.extract('Node')
+	print data
 
 	return HttpResponse(str(ret))
 
