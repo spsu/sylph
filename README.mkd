@@ -1,4 +1,4 @@
-Sylph: No More Websites (Part I)
+Sylph: NO MORE WEBSITES (Part I)
 ================================
 This project is part of my research to build a web without websites. No party
 should be able to exert control over how we produce/consume/share information.
@@ -32,13 +32,42 @@ And what about edge-cases, such as programmers and researchers?
 I want everyone to be involved in making this. 
 [This document explains more](http://possibilistic.org/docs/sylph/).
 
-Now back to earth for a second
-------------------------------
-Building such a platform will take _a very long time_ to get right. We have to 
-start with the basics and build our way up. This prototype client is written 
-using Python/Django/[Celery](http://github.com/ask/celery). 
+Short-term objectives
+---------------------
+Now back to earth for a second... 
 
-I'm still in the process of learning Django and Celery, but I'm getting better.
+Building such a platform will take a considerable amount of time and effort to
+get right. With the proper involvement and research, we can accomplish this. At 
+present, however, we need to identify achievable and sustainable short-term
+objectives. 
+
+_This prototype_ of the sylph platform is written in Python, Django, and 
+[Celery](http://github.com/ask/celery). Here are the goals we want to 
+accomplish in iteration 1:
+
+* **Scalable communications platform**
+	* *Direct node-to-node* communications. 
+	* *Many nodes-to-"agglomerative" node* (eg. a cache server, directory 
+	  service, clustering system, etc.)
+	* *API to node* (eg. Javascript library, desktop library/client to access
+	  one's own node.)
+
+* **Robust data exchange format**
+	* RDF-based
+	* Grounded in semantics so that it is extensible in the future
+	* Idea of URI-dereferencable resources (though optional) to achieve both
+	  current-web and future-web interoperability. 
+
+* "Applications" on top of sylph:
+	* Basic social networking facility, but not similar to present systems...
+	  more focused on getting work/projects done in a distributed setting.
+	* Ability to share commentary, news items, personal blogging, etc. in a
+	  _relevant_ manner.
+	* Ability to work together on projects, coding, research&mdash;easily. 
+
+We're asking all developers and CS researchers to join us in this effort. 
+Again, I have [more of the objectives listed 
+here](http://possibilistic.org/docs/sylph/).
 
 License
 -------
@@ -76,5 +105,7 @@ database name and RabbitMQ virtual host.) Be aware of permissions in the RMDBS
 and RabbitMQ!
 
 As I'm in the prototyping stages, these configuration options are geared at
-rapid development rather than long-term deployment. 
+rapid development rather than long-term deployment. I'm rather new to Django 
+and Celery myself, but I'm quickly getting familiar with them both. 
+
 
