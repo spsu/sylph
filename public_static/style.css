@@ -86,8 +86,10 @@ a:active, a:hover { color: #aae; }
 }
 
 .buttons {
-	margin: 2px 20px 10px 10px;
+	margin: 12px 20px 10px 10px;
 	text-align: right;
+	float: right;
+	width: 300px;
 }
 
 #content h1 { font-size: 1.8em; }
@@ -108,9 +110,19 @@ a:active, a:hover { color: #aae; }
 table.table {
 	width: 100%;
 }
-table.table  td {
-	padding: 5px;
+table.table td {
+	padding: 4px;
 }
+table.table th {
+	padding: 3px;
+	background-color: #ddd;
+	font-size: 1.2em;
+}
+
+table.table p {
+	margin: 2px 0px 0px 0px;
+}
+	
 
 .row_odd {
 	background-color: #ddd;

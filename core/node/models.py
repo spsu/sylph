@@ -161,6 +161,14 @@ class Node(models.Model): # NOT A RESOURCE!
 
 	# ============= Template Helpers ======================
 
+	def is_ours(self):
+		"""Returns whether this node is ours."""
+		return self.id == 1
+
+	def is_not_ours(self):
+		"""Returns whether this node is not ours."""
+		return self.id != 1
+
 	def status_color(self):
 		"""Return a status color for visualization. Temporary."""
 		if self.id == 1:

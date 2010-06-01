@@ -3,11 +3,11 @@
 {% block title %}Node index{% endblock %}
 
 {%block content %}
-	<h1> Node Index </h1>
 	<div class="buttons">
 		<a href="/node/add/" class="button">Add Node</a>
 		<a href="/node/edit/" class="button">Edit Own Node</a>
 	</div>
+	<h1> Node Index </h1>
 	<table class="table">
 	{% for node in nodes %}
 		<tr class="row_{% cycle 'odd' 'even' %}">
@@ -15,19 +15,26 @@
 				title="{{ node.get_status }}">
 				&nbsp;&nbsp;&nbsp;
 			</td>
-			<td>		
-				{% ifequal node.id 1 %}
-					<strong>
-						<a href="{{ node.get_absolute_url }}">Our Node</a>
-					</strong>
+			<td>
+				{% if node.name %}
+					<a href="{{ node.get_absolute_url }}">{{node.name}}</a>
 				{% else %}
-					<a href="{{ node.get_absolute_url }}">{{ node.uri }}</a>
-				{% endifequal %}		
+					<a href="{{ node.get_absolute_url }}">Nameless node</a>
+				{% endif %}
+				{% ifequal node.id 1 %}
+					<strong>(our node)</strong>
+				{% else %}
+				{% endifequal %}	
+				<p>located at <u>{{ node.uri }}</u></p>	
 			</td>
 			<td>	
+				{% if node.datetime_added %}
+					<p><small>added {{ node.datetime_added }}
+					</small></p>
+				{% endif %}
 				{% if node.datetime_last_resolved %}
-					<small>last resolved {{ node.datetime_last_resolved }}
-					</small>
+					<p><small>last resolved {{ node.datetime_last_resolved }}
+					</small></p>
 				{% endif %}
 			</td>
 			<td>

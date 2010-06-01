@@ -3,7 +3,6 @@
 {% block title %}Viewing Node{% endblock %}
 
 {%block content %}
-	<h1> <a href="/node/">Index</a> &gt; Node #{{ node.id }} </h1>
 	<div class="buttons">
 	{% ifequal node.id 1 %}
 		<a href="/node/edit/" class="button">Edit Own Node</a>
@@ -11,9 +10,96 @@
 		<a href="/node/delete/{{ node.id }}/" class="button">Delete Node</a>
 	{% endifequal %}	
 	</div>
+	<h2> <a href="/node/">Index</a> &gt; Node #{{ node.id }} </h2>
 
-	<p><strong>{{ node.uri }}</strong></p>
+	<table class="table">
+		<tr>
+			<th colspan="2">Basic Info</th>
+		</tr>
+		<tr>
+			<td>Name</td>
+			<td><strong>{{ node.name }}</strong></td>
+		</tr>
+		<tr>
+			<td>URI</td>
+			<td>{{ node.uri }}</td>
+		</tr>
+		<tr>
+			<td>Description</td>
+			<td>{{ node.description }}</td>
+		</tr>
+		<tr>
+			<td>Date Edited</td>
+			<td>{{ node.datetime_edited }}</td>
+		</tr>
+	</table>
 
+	{% if node.is_not_ours %}
+		<p>
+			<strong>Personal Notes:</strong> 
+			{% if node.own_description %}
+				{{ node.own_description }}
+			{% else %}
+				None
+			{% endif %}
+		</p>
+	{% else %}
+		<br />
+	{% endif %}
+
+	{% if node.is_not_ours %}
+
+		<table class="table">
+			<tr>
+				<th colspan="2">Resolve Details</th>
+			</tr>
+			<tr>
+				<td>Date Added</td>
+				<td>{{ node.datetime_added }}</td>
+			</tr>
+			<tr>
+				<td>Last Resolved</td>
+				<td>{{ node.datetime_resolved }}</td>
+			</tr>
+			<tr>
+				<td>Last Error</td>
+				<td>{{ node.datetime_last_failed }}</td>
+			</tr>
+		</table>
+
+		<br />
+
+		<table class="table">
+			<tr>
+				<th colspan="2">Communication Originating Here</th>
+			</tr>
+			<tr>
+				<td>Last pushed to</td>
+				<td>{{ node.datetime_last_pushed_to }}</td>
+			</tr>
+			<tr>
+				<td>Last pulled from</td>
+				<td>{{ node.datetime_last_pulled_from }}</td>
+			</tr>
+		</table>
+
+		<br />
+
+		<table class="table">
+			<tr>
+				<th colspan="2">Communication Originating Remotely</th>
+			</tr>
+			<tr>
+				<td>Last pulled from us</td>
+				<td>{{ node.datetime_pulled_from_us }}</td>
+			</tr>
+			<tr>
+				<td>Last pushed to us</td>
+				<td>{{ node.datetime_pushed_to_us }}</td>
+			</tr>
+		</table>
+
+	{% endif %}
 
 	TODO - More info
 	<ul>
