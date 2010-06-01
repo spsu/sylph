@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from sylph.core.endpoint.exceptions import ProtocolErrorException
-from sylph.core.endpoint.comms.Intermediary import Intermediary
+from sylph.utils.Intermediary import Intermediary
 from models import *
 
 import datetime
@@ -17,12 +17,8 @@ def ping_response(request):
 	except Node.DoesNotExist:
 		raise Exception # XXX: This is a critcal system error!
 
-	print node
-
 	im = Intermediary(node)
-
 	rdf = im.to_rdf()
 
 	return HttpResponse(rdf, mimetype='text/plain')
 
-	return HttpResponse('PING WORKS') #TODO: Convert to Intermediary
