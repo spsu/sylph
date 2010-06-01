@@ -56,8 +56,7 @@ class Communicator(object):
 			conn.close() # TODO: In future, keep connection in some cases
 			return data
 
-		except:
-		#except httplib.HTTPException:
+		except: #except httplib.HTTPException:
 			conn.close() # TODO: In future, keep connection in some cases
 			print "An exception occurred in comms." # TODO: Log this
 			return False

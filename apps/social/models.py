@@ -26,7 +26,8 @@ class User(Resource):
 			'last_name',
 			'title',
 			'suffix',
-			'bio'
+			'bio',
+			'node'
 	]
 
 	# ============= Model Fields ==========================
@@ -58,14 +59,14 @@ class User(Resource):
 	bio_markup_cache = models.TextField(blank=True)
 	bio_cache_datetime = models.DateTimeField(null=True, blank=True) 
 
+	"""FK to the node the user owns."""
+	node = models.ForeignKey('node.Node', null=True, blank=True)
+
 	# TODO: Photo the user chooses for their profile
 	#photo = models.ForeignKey('images.Photo')
 
 	# TODO: Avatar the user chooses for their posts
 	#avatar = models.ForeignKey('images.Avatar')
-
-	# TODO: Node the user owns
-	#node = models.ForeignKey('endpoint.Node')
 
 
 	# ============= Model-specific methods ================

@@ -88,6 +88,14 @@ def install_main(request):
 
 				return p
 
+			# Set our node endpoint URI
+			node = Node.objects.get(id=1)
+			node.uri = make_path_uri('/endpoint/') # TODO: More custom
+			node.protocol_version = settings.PROTOCOL_VERSION
+			node.software_name = settings.SOFTWARE_NAME
+			node.software_version = settings.SOFTWARE_VERSION
+			node.save()
+
 			# Save user's profile
 			user.username = data['public_username']
 			user.first_name = data['f_name']
@@ -95,6 +103,7 @@ def install_main(request):
 			user.last_name = data['l_name']
 			user.email = data['email']
 			user.uri = make_path_uri('/profile/') # TODO: More custom / OpenID
+			user.node = node
 			user.save()
 
 			# TODO/XXX: Create site login account/credentials
@@ -104,13 +113,6 @@ def install_main(request):
 			configs.installation_status = INSTALLED
 			configs.save()
 
-			# Set our node endpoint URI
-			node = Node.objects.get(id=1)
-			node.uri = make_path_uri('/endpoint/') # TODO: More custom
-			node.protocol_version = settings.PROTOCOL_VERSION
-			node.software_name = settings.SOFTWARE_NAME
-			node.software_version = settings.SOFTWARE_VERSION
-			node.save()
 
 			# TODO: Login here! 
 			return HttpResponseRedirect('/') # ACCOUNT CREATED!

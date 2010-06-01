@@ -5,6 +5,16 @@ Basic list of things that need doing. All contributors can/should edit.
 Note that all items that need to be fixed are marked "TODO" in the code.
 Critical items are marked "XXX" or "TODO/XXX"
 
+Celery-related
+--------------
+* Run tasks immediately without RabbitMQ if it is detected RabbitMQ isn't 
+  running and DEBUG=True.
+* Easy way to use Celery without RabbitMQ
+
+Organization
+------------
+* API and Task design must be sensible.
+
 Libraries to explore
 --------------------
 * [Django-South](http://south.aeracode.org/) for updating models when they 
