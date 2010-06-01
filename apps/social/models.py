@@ -106,8 +106,9 @@ class User(Resource):
 		# TODO: Markup type
 		stale = False
 		if not self.bio_markup_cache or \
-			self.datetime_edited >= self.bio_cache_datetime:
-				stale = True
+			(self.datetime_edited and \
+				self.datetime_edited >= self.bio_cache_datetime):
+					stale = True
 
 		if stale:
 			markup = markdown(self.bio) # TODO: More markup methods

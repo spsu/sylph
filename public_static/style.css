@@ -6,7 +6,7 @@ body {
 #main { 
 	border: 1px solid #ccc; 
 	margin: 0px auto 0px auto;
-	width: 700px;
+	width: 800px;
 }
 #topbar {
 	margin-bottom: 8px;
@@ -55,7 +55,7 @@ body {
 }
 #content {
 	margin: 0px;
-	width: 500px;
+	width: 600px;
 	float: right;
 }
 #aftercontent {

@@ -58,22 +58,23 @@ class Post(ResourceTree):
 	# ============= Model-specific methods ================
 
 	def contents_markdown(self):
-		# XXX: DEPRECATED 
+		print "contents_markdown is deprecated" # XXX: DEPRECATED 
 		return self.contents_with_markup()
 
 	def contents_with_markup(self):
 		"""Get the contents with markup."""
-		if self.markup_type in ['P', 'X']:
+		if self.markup_type in ['P', 'X']: # TODO: Notify template of unsafety
 			return self.contents
 
 		stale = False
 		if not self.contents_markup_cache or \
-			self.datetime_edited >= self.contents_cache_datetime:
-				stale = True
+			(self.datetime_edited and \
+				self.datetime_edited >= self.contents_cache_datetime):
+					stale = True
 
 		if stale:
 			markup = markdown(self.contents) # TODO: More markup methods
-			self.bio_markup_cache = markup
+			self.contents_markup_cache = markup
 			self.contents_cache_datetime = datetime.today()
 			self.save()
 

@@ -23,9 +23,10 @@ def index(request):
 							mimetype='application/xhtml+xml')
 
 
-# ============ Edit Node ==================================
+# ============ Edit Own Node ==============================
 
 def edit_own_node(request):
+	"""Edit the details on our own node."""
 	node = None
 	try:
 		node = Node.objects.get(pk=1)
@@ -52,6 +53,42 @@ def edit_own_node(request):
 
 	return render_to_response('core/node/edit_own.html',
 							  {'form': form}, 
+							  context_instance=RequestContext(request))
+
+
+# ============ Edit Other Node ============================
+
+def edit_other_node(request, node_id):
+	"""Edit the details on another node that isn't our own."""
+	if node_id in [1, '1']:
+		return HttpResponseRedirect('/node/edit/')
+
+	node = None
+	try:
+		node = Node.objects.get(pk=node_id)
+	except Node.DoesNotExist:
+		raise Http404
+
+	class EditOtherNodeForm(forms.ModelForm):
+		"""Form for editing another node"""
+		class Meta:
+			model = Node
+			fields = ['own_description']
+
+	if request.method == 'POST':
+		form = EditOtherNodeForm(request.POST, instance=node)
+		if form.is_valid():
+			# Note: Don't change datetime_edited--that's only for owner
+			n = form.save(commit=False)
+			n.save()
+			node_uri = '/node/view/%d/' % node.id
+			return HttpResponseRedirect(node_uri)
+
+	else:
+		form = EditOtherNodeForm(instance=node)
+
+	return render_to_response('core/node/edit_other.html',
+							  {'node': node, 'form': form}, 
 							  context_instance=RequestContext(request))
 
 
@@ -106,6 +143,9 @@ def add_node(request):
 								'form': form
 							  }, 
 							  context_instance=RequestContext(request))
+
+
+# ============ Delete Node ================================
 
 def delete_node(request, node_id):
 	"""Delete a node from the system."""

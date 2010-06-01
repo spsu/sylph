@@ -16,15 +16,13 @@
 				&nbsp;&nbsp;&nbsp;
 			</td>
 			<td>
+				{% if node.is_ours %}<strong>{% endif %}
 				{% if node.name %}
 					<a href="{{ node.get_absolute_url }}">{{node.name}}</a>
 				{% else %}
 					<a href="{{ node.get_absolute_url }}">Nameless node</a>
 				{% endif %}
-				{% ifequal node.id 1 %}
-					<strong>(our node)</strong>
-				{% else %}
-				{% endifequal %}	
+				{% if node.is_ours %}(your node)</strong>{% endif %}	
 				<p>located at <u>{{ node.uri }}</u></p>	
 			</td>
 			<td>	
@@ -38,11 +36,12 @@
 				{% endif %}
 			</td>
 			<td>
-				{% ifequal node.id 1 %}
-					<a href="/node/delete/1/">edit</a>
+				{% if node.is_ours %}
+					<a href="/node/edit/">edit</a>
 				{% else %}
+					<a href="/node/edit/{{ node.id }}/">edit</a> |
 					<a href="/node/delete/{{ node.id }}/">delete</a>
-				{% endifequal %}
+				{% endif %}
 			</td>
 		</tr>
 	{% endfor %}
