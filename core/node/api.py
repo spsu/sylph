@@ -23,8 +23,6 @@ def ping_response(request):
 	except Node.DoesNotExist:
 		raise Exception # XXX: This is a critcal system error!
 
-	print node
-
 	user = None
 	try:
 		user = User.objects.get(pk=1)
@@ -32,7 +30,7 @@ def ping_response(request):
 		raise Exception # XXX: This is a critcal system error!
 	
 	im = Intermediary(node)
-	im.add(user)
+	im.add(user) # TODO: Only share minimal info per user's preferences
 	rdf = im.to_rdf()
 
 	return HttpResponse(rdf, mimetype='text/plain')

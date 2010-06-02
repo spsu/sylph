@@ -7,10 +7,17 @@ from sylph.utils.Intermediary import Intermediary
 from cStringIO import StringIO
 
 class RdfParser(object):
-	def __init__(self, rdf):
+	"""A basic wrapper for RdfLib's RDF parser.
+	This class aims to accomplish easier parsing, extraction of Models,
+	etc."""
+
+	def __init__(self, rdf, format='guess'):
 		"""Init the parser with the graph string."""
 		self.graph = Graph()
-		self.graph.load(StringIO(rdf), format="n3")
+		if format == 'guess':
+			format = self.__guess_format(rdf)
+			print 'RdfParser guesses format to be: %s' % format
+		self.graph.load(StringIO(rdf), format=format)
 
 	def extract(self, datatype):
 		"""Extract all of the data of a given datatype."""
@@ -30,4 +37,13 @@ class RdfParser(object):
 				item[predstr] = obj
 			data.append(item)
 		return data
+
+	@staticmethod
+	def __guess_format(st):
+		"""Guess the format of the input string."""
+		# TODO: At present, it can only guess between XML and n3, even
+		# then this is a vague heuristic.
+		if st.startswith('<'):
+			return 'xml'
+		return 'n3'
 

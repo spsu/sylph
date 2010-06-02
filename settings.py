@@ -14,6 +14,7 @@ import sys
 SOFTWARE_NAME = 'Sylph.py Client'
 SOFTWARE_VERSION = '0.1.0.05.25'
 PROTOCOL_VERSION = '0.1.0.05.25' 
+RDF_SERIALIZATION = 'xml' # xml or n3
 
 # ================= Common Configuration ==================
 

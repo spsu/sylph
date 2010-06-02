@@ -5,6 +5,22 @@ Basic list of things that need doing. All contributors can/should edit.
 Note that all items that need to be fixed are marked "TODO" in the code.
 Critical items are marked "XXX" or "TODO/XXX"
 
+Theory
+------
+* Fundamentally, we can't have users data change unless they're verified. But
+  what if a new (untrusted) node changes a person in the graph that they're 
+  not supposed to?
+
+Bugs
+----
+* Newlines (and I assume special characters) get mangled in transit.
+
+Core/backend system
+-------------------
+* Improve Communicator, Intermediary (rename), and RdfParser
+* Extensible API dispatcher system
+* Make tasks/API easier to debug
+
 Celery-related
 --------------
 * Run tasks immediately without RabbitMQ if it is detected RabbitMQ isn't 
@@ -14,6 +30,16 @@ Celery-related
 Organization
 ------------
 * API and Task design must be sensible.
+
+Django apps
+-----------
+* **"Certify" app**, designed to certify that information is accurate. Could 
+  work in addition to PGP signing. Protected info may require indentification 
+  from the requester. 
+* **"Following" app**, designed to manage subscriptions to various resource
+  feeds. (Should this be 'core'?)
+* **"Ratings" app**, designed to rate resources and aggregate the ratings of
+  third parties.
 
 Libraries to explore
 --------------------

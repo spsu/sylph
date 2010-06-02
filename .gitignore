@@ -1,6 +1,6 @@
 *~
 *pyc
 
-# Django
+# Django / Celery
 settings_local.py
-#manage.py
+celerybeat-schedule

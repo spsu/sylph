@@ -1,4 +1,5 @@
 # Django
+from django.conf import settings
 from django.db import models
 from django.db.models.query import QuerySet
 
@@ -114,7 +115,7 @@ class Intermediary(object):
 		self.subgraphs.append(graph)
 
 
-	def to_rdf(self, format='n3'):
+	def to_rdf(self, format='settings'):
 		"""Convert the intermediary store into RDF."""
 		graph = Graph()
 		for k, v in self.NAMESPACES.iteritems():
@@ -123,7 +124,10 @@ class Intermediary(object):
 		for g in self.subgraphs:
 			graph += g
 
+		if format == 'settings':
+			format = settings.RDF_SERIALIZATION
+
+		print format
+
 		return graph.serialize(format=format)
-
-
 

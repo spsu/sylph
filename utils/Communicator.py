@@ -35,12 +35,6 @@ class Communicator(object):
 			port = self.endpoint_uri.port
 
 		try:
-			print hostname
-			print port
-			print path
-			print params
-			print headers
-
 			conn = httplib.HTTPConnection(hostname, port, timeout=self.timeout)
 			conn.request("POST", path, params, headers)
 			response = conn.getresponse()
