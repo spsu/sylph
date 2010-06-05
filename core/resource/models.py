@@ -1,10 +1,10 @@
 from django.db import models
 import datetime
+import re
 
 """
-	'Endpoint Models' describe the data that is necessary for the 
-	protocol to function at all. These include some of the most 
-	fundamental datatypes in the system.
+Resources are the fundamental datatype of the system. 
+TODO: Documentation. 
 """
 
 # ============ Resource ===================================
@@ -12,14 +12,13 @@ import datetime
 class Resource(models.Model):
 	"""
 	The _Resource_ is the most fundamental datatype of the early and 
-	prototypical Sylph architecture. It is absolutely key that we all 
-	agree on this and establish it as such. 
+	prototypical Sylph architecture.
 
 		>> Understanding the Resource is understanding Sylph. <<
 
 	Resources in a sense represent 'network data files' that are 
 	uniquely identified by a URL and can be shared, updated, looked up 
-	at a cache if they go missing, etc. 
+	at a cache if they go missing, etc. etc.
 
 	Resources are built upon in an OO-hierarchy, adding the features 
 	and fields required by the type of data we are modeling. 
@@ -50,12 +49,15 @@ class Resource(models.Model):
 
 	# ============= Sylph Metadata ========================
 
-	# A list of transportable RDF fields
+	"""A list of transportable RDF fields."""
 	rdf_fields = [
-			'uri',
-			'datetime_created',
-			'datetime_edited'
+		'uri',
+		'datetime_created',
+		'datetime_edited',
 	]
+
+	"""A list of fields *not* to transport."""
+	rdf_ignore = []
 
 	class_name = 'endpoint.Resource'
 
@@ -106,9 +108,7 @@ class Resource(models.Model):
 	# ============= RDF Serilization Helpers ==============
 
 	def get_transportable(self):
-		"""
-		Return the elements that can be transported over RDF payload.
-		"""
+		"""Return all data that can be transported over RDF payload."""
 		dic = dict()
 		fields = self.get_transportable_fields()
 
@@ -122,18 +122,45 @@ class Resource(models.Model):
 	def get_transportable_fields(cls):
 		"""
 		Return a list of the names of the fields that can be 
-		transported.
+		transported, minus the fields that cannot be transported.
 		"""
-		# TODO: Won't multiple-inheritance be an issue?
-		if hasattr(cls.__bases__[0], 'rdf_fields'):
-			fields = cls.__bases__[0].get_transportable_fields()
-			for field in cls.rdf_fields:
-				if field in fields:
-					continue
-				fields.append(field)
-			return fields
 
-		return cls.rdf_fields
+		def get_transportable(cls):
+			"""Recursively builds a list of the fields that CAN
+			be transported over RDF given the model rules."""
+			# TODO: Multiple-inheritance issue
+			if not hasattr(cls.__bases__[0], 'rdf_fields'):
+				return cls.rdf_fields
+			else:
+				fields = get_transportable(cls.__bases__[0])
+				for field in cls.rdf_fields:
+					if field in fields:
+						continue
+					fields.append(field)
+				return fields
+
+		def get_ignorable(cls):
+			"""Recursively builds a list of the fields that CANNOT
+			be transported over RDF given the model rules."""
+			# TODO: Multiple-inheritance issue
+			if not hasattr(cls.__bases__[0], 'rdf_ignore'):
+				return cls.rdf_ignore
+			else:
+				fields = get_ignorable(cls.__bases__[0])
+				for field in cls.rdf_ignore:
+					if field in fields:
+						continue
+					fields.append(field)
+				return fields
+
+		# Build the list
+		fields = get_transportable(cls)
+		ignorable = get_ignorable(cls)
+		for v in ignorable:
+			if v in fields:
+				fields.remove(v)
+
+		return fields
 
 	def get_ontology_name(self):
 		"""Generates the ontology name (THIS ONLY FITS SHORT-TERM OBJECTIVE!)"""
@@ -184,11 +211,14 @@ class ResourceTree(Resource):
 
 	# ============= Sylph Metadata ========================
 
-	# A list of transportable RDF fields
+	"""A list of transportable RDF fields."""
 	rdf_fields = [
-			'reply_to_root',
-			'reply_to_parent',
+		'reply_to_root',
+		'reply_to_parent',
 	]
+
+	"""A list of fields *not* to transport."""
+	rdf_ignore = []
 
 	class_name = 'endpoint.ResourceTree'
 
@@ -218,11 +248,14 @@ class ResourceDigraphEdge(Resource):
 
 	# ============= Sylph Metadata ========================
 
-	# A list of transportable RDF fields
+	"""A list of transportable RDF fields."""
 	rdf_fields = [
 			'origin',
 			'destination',
 	]
+
+	"""A list of fields *not* to transport."""
+	rdf_ignore = []
 
 	class_name = 'endpoint.ResourceDigraphEdge'
 

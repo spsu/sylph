@@ -31,8 +31,13 @@ class RdfParser(object):
 					continue
 				if obj == ns['None']:
 					obj = None
-				if type(obj) == Literal:
-					obj = str(obj)
+				elif type(obj) == URIRef:
+					obj = unicode(obj)
+				elif type(obj) == Literal:
+					obj = obj.toPython()
+					if type(obj) == Literal: # Don't be silly, RdfLib!
+						obj = unicode(obj)
+
 				predstr = str(pred).rpartition('#')[2].rpartition('/')[2]
 				item[predstr] = obj
 			data.append(item)

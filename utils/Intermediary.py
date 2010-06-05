@@ -127,7 +127,5 @@ class Intermediary(object):
 		if format == 'settings':
 			format = settings.RDF_SERIALIZATION
 
-		print format
-
 		return graph.serialize(format=format)
 

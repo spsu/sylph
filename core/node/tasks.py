@@ -89,9 +89,8 @@ def do_add_node_lookup(uri):
 	except:
 		print "No user data, or error. Ignoring."
 
-	print "Datetime edited:"
-	print node_data['datetime_edited']
-
+	print user_data
+	
 	# Update the node's status
 	node.is_yet_to_resolve = False
 	node.datetime_last_resolved = datetime.today()

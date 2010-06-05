@@ -18,16 +18,21 @@ class User(Resource):
 
 	# ============= Sylph Metadata ========================
 
-	# A list of transportable RDF fields
+	"""A list of transportable RDF fields."""
 	rdf_fields = [
-			'username',
-			'first_name',
-			'middle_name',
-			'last_name',
-			'title',
-			'suffix',
-			'bio',
-			'node'
+		'username',
+		'first_name',
+		'middle_name',
+		'last_name',
+		'title',
+		'suffix',
+		'bio',
+		'node',
+	]
+
+	"""A list of fields *not* to transport."""
+	rdf_ignore = [
+		'datetime_created',
 	]
 
 	# ============= Model Fields ==========================

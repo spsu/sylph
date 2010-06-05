@@ -8,18 +8,36 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from sylph.apps.post.models import Post
+from sylph.apps.social.models import User
+
 from sylph.apps.post.tasks import post_random_message
 from sylph.core.backend.models import BackendConfig
 from sylph.core.backend.utils.Configs import Configs
 from sylph.core.resource.models import Resource
 from sylph.utils.RdfParser import RdfParser
+from sylph.utils.Intermediary import Intermediary
 
 """Quick code to test."""
 
 def test(request):
-	from sylph.core.node.api import ping_response
+	#from sylph.core.node.api import ping_response
+	#return ping_response(request)
 
-	return ping_response(request)
+
+
+	user = User.objects.get(pk=1)
+
+	print user.get_transportable_fields()
+
+	x = Intermediary(user)
+	rdf = x.to_rdf()
+	p = RdfParser(rdf)
+	udata = p.extract('User')
+	
+	print udata
+
+
+	return HttpResponse(udata[0]['bio'])
 
 def test2(request):
 	from sylph.utils.Communicator import Communicator
