@@ -2,7 +2,7 @@ from rdflib.Graph import ConjunctiveGraph as Graph
 from rdflib import URIRef, Literal, BNode, RDF
 from rdflib import Namespace as NS
 
-from sylph.utils.Intermediary import Intermediary
+from Intermediary import Intermediary
 
 from cStringIO import StringIO
 

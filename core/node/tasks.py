@@ -58,9 +58,9 @@ def do_add_node_lookup(uri):
 	except User.DoesNotExist:
 		user = User()
 
-	# Perform communications. 
-	comm = Communicator(uri)
-	ret = comm.send_post({'dispatch': 'ping'})
+	# Perform communications
+	payload = Payload()
+	ret = payload.send(uri, 'ping')
 
 	if not ret:
 		print "No communication return data!!" # TODO: Error log
@@ -69,28 +69,19 @@ def do_add_node_lookup(uri):
 
 	parser = None
 	node_data = None
-	try:
-		parser = RdfParser(ret)
-		node_data = parser.extract('Node')
-		if not node_data or len(node_data) != 1:
-			raise Exception, "Error with data"
-		node_data = node_data[0]
 
+	try:
+		node_data = payload.extract('Node')[0]
 	except:
 		print "Error parsing RDF" # TODO: Error log
 		on_failure(node)
 		return
 
 	try:
-		user_data = parser.extract('User')
-		if not user_data or len(user_data) != 1:
-			raise Exception, "Error with data"
-		user_data = user_data[0]
+		user_data = payload.extract('User')[0]
 	except:
 		print "No user data, or error. Ignoring."
 
-	print user_data
-	
 	# Update the node's status
 	node.is_yet_to_resolve = False
 	node.datetime_last_resolved = datetime.today()

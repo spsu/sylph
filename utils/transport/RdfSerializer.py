@@ -14,9 +14,9 @@ from sylph.core.node.models import Node
 
 from types import NoneType
 
-class Intermediary(object):
+class RdfSerializer(object):
 	"""
-	Intermediary transforms QueryResults and singular model instances
+	RdfSerializer transforms QueryResults and singular model instances
 	from Django's ORM into RDF payloads to send over the wire. This is
 	how we will accomplish communication in Sylph.
 	"""
@@ -44,7 +44,7 @@ class Intermediary(object):
 	# ============= CTOR ==================================
 
 	def __init__(self, obj=None):
-		"""Intermediary constructor. May take an optional first result
+		"""RdfSerializer constructor. May take an optional first result
 		to add to the graph."""
 
 		"""Subgraphs are held for every model/queryresult added."""
@@ -57,7 +57,7 @@ class Intermediary(object):
 	# ============= Add ===================================
 
 	def add(self, obj):
-		"""Add a query result or model into the intermediary."""
+		"""Add a query result or model into the RdfSerializer."""
 		if type(obj) not in [list, tuple, QuerySet]:
 			if not isinstance(obj, Resource) and \
 			   not isinstance(obj, Node):
@@ -116,7 +116,7 @@ class Intermediary(object):
 
 
 	def to_rdf(self, format='settings'):
-		"""Convert the intermediary store into RDF."""
+		"""Convert the RdfSerializer store into RDF."""
 		graph = Graph()
 		for k, v in self.NAMESPACES.iteritems():
 			graph.bind(k, v)

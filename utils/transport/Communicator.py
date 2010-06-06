@@ -8,15 +8,19 @@ class Communicator(object):
 	"""This class is for delivering data to another endpoint. It 
 	negotiates HTTP and URL parsing for the user."""
 
-	def __init__(self, endpoint_uri, timeout=10):
+	def __init__(self, endpoint_uri="", timeout=10):
 
 		# TODO: Multiple comms with host may need to be accomplished 
 		# within a single session (keep alive parameter?)
 
-		self.endpoint_uri = urlparse(endpoint_uri) 
+		self.endpoint_uri = endpoint_uri
 		self.timeout = timeout
+
+	def set_uri(self, uri):
+		"""Set the URI of the endpoint we'll be accessing."""
+		self.endpoint_uri = uri
 		
-	def send_post(self, post_data={}):
+	def send_post(self, post_data={}, destination=None):
 		"""Send a dictionary of post data to the endpoint."""
 		params = urllib.urlencode(post_data)
 		agent = '%s/%s' % (settings.SOFTWARE_NAME, settings.SOFTWARE_VERSION)
@@ -28,11 +32,12 @@ class Communicator(object):
 			#'X-Sylph-Protocol-Version': settings.PROTOCOL_VERSION,
 		}
 
-		hostname = self.endpoint_uri.hostname
-		port = 80
-		path = self.endpoint_uri.path
-		if self.endpoint_uri.port:
-			port = self.endpoint_uri.port
+		uri = destination if destination else self.endpoint_uri
+		uri = urlparse(uri)
+
+		hostname = uri.hostname
+		port = 80 if not uri.port else uri.port
+		path = uri.path
 
 		try:
 			conn = httplib.HTTPConnection(hostname, port, timeout=self.timeout)

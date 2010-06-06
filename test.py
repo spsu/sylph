@@ -14,14 +14,14 @@ from sylph.apps.post.tasks import post_random_message
 from sylph.core.backend.models import BackendConfig
 from sylph.core.backend.utils.Configs import Configs
 from sylph.core.resource.models import Resource
-from sylph.utils.RdfParser import RdfParser
-from sylph.utils.Intermediary import Intermediary
+from sylph.utils.transport.RdfParser import RdfParser
+from sylph.utils.transport.RdfSerializer import RdfSerializer
 
 """Quick code to test."""
 
 def test(request):
-	#from sylph.core.node.api import ping_response
-	#return ping_response(request)
+	from sylph.core.node.api import ping_response
+	return ping_response(request)
 
 
 
