@@ -5,6 +5,10 @@ Basic list of things that need doing. All contributors can/should edit.
 Note that all items that need to be fixed are marked "TODO" in the code.
 Critical items are marked "XXX" or "TODO/XXX"
 
+Immediate
+---------
+**Concentrate on web2rdf and bootstrapping web content into Sylph.**
+
 Theory
 ------
 * Fundamentally, we can't have users data change unless they're verified. But
