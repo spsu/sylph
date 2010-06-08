@@ -14,8 +14,8 @@ from sylph.apps.post.tasks import post_random_message
 from sylph.core.backend.models import BackendConfig
 from sylph.core.backend.utils.Configs import Configs
 from sylph.core.resource.models import Resource
-from sylph.utils.transport.RdfParser import RdfParser
-from sylph.utils.transport.RdfSerializer import RdfSerializer
+from sylph.utils.data.RdfParser import RdfParser
+from sylph.utils.data.RdfSerializer import RdfSerializer
 
 """Quick code to test."""
 
@@ -27,17 +27,16 @@ def test(request):
 
 	user = User.objects.get(pk=1)
 
-	print user.get_transportable_fields()
+	#print user.get_transportable_fields()
 
-	x = Intermediary(user)
-	rdf = x.to_rdf()
-	p = RdfParser(rdf)
-	udata = p.extract('User')
+	#rdf = x.to_rdf()
+	#p = RdfParser(rdf)
+	#udata = p.extract('User')
 	
-	print udata
+	#print udata
 
 
-	return HttpResponse(udata[0]['bio'])
+	#return HttpResponse(udata[0]['bio'])
 
 def test2(request):
 	from sylph.utils.Communicator import Communicator

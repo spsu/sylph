@@ -1,5 +1,6 @@
 *~
 *pyc
+*swp
 
 # Django / Celery
 settings_local.py

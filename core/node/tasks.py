@@ -5,8 +5,9 @@ from django.conf import settings
 
 from models import *
 from sylph.apps.social.models import User
-from sylph.utils.Communicator import Communicator
-from sylph.utils.RdfParser import RdfParser
+from sylph.utils.transport.Communicator import Communicator
+from sylph.utils.transport.Request import Request
+from sylph.utils.data.RdfParser import RdfParser
 
 from datetime import datetime, timedelta
 import hashlib
@@ -18,7 +19,7 @@ import httplib
 @task
 def do_add_node_lookup(uri):
 	"""
-	Nodes will get added all the time and in various contexts. 
+	Nodes will get added all the time and in various contexts.
 	This is the task that must run for each of them.
 
 	Query every single added node -- this MUST occur.
@@ -35,8 +36,8 @@ def do_add_node_lookup(uri):
 
 	after done, set is_remaining_to_query or whatever = False
 
-	Pinging a node does not require us to give identity unless the 
-	remote node requests it. 
+	Pinging a node does not require us to give identity unless the
+	remote node requests it.
 	"""
 
 	def on_failure(node):
@@ -59,8 +60,8 @@ def do_add_node_lookup(uri):
 		user = User()
 
 	# Perform communications
-	payload = Payload()
-	ret = payload.send(uri, 'ping')
+	comm = Communicator(uri)
+	ret = comm.send_post({'dispatch': 'ping'})
 
 	if not ret:
 		print "No communication return data!!" # TODO: Error log
@@ -71,14 +72,14 @@ def do_add_node_lookup(uri):
 	node_data = None
 
 	try:
-		node_data = payload.extract('Node')[0]
+		node_data = ret.extract('Node')[0]
 	except:
 		print "Error parsing RDF" # TODO: Error log
 		on_failure(node)
 		return
 
 	try:
-		user_data = payload.extract('User')[0]
+		user_data = ret.extract('User')[0]
 	except:
 		print "No user data, or error. Ignoring."
 
@@ -151,11 +152,9 @@ def ping_node(id):
 		on_failure(node)
 		return
 
-	parser = None
 	node_data = None
 	try:
-		parser = RdfParser(ret)
-		node_data = parser.extract('Node')
+		node_data = ret.extract('Node')
 		if not node_data or len(node_data) != 1:
 			raise Exception, "Error with data"
 		node_data = node_data[0]
@@ -166,7 +165,7 @@ def ping_node(id):
 		return
 
 	try:
-		user_data = parser.extract('User')
+		user_data = ret.extract('User')
 		if not user_data or len(user_data) != 1:
 			raise Exception, "Error with data"
 		user_data = user_data[0]

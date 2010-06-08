@@ -2,7 +2,7 @@ from rdflib.Graph import ConjunctiveGraph as Graph
 from rdflib import URIRef, Literal, BNode, RDF
 from rdflib import Namespace as NS
 
-from Intermediary import Intermediary
+from RdfSerializer import RdfSerializer
 
 from cStringIO import StringIO
 
@@ -22,7 +22,7 @@ class RdfParser(object):
 	def extract(self, datatype):
 		"""Extract all of the data of a given datatype."""
 		data = []
-		ns = Intermediary.NAMESPACES['sylph'] # TODO: Awkward.
+		ns = RdfSerializer.NAMESPACES['sylph'] # TODO: Awkward.
 		for sub in self.graph.subjects(RDF.type, ns[datatype]):
 			idx = str(sub)
 			item = {'uri': idx}
