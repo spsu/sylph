@@ -13,11 +13,11 @@ A database-driven URL system may need to replace Django's URL dispatcher.
 
 # Note: This file is only interpreted once: at webserver startup!
 
-admin.autodiscover()
+#admin.autodiscover()
 
 urlpatterns = patterns('',
-	(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-	(r'^admin/', include(admin.site.urls)),
+	#(r'^admin/doc/', include('django.contrib.admindocs.urls')),
+	#(r'^admin/', include(admin.site.urls)),
 
 	# Specific views
 	(r'^/?$', 'sylph.core.frontend.views.index'),
@@ -25,6 +25,7 @@ urlpatterns = patterns('',
 	(r'^endpoint/$', 'sylph.core.endpoint.views.index'),
 
 	# Application level
+	(r'^bootstrap/', include('sylph.apps.bootstrap.urls')),	# bootstrap -> www?
 	(r'^post/', include('sylph.apps.post.urls')),
 	(r'^profile/', include('sylph.apps.social.urls')),
 
@@ -35,7 +36,7 @@ urlpatterns = patterns('',
 	#(r'main/', include('sylph.system.frontend.urls')),
 )
 
-# Static media serving happens regardless (THIS IS ONLY FOR DEVELOPMENT!)
+# Static media serving (THIS IS ONLY FOR DEVELOPMENT SERVERS!)
 if settings.DEBUG:
 	urlpatterns += patterns('',
 		(r'^%s(?P<path>.*)$' % settings.MEDIA_URL[1:],

@@ -1,3 +1,3 @@
-The data model/system we'll use to bootstrap the existing web.
+The data model and system we'll use to bootstrap the existing web.
 
 This is a vast problem to solve.

@@ -24,6 +24,13 @@ class BlogItem(Post):
 	description = models.CharField(max_length=255, blank=True, null=False)
 
 	"""
+	An optional excerpt from the contents that has been algorithmically
+	selected.
+	"""
+	generated_excerpt = models.CharField(max_length=255, blank=True, 
+											null=False)
+
+	"""
 	Whether the model spans multiple pages (as defined by the author
 	in the markup of the text itself). A sophisticated Sylph client 
 	should be able to override or autoset this clientside. 
@@ -33,6 +40,16 @@ class BlogItem(Post):
 	# TODO: Authors table (n:m)
 
 	# TODO: Gallery table?
+
+	def get_description(self):
+		"""Return either the human-defined description or a generated 
+		excerpt. If there is no excerpt, generate one and cache it."""
+		if self.description:
+			return self.description
+		if self.generated_excerpt:
+			return self.generated_excerpt
+		# TODO: Generate excerpt and save
+		return None
 
 
 # TODO: Should BlogResponse be created?

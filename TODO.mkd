@@ -5,6 +5,25 @@ Basic list of things that need doing. All contributors can/should edit.
 Note that all items that need to be fixed are marked "TODO" in the code.
 Critical items are marked "XXX" or "TODO/XXX"
 
+Iteration I Goals
+-----------------
+**Replacing the centralized web** needs to become an obvious paradigm shift for
+other developers, therefore bootstrapping web content into Sylph needs to be 
+implemented well. When people see this, they will understand why the web needs
+to be replaced. 
+
+* **Top content** (per the user's interests) needs to be identified. 
+	* Only the best stories and commentary should be presented to the user 
+	  unless they want to see more. 
+* **Clustering similar items**: Similar stories should be clustered with 
+  the 'best' coverage presented as the default view. 
+* **Comments should be centralized**.
+* **Everything we want to read** should be accessible through Sylph--virtually 
+  no external links, if possible! (Perhaps that can only be realized 
+  long-term.)
+* Make it possible to **save & archive** stories and comments that are 
+  important to us. Make them easy to search and share.
+
 Immediate
 ---------
 **Concentrate on web2rdf and bootstrapping web content into Sylph.**
@@ -18,13 +37,11 @@ Theory
 > A user can have an endpoint URI be their resource URI if we wish, since 
 > essentially they are different data models. 
 
-Bugs
-----
-* Newlines (and I assume special characters) get mangled in transit.
 
 Core/backend system
 -------------------
-* Improve Communicator, Intermediary (rename), and RdfParser
+* Improve and expand upon "Utilities" libraries
+* Move core/ -> apps/
 * Extensible API dispatcher system
 * Make tasks/API easier to debug
 

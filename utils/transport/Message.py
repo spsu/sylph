@@ -2,6 +2,12 @@
 
 class Message(object):
 	"""
+
+	TODO/Redesign:
+		Message.knowledgeBase (all [RDF] facts known to the message)
+							  extract and add to this. 
+		Message.serializer (also supports deserialization)
+
 	In the future, the transport framework should support:
 
 		Node-to-Node

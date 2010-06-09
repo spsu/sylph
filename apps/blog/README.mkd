@@ -2,6 +2,6 @@ Blog Application
 ================
 
 The blog application is used for creating and consuming self-published news 
-items such as is presentlydone with blogging software (eg. Wordpress).
+items such as is presently done with blogging software (eg. Wordpress).
 
 _TODO_: Define feeds, multiple authors, subscriptions, tags, categories, etc. 

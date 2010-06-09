@@ -40,13 +40,3 @@ def index(request):
 							  },
 							  context_instance=RequestContext(request))
 
-def viewThread():
-	pass
-
-def postNew():
-	pass
-
-def reply():
-	pass
-
-

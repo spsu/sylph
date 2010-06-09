@@ -72,12 +72,12 @@ MIDDLEWARE_CLASSES = (
 )
 
 INSTALLED_APPS = (
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-	'django.contrib.admin',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-	'django.contrib.humanize',
+	#'django.contrib.auth',			# Builtin user authentication
+	'django.contrib.contenttypes',	# generic/dynamic querying w/o imports!! 
+	#'django.contrib.admin',		# admin interface
+	#'django.contrib.sessions',		# store data on visitors
+	#'django.contrib.sites',		# SITE_ID, multiple django sites... 
+	'django.contrib.humanize',		# 1 -> 'one', 10^6 -> '1.0 million', etc.
 
 	# Django debug toolbar
 	#'debug_toolbar',
@@ -95,6 +95,7 @@ INSTALLED_APPS = (
 	'sylph.apps.post',
 	'sylph.apps.blog',
 	'sylph.apps.social',
+	'sylph.apps.bootstrap',
 )
 
 # ================= Virtualization Helpers ================

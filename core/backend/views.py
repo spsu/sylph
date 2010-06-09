@@ -6,8 +6,6 @@ from django import forms
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-import sylph.test
-
 from sylph.core.resource.models import Resource
 from sylph.core.node.models import Node
 from sylph.apps.social.models import User
@@ -156,10 +154,12 @@ def logoutView(request):
 
 def test(request):
 	"""A view to test code. Simplifies testing process."""
+	import sylph.test
 	return sylph.test.test(request) # TODO/XXX: Remove in production
 
 def test2(request):
 	"""Another view to test code. Simplifies testing process."""
+	import sylph.test
 	return sylph.test.test2(request) # TODO/XXX: Remove in production
 
 # ============ Signup (DEPRECATED) ========================

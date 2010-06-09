@@ -1,7 +1,6 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('sylph.apps.post.views',
-	# Endpoint
 	(r'^$', 'index_parentless'),
 	(r'^all/$', 'index_all'),
 	(r'create/$', 'create_post'),

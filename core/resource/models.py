@@ -7,6 +7,10 @@ Resources are the fundamental datatype of the system.
 TODO: Documentation. 
 """
 
+# TODO: Consider 'ResourceRef' with just uri and make 'Resource' a decendant
+# This will be for the purpose of referencing resources and having no data
+# associated with them. 
+
 # ============ Resource ===================================
 
 class Resource(models.Model):
@@ -57,7 +61,11 @@ class Resource(models.Model):
 	]
 
 	"""A list of fields *not* to transport."""
-	rdf_ignore = []
+	rdf_ignore = [
+		'datetime_added',
+		'datetime_retrieved',
+		'datetime_last_accessed',
+	]
 
 	class_name = 'endpoint.Resource'
 
@@ -98,8 +106,9 @@ class Resource(models.Model):
 	"""
 	# TODO/XXX: Consumer-only. Cannot send these!!
 	# TODO: Strip any resource metadata being sent marked 'consumer-only'
+	datetime_added = models.DateTimeField(null=True, blank=True) 
 	datetime_retrieved = models.DateTimeField(null=True, blank=True) 
-	datetime_read = models.DateTimeField(null=True, blank=True) 
+	datetime_last_accessed = models.DateTimeField(null=True, blank=True) 
 
 	# TODO: Is this proper? (Should the type itself be responsible?)
 	# A non-tranportable cache of reply count.
