@@ -7,13 +7,40 @@ from datetime import datetime
 
 class User(Resource):
 	"""
-	User resources represent people in the graph. They support being
-	largely incomplete as data is missing by default. 
+	User Resources represent people in the graph.
 
-	Users fit the requirement for being a resource:
-		* They can be shared with you
-		* They can be updated by the owner
-		* A stub may exist in our system until we query the owner.
+	We usually store users when we want to keep communications with
+	them or follow one or more of their feeds. (Though the system could
+	easily store thousands of users for eg. the employees in your
+	company, or people in your interest group. Just because a user is
+	stored does not mean we are tracking them specifically.)
+
+	Think of this application as your email address list or a phone
+	book of the people you have encountered in some way: Another layer
+	will build on top of the user system for social networking, etc.
+
+	--
+
+	A user's node is the only authority on how this information should
+	be updated/changed locally. When we first encounter a user such as
+	by being given a resource they have created, we may	take on metadata
+	as provided by the third party that provided us the data. However,
+	once a user's node has been contacted, it is the only authority on
+	changing data for that user's resource.
+
+	--
+
+	On the topic of the User's "Resource URI", I have some specific
+	suggestions:
+
+		1. An OpenID-type system where a page contains <meta> link to
+		   the user's current node (such that they can relocate the
+		   node or switch providers.) This is the preferred way.
+
+		2. The node URI with some kind of hash appended, eg.
+		   http://domain.com/mynode/#user
+		   (This is not the preferred approach since the user is stuck
+		   with a node they cannot relocate.)
 	"""
 
 	# ============= Sylph Metadata ========================
@@ -54,7 +81,7 @@ class User(Resource):
 		('H', 'Hon.'),
 		('R', 'Rev.'),
 	)
-	title = models.CharField(max_length=1, choices=TITLE_CHOICES, 
+	title = models.CharField(max_length=1, choices=TITLE_CHOICES,
 							 null=False, blank=True)
 	suffix = models.CharField(max_length=10, null=False, blank=True)
 
@@ -62,7 +89,7 @@ class User(Resource):
 
 	# Cannot send marked-up bio
 	bio_markup_cache = models.TextField(blank=True)
-	bio_cache_datetime = models.DateTimeField(null=True, blank=True) 
+	bio_cache_datetime = models.DateTimeField(null=True, blank=True)
 
 	"""FK to the node the user owns."""
 	node = models.ForeignKey('node.Node', null=True, blank=True)
@@ -77,10 +104,10 @@ class User(Resource):
 	# ============= Model-specific methods ================
 
 	def get_name(self):
-		"""Get a western-formatted name (if available) or the 
+		"""Get a western-formatted name (if available) or the
 		username."""
 		# TODO: g11n
-		name = "(nameless)" 
+		name = "(nameless)"
 		if self.username:
 			name = self.username
 		if self.first_name:
@@ -159,11 +186,11 @@ class UserEmail(models.Model):
 
 class Knows(ResourceDigraphEdge):
 	"""
-	Knows represents a connection between two users, but is realized as 
-	a digraph instead of a forced, edgeless connection that must be 
+	Knows represents a connection between two users, but is realized as
+	a digraph instead of a forced, edgeless connection that must be
 	maintained at both ends.
 
-	This is in a way similar to foaf:knows and will be built as such. 
+	This is in a way similar to foaf:knows and will be built as such.
 	"""
 
 	# TODO: Programatically enforce 'origin' and 'destination' to be users

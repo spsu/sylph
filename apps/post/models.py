@@ -8,11 +8,11 @@ class Post(ResourceTree):
 	"""
 	Posts represent any content with a title and a main body of text.
 
-	As Post decends from ResourceTree, posts have the capability to 
+	As Post decends from ResourceTree, posts have the capability to
 	have both an absolute root parent as well as an immediate parent.
 
-	The Post model is further extended in other applications. Commonly 
-	it is used to represent blog items, articles, threaded comments, 
+	The Post model is further extended in other applications. Commonly
+	it is used to represent blog items, articles, threaded comments,
 	etc.
 	"""
 
@@ -28,9 +28,9 @@ class Post(ResourceTree):
 
 	# Title of the post. Required if a 'first' post.
 	title = models.CharField(
-				max_length=100, 
+				max_length=100,
 				blank=True, # XXX: Programatically enforced for first posts.
-				null=False 
+				null=False
 	)
 
 	# The person who created the post. Can be null if anonymous or unknown.
@@ -48,12 +48,12 @@ class Post(ResourceTree):
 		('H', 'HTML (lite)'), # XXX: HTML must be filtered extensively. 
 		('X', 'Unknown'),
 	)
-	markup_type = models.CharField(max_length=1, choices=MARKUP_TYPE_CHOICES, 
+	markup_type = models.CharField(max_length=1, choices=MARKUP_TYPE_CHOICES,
 								   null=False, default='M')
 
 	# Cannot send marked-up contents
 	contents_markup_cache = models.TextField(blank=True)
-	contents_cache_datetime = models.DateTimeField(null=True, blank=True) 
+	contents_cache_datetime = models.DateTimeField(null=True, blank=True)
 
 	# ============= Model-specific methods ================
 
@@ -93,22 +93,46 @@ class Post(ResourceTree):
 	def __unicode__(self):
 		return self.title
 
+class PostCacheData(models.Model):
+	"""
+	NOT A RESOURCE
+
+	In the case where we download posts by users not tracked by our
+	system, we store some basic info on them here.
+	"""
+	post = models.ForeignKey('Post')
+
+	"""Name stored with a post. Can be a username, first name, whatever."""
+	name = models.CharField(max_length=60, blank=True, null=False)
+
+	"""URI of the user resource in the event we want to look them up."""
+	user_uri = models.CharField(max_length=255, blank=True, null=False)
+
+	#"""URI of the user's node in the event we want to look them up."""
+	#node_uri = models.CharField(max_length=255, blank=True, null=False)
+
+	"""An optional website URI."""
+	web_uri = models.CharField(max_length=255, blank=True, null=False)
+
+	"""An optional email address."""
+	email = models.CharField(max_length=60, blank=True, null=False)
+
 
 class PostReferences(models.Model):
 	"""
 	NOT A RESOURCE
 
 	Aggregate the links to other resources, either computationally via
-	the assistance of a backend job, or delivered along with a payload, 
+	the assistance of a backend job, or delivered along with a payload,
 	eg: <references>URI</references>.
 
 	This allows fast querying and graph search (theoretically).\
 
 	Nomenclature (work in progress):
 		* A _link_ is an html/web anchor.
-		* A _reference_ is a Sylph connection between resources. 
+		* A _reference_ is a Sylph connection between resources.
 	"""
-	
+
 	post = models.ForeignKey('Post', related_name='set_post')
 	linked_resource = models.ForeignKey('resource.Resource')
 
