@@ -8,7 +8,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from sylph.apps.social.models import User
+from sylph.apps.user.models import User
 
 from datetime import datetime
 import hashlib

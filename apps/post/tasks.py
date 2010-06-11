@@ -1,6 +1,6 @@
 from celery.decorators import task
 from models import *
-from sylph.apps.social.models import User
+from sylph.apps.user.models import User
 from django.conf import settings
 
 from datetime import datetime

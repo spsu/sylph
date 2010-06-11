@@ -15,7 +15,7 @@ import hashlib
 
 def index(request):
 	users = User.objects.all()
-	return render_to_response('apps/social/index.html', {
+	return render_to_response('apps/user/index.html', {
 									'users': users,
 							}, 
 							context_instance=RequestContext(request),
@@ -75,7 +75,7 @@ def edit_own_profile(request):
 	else:
 		form = EditProfileForm(instance=user)
 
-	return render_to_response('apps/social/edit_profile.html',
+	return render_to_response('apps/user/edit_profile.html',
 							  {'form': form}, 
 							  context_instance=RequestContext(request))
 
@@ -90,7 +90,7 @@ def view_profile(request, user_id):
 	except User.DoesNotExist:
 		raise Http404
 
-	return render_to_response('apps/social/view_profile.html', {
+	return render_to_response('apps/user/view_profile.html', {
 									'user': user,
 							}, 
 							context_instance=RequestContext(request),

@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from sylph.core.backend.utils.install_state import is_installed
-from sylph.apps.social.models import User
+from sylph.apps.user.models import User
 
 
 def ip_address(request):

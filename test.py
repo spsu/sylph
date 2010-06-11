@@ -8,7 +8,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from sylph.apps.post.models import Post
-from sylph.apps.social.models import User
+from sylph.apps.user.models import User
 
 from sylph.apps.post.tasks import post_random_message
 from sylph.core.backend.models import BackendConfig

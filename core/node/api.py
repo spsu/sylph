@@ -7,7 +7,7 @@ from django.template import RequestContext
 from sylph.core.endpoint.exceptions import ProtocolErrorException
 from sylph.utils.data.RdfSerializer import RdfSerializer
 
-from sylph.apps.social.models import User
+from sylph.apps.user.models import User
 from sylph.core.node.models import Node
 
 import datetime

@@ -14,12 +14,8 @@ import hashlib
 # ============ Jobs Index =================================
 
 def index(request):
-	users = User.objects.all()
-	return render_to_response('apps/social/index.html', {
-									'users': users,
-							}, 
-							context_instance=RequestContext(request),
-							mimetype='application/xhtml+xml')
+	# TODO
+	pass
 
 
 # ============ Run Jobs: VIA CRON! ========================
@@ -29,55 +25,18 @@ def run_jobs(request):
 	process_n_messages_pool()
 
 	return HttpResponse("Jobs Run", mimetype='text/plain')
-	
 
 
 # ============ Edit Job ===================================
 
-def edit_job(request):
-	user = None
-	try:
-		user = User.objects.get(pk=1)
-	except User.DoesNotExist:
-		raise Http404 # TODO: This is actually a core system failure!
-
-	class EditProfileForm(forms.ModelForm):
-		"""Form for editing one's profile"""
-		class Meta:
-			model = User
-			fields = ['username', 'first_name', 'middle_name', 'last_name',
-					  'title', 'bio']
-
-	if request.method == 'POST':
-		form = EditProfileForm(request.POST, instance=user)
-		if form.is_valid():
-			u = form.save(commit=False)
-			u.datetime_edited = datetime.today()
-			u.save()
-			return HttpResponseRedirect('/profile/view/1/')
-
-	else:
-		form = EditProfileForm(instance=user)
-
-	return render_to_response('apps/social/edit_profile.html',
-							  {'form': form}, 
-							  context_instance=RequestContext(request))
+def edit_job(request, job_id):
+	# TODO
+	pass
 
 
 # ============ View Job ===================================
 
-def view_profile(request, user_id):
-	"""View a profile by user id"""
-	profile = None
-	try:
-		user = User.objects.get(pk=user_id)
-	except User.DoesNotExist:
-		raise Http404
-
-	return render_to_response('apps/social/view_profile.html', {
-									'user': user,
-							}, 
-							context_instance=RequestContext(request),
-							mimetype='application/xhtml+xml')
-
+def view_job(request, job_id):
+	# TODO
+	pass
 

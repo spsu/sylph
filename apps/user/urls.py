@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import *
 
-urlpatterns = patterns('sylph.apps.social.views',
+urlpatterns = patterns('sylph.apps.user.views',
 
 	(r'^/?$', 'index'),
 	(r'^edit/$', 'edit_own_profile'),

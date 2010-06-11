@@ -4,7 +4,7 @@ from celery.task.base import PeriodicTask
 from django.conf import settings
 
 from models import *
-from sylph.apps.social.models import User
+from sylph.apps.user.models import User
 from sylph.utils.transport.Communicator import Communicator
 from sylph.utils.transport.Request import Request
 from sylph.utils.data.RdfParser import RdfParser

@@ -8,7 +8,7 @@ from django.template import RequestContext
 
 from sylph.core.resource.models import Resource
 from sylph.core.node.models import Node
-from sylph.apps.social.models import User
+from sylph.apps.user.models import User
 
 from utils.install_state import is_installed, INSTALLED
 from utils.database import reset_database, sync_empty_database

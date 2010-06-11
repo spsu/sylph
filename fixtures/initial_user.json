@@ -6,7 +6,7 @@
 	}
 },
 {
-	"model": "social.User",
+	"model": "user.User",
 	"pk": 1,
 	"fields": {
 		"username": "new user"

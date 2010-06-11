@@ -52,7 +52,7 @@ def reset_database():
 					verbosity=1, interactive=False) 
 	management.call_command('loaddata', 'fixtures/initial_node.json', 
 					verbosity=1, interactive=False) 
-	management.call_command('loaddata', 'fixtures/initial_social.json', 
+	management.call_command('loaddata', 'fixtures/initial_user.json', 
 					verbosity=1, interactive=False) 
 
 
