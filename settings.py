@@ -29,6 +29,7 @@ LOGIN_REDIRECT_URL = '/'
 
 MEDIA_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/media/'
+ENDPOINT_URI = '/endpoint/'
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -69,6 +70,7 @@ MIDDLEWARE_CLASSES = (
 
 	# Custom middlware
 	'sylph.core.backend.middleware.EnsureInstalledMiddleware',
+	'sylph.core.endpoint.middleware.EndpointExceptionHandlerMiddleware',
 )
 
 INSTALLED_APPS = (
