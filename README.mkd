@@ -1,81 +1,70 @@
-Sylph: NO MORE WEBSITES (Part I)
-================================
-This project is part of my research to build a web without websites. No party
-should be able to exert control over how we produce/consume/share information.
-The only way to make this happen is to decentralize _everything_. 
+Sylph: Distributed Informatics Platform (NO MORE WEBSITES)
+==========================================================
+Sylph is part of my research to build a _web without websites_. I believe this is the way forward for a number of reasons:
 
-I've been slowly working on this research for four years, but after 
-[Diaspora](http://www.nytimes.com/2010/05/12/nyregion/12about.html) unveiled 
-their plans, I began working nonstop to beat them to it. Distributed 
-informatics is bigger and far grander what the Diaspora team is trying to 
-accomplish, but we have to start now. 
+* **Freedom**: We can't control the stories that are published on Slashdot. We can't submit patches to Twitter. We can't even customize most websites the way we want. To top it all off, we're subject to the censorship of the website management. 
 
-Sylph envisions a world with an infinite signal to noise ratio: 1:0. A platform
-of infinite potential that can be evolved in any way. Imagine:
+* **Productivity (of content consumers)**: Visiting more than two websites means we consume information in a non-uniform manner. This takes time and makes the brain work harder. Why not have one single platform that allows us to skim, search, use, share, and create everything we want? (Hint: the WWW is already about information, NOT about building the best websites.)
 
-* No more ads
-* No more marketers
-* No more paywalls
-* Sort & filter content with data mining algorithms **designed for you**
+* **Productivity (of developers)**: We waste a copious amount of effort reimplementing the same functionality again and again (instead of purely innovating). Let's build a new kind of system such that it can allow all developers to contribute in their own way. Let information scientists implement personal data mining for us, algorithmically choosing the best (most relevant) new content. Let distributed/peer-to-peer researchers find new ways to extend the platform's data exchange protocol. Let engineers develop a uniform packaging system so we can build and deploy new software packages that can make use of the data we already have.
+
+* **Tailored information**: We should be able to control what reaches our eyeballs, what comes in and goes out. When we own our data, the platform can use that to learn more about us&mdash;what peer group(s) we belong to, what we're interested in (social and attention mining). With advanced informatics in our hands, imagine what we can do...
+
+* **No marketing**: Screw ads and marketers. Screw the paywalls too, for that matter. The internet is not for them, it's for us. If we're ever to have a higher order of signal-to-noise, we need to ditch this scum and not look back.
+
+The only way to gain this kind of abstract functionality is to decentralize _everything_. That's why I believe next web will be a _distributed informatics layer_. Sylph is a research platform for investigating the data model, protocols, security measures, APIs etc. that we'll need to implement. It also aims to be a usable client for researchers in this area.
+
+If you're interested, please get in touch. We need your help. And if you're building a website, perhaps you should reconsider. 
+
+* email: echelon at gmail dot com
+* [This document explains more](http://possibilistic.org/docs/sylph/).
+
+Short-term objectives
+---------------------
+Now back to earth for a second... 
+
+Building such a platform will take a considerable amount of time and effort to get right. With the proper involvement and research, we can accomplish this. At present, however, we need to identify achievable and sustainable short-term objectives. 
+
+_This prototype_ of the sylph platform is written in Python, Django, and [Celery](http://github.com/ask/celery). Here are the goals we want to accomplish in iteration 1:
+
+* **Bootstrapping the exisiting web**: We're going to scrape WWW content and place it into our distributed platform for exchange between nodes.
+
+* **Scalable communications platform**:
+	* *Direct node-to-node* communications. 
+	* *Many nodes-to-"agglomerative" node* (eg. a cache server, directory service, clustering system, etc.)
+	* *API to node* (eg. Javascript library, desktop library/client to access one's own node.)
+
+* **Robust data exchange format**
+	* RDF-based
+	* Grounded in semantics so that it is extensible in the future (automated reasoners are possible.)
+	* Idea of URI-dereferencable resources (though optional) to achieve both current-web and future-web interoperability. 
+
+* **"Applications" on top of sylph**:
+	* Basic social networking facility, but not similar to present systems... more focused on getting work/projects done in a distributed setting. (I could personally care less about "social networking". This should be more tailored to getting things done.)
+	* Ability to share commentary, news items, personal blogging, etc. in a _relevant_ manner.
+	* Ability to work together on projects, coding, research&mdash;easily. 
+
+Year-end objectives
+-------------------
+* Sort & filter content with data mining algorithms _designed for you_
 * Trackerless filesharing with _friends and known peers_
-* News will be highly relevant: never read an off-topic headline again
+* Highly relevant content (news, etc): never read an off-topic headline again
 
 And what about edge-cases, such as programmers and researchers?
 
 * Even more distributed development practices and collaboration
 * Find people working in your research area immediately
 * Share files, papers, literature&mdash;no one can stop you.
-* Algorithms can study how you collaborate in the graph to advise you of
-  what you need to learn, who you should meet/mentor, and developments of
-  concern. 
-
-I want everyone to be involved in making this. 
-[This document explains more](http://possibilistic.org/docs/sylph/).
-
-Short-term objectives
----------------------
-Now back to earth for a second... 
-
-Building such a platform will take a considerable amount of time and effort to
-get right. With the proper involvement and research, we can accomplish this. At 
-present, however, we need to identify achievable and sustainable short-term
-objectives. 
-
-_This prototype_ of the sylph platform is written in Python, Django, and 
-[Celery](http://github.com/ask/celery). Here are the goals we want to 
-accomplish in iteration 1:
-
-* **Scalable communications platform**
-	* *Direct node-to-node* communications. 
-	* *Many nodes-to-"agglomerative" node* (eg. a cache server, directory 
-	  service, clustering system, etc.)
-	* *API to node* (eg. Javascript library, desktop library/client to access
-	  one's own node.)
-
-* **Robust data exchange format**
-	* RDF-based
-	* Grounded in semantics so that it is extensible in the future
-	* Idea of URI-dereferencable resources (though optional) to achieve both
-	  current-web and future-web interoperability. 
-
-* "Applications" on top of sylph:
-	* Basic social networking facility, but not similar to present systems...
-	  more focused on getting work/projects done in a distributed setting.
-	* Ability to share commentary, news items, personal blogging, etc. in a
-	  _relevant_ manner.
-	* Ability to work together on projects, coding, research&mdash;easily. 
-
-We're asking all developers and CS researchers to join us in this effort. 
-Again, I have [more of the objectives listed 
-here](http://possibilistic.org/docs/sylph/).
+* Algorithms can study how you collaborate in the graph to advise you of what you need to learn, who you should meet/mentor, and developments of concern. 
 
 License
--------
-The code is currently under the AGPL 3. As soon as I get more developers, we'll
-probably license it under the MIT/BSD. 
+=======
+The code is currently under the AGPL 3. As soon as I get more developers, we'll probably license it under the MIT/BSD. 
 
 Project Setup
--------------
+=============
+
+(Not very easy at present.)
 
 Sylph currently requires the following:
 
