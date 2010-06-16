@@ -3,7 +3,7 @@
 {% block title %}Edit Own Node{% endblock %}
 
 {%block content %}
-	<h1> Edit Own Node </h1>
+	<h1> Edit Your Node </h1>
 	<form action="" method="post">
 		{% for field in form %}
 		<div class="field">
@@ -13,5 +13,18 @@
 		{% endfor %}
 
 		<input type="submit" value="Submit" />
+	</form>
+
+	<h2>Change Node URI</h2>
+	<em>TODO: Doing this shouldn't matter TOO much...</em>
+	<form action="?uri=true" method="post">
+		{% for field in res_form %}
+		<div class="field">
+			<span class="error">{{ field.errors }}</span>
+			{{ field.label_tag }} {{ field }}
+		</div>
+		{% endfor %}
+
+		<input type="submit" value="Change URI" />
 	</form>
 {% endblock content %}

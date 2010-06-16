@@ -77,7 +77,7 @@ class Resource(models.Model):
 	producer can make a certain subset of URIs at their own domain or
 	path. 
 	"""
-	uri = models.URLField(max_length=200, unique=True)
+	uri = models.URLField(max_length=200, unique=True, blank=False, null=False)
 
 	"""
 	Describes the ultimate datatype of the resource. In OO 
@@ -182,7 +182,7 @@ class Resource(models.Model):
 		return self.__class__.__name__
 
 	# ============= Django Methods and Metadata ===========
-	
+
 	class Meta:
 		verbose_name = 'resource'
 		verbose_name_plural = 'resources'

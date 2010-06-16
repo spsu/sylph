@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.core import serializers
 
 from models import *
+from sylph.core.resource.models import Resource
 import tasks
 
 from datetime import datetime
@@ -30,7 +31,7 @@ def edit_own_node(request):
 	"""Edit the details on our own node."""
 	node = None
 	try:
-		node = Node.objects.get(pk=1)
+		node = Node.objects.get(pk=2)
 	except Node.DoesNotExist:
 		raise Http404 # TODO: This is actually a core system failure!
 
@@ -38,23 +39,43 @@ def edit_own_node(request):
 		"""Form for editing one's own node"""
 		class Meta:
 			model = Node
-			fields = ['uri', # TODO: Should we let them edit URI this way?
+			fields = [#'uri', # TODO: Should we let them edit URI this way?
+								# XXX: ALSO! IT SEEMS TO NOT WORK NOW!
 						'name',
 						'description']
 
+	class EditNodeUriForm(forms.ModelForm):
+		"""Form to edit your node URI
+		This is a workaround since Django won't do it for us!"""
+		class Meta:
+			model = Node
+			fields = ['uri']
+
 	if request.method == 'POST':
 		form = EditNodeForm(request.POST, instance=node)
-		if form.is_valid():
-			n = form.save(commit=False)
-			n.datetime_edited = datetime.today()
-			n.save()
-			return HttpResponseRedirect('/node/view/1/')
+		res_form = EditNodeUriForm(request.POST, instance=node)
+
+		if 'uri' in request.GET:
+			node.uri = request.POST['uri'] # FIXME: Not clean, but form failed!
+			node.datetime_edited = datetime.today()
+			node.save()
+			return HttpResponseRedirect('/node/view/2/')
+
+		else:
+			if form.is_valid():
+				n = form.save(commit=False)
+				n.datetime_edited = datetime.today()
+				n.save()
+				return HttpResponseRedirect('/node/view/2/')
 
 	else:
 		form = EditNodeForm(instance=node)
+		res_form = EditNodeUriForm(instance=node)
 
-	return render_to_response('core/node/edit_own.html',
-								{'form': form},
+	return render_to_response('core/node/edit_own.html', {
+									'form': form,
+									'res_form': res_form
+								},
 								context_instance=RequestContext(request))
 
 
@@ -62,7 +83,7 @@ def edit_own_node(request):
 
 def edit_other_node(request, node_id):
 	"""Edit the details on another node that isn't our own."""
-	if node_id in [1, '1']:
+	if node_id in [1, '1', 2, '2']:
 		return HttpResponseRedirect('/node/edit/')
 
 	node = None
@@ -151,8 +172,8 @@ def add_node(request):
 
 def delete_node(request, node_id):
 	"""Delete a node from the system."""
-	if node_id in [1, '1']:
-		return HttpResponseRedirect('/node/view/1/')
+	if node_id in [1, '1', 2, '2']:
+		return HttpResponseRedirect('/node/view/2/')
 
 	node = None
 	try:

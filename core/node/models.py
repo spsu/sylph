@@ -1,5 +1,5 @@
 from django.db import models
-
+from sylph.core.resource.models import Resource
 from datetime import datetime
 
 # ============ Nodes ======================================
@@ -8,17 +8,16 @@ from datetime import datetime
 # TODO: FollowerNodes and FollowingNodes
 # TODO: Generic and Advanced permissions
 
-class Node(models.Model): # NOT A RESOURCE!
+class Node(Resource):
 	"""
 	Nodes are the machines on the web that can share and communicate
-	resources with one another. They are immutable and thus not 
-	Resources themselves (as the data model exists thus far). 
+	resources with one another.
 
 	There can be user-owned Nodes, cache Nodes, directory Nodes, and
 	so forth.
 
 	Endpoint would probably be a better name for this, but I'll go with
-	Node since the graph nature is more visible. 
+	Node since the graph nature is more visible.
 
 	This is only a first-iteration model.
 	"""
@@ -43,9 +42,6 @@ class Node(models.Model): # NOT A RESOURCE!
 
 	# ============= Model Fields ==========================
 
-	"""Node physical query endpoint. Required and Unique."""
-	uri = models.URLField(max_length=200, unique=True, verify_exists=False)
-	
 	"""A short name for the node."""
 	name = models.CharField(max_length=20, null=False, blank=True)
 
@@ -79,11 +75,11 @@ class Node(models.Model): # NOT A RESOURCE!
 	"""Client Software version"""
 	software_version = models.CharField(max_length=15, null=False, blank=True)
 
-	"""First time nodes are added, they must be resolved.""" 
+	"""First time nodes are added, they must be resolved."""
 	is_yet_to_resolve = models.BooleanField()
 
 	"""Date the node was first added to the server."""
-	datetime_added = models.DateTimeField(default=datetime.today)
+	#datetime_added = models.DateTimeField(default=datetime.today)
 
 	"""Date the last successful communication with the node occurred on."""
 	datetime_last_resolved = models.DateTimeField(null=True)
@@ -92,7 +88,7 @@ class Node(models.Model): # NOT A RESOURCE!
 	datetime_last_failed = models.DateTimeField(null=True)
 
 	"""Date when node parameters were changed by the owner"""
-	datetime_edited = models.DateTimeField(null=True)
+	#datetime_edited = models.DateTimeField(null=True)
 
 	"""For events originating at the local node"""
 	datetime_last_pushed_to = models.DateTimeField(null=True)
@@ -112,41 +108,12 @@ class Node(models.Model): # NOT A RESOURCE!
 		('ENDP', 'Not a valid endpoint.'),
 		('AVAIL', 'Available / OK.'),
     )
-	status = models.CharField(max_length=5, choices=STATUS_TYPE_CHOICES, 
-							  null=False, blank=False, default='U')
+	status = models.CharField(max_length=5, choices=STATUS_TYPE_CHOICES,
+								null=False, blank=False, default='U')
 
 
 	# ============= RDF Serilization Helpers ==============
 
-	def get_transportable(self):
-		"""
-		Return the elements that can be transported over RDF payload.
-		"""
-		dic = dict()
-		fields = self.get_transportable_fields()
-
-		for field in fields:
-			if hasattr(self, field):
-				dic[field] = getattr(self, field)
-
-		return dic
-
-	@classmethod
-	def get_transportable_fields(cls):
-		"""
-		Return a list of the names of the fields that can be 
-		transported.
-		"""
-		# TODO: Won't multiple-inheritance be an issue?
-		if hasattr(cls.__bases__[0], 'rdf_fields'):
-			fields = cls.__bases__[0].get_transportable_fields()
-			for field in cls.rdf_fields:
-				if field in fields:
-					continue
-				fields.append(field)
-			return fields
-
-		return cls.rdf_fields
 
 	def get_ontology_name(self):
 		"""Heuristic to generate the ontology name."""
@@ -163,15 +130,15 @@ class Node(models.Model): # NOT A RESOURCE!
 
 	def is_ours(self):
 		"""Returns whether this node is ours."""
-		return self.id == 1
+		return self.id == 2
 
 	def is_not_ours(self):
 		"""Returns whether this node is not ours."""
-		return self.id != 1
+		return self.id != 2
 
 	def status_color(self):
 		"""Return a status color for visualization. Temporary."""
-		if self.id == 1:
+		if self.id == 2:
 			return 'white'
 		if self.is_yet_to_resolve:
 			return 'red'
@@ -180,7 +147,7 @@ class Node(models.Model): # NOT A RESOURCE!
 		return 'red'
 
 	def get_status(self):
-		if self.id == 1:
+		if self.id == 2:
 			return 'Our node'
 		if self.is_yet_to_resolve:
 			return 'Unresolved'
@@ -189,7 +156,7 @@ class Node(models.Model): # NOT A RESOURCE!
 		return "Bad Status"
 
 	# ============= Django Methods and Metadata ===========
-	
+
 	class Meta:
 		verbose_name = 'node'
 		verbose_name_plural = 'nodes'
@@ -203,5 +170,5 @@ class Node(models.Model): # NOT A RESOURCE!
 		return proto_version == self.protocol_version
 
 	def __unicode__(self):
-		return self.uri
+		return "node: " + self.uri
 

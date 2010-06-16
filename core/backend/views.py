@@ -27,7 +27,7 @@ def index(request):
 	sync_empty_database()
 
 	return render_to_response('core/backend/index.html',
-							  context_instance=RequestContext(request))
+								context_instance=RequestContext(request))
 
 
 # ============ Installation Procedure =====================
@@ -43,7 +43,7 @@ def install_main(request):
 	except:
 		# TODO
 		raise Exception, "TODO: resync-database!"
-	
+
 	# TODO: This should be broken down into a multi-step creation process
 	class NewUserInstallForm(forms.Form):
 		"""Form for creating user account"""
@@ -87,7 +87,7 @@ def install_main(request):
 				return p
 
 			# Set our node endpoint URI
-			node = Node.objects.get(id=1)
+			node = Node.objects.get(id=2)
 			node.uri = make_path_uri('/endpoint/') # TODO: More custom
 			node.protocol_version = settings.PROTOCOL_VERSION
 			node.software_name = settings.SOFTWARE_NAME
@@ -120,15 +120,15 @@ def install_main(request):
 
 
 	return render_to_response('core/backend/install/index.html',
-							  {'form': form},
-							  context_instance=RequestContext(request))
+								{'form': form},
+								context_instance=RequestContext(request))
 
 
 # ============ Reset Everything ===========================
 
-def reset(request):	
+def reset(request):
 	"""Reset everything, tear down and rebuild database, and begin the
-	install process all over. Obviously this will need to be locked 
+	install process all over. Obviously this will need to be locked
 	down when the software is complete."""
 	template = 'core/backend/install/reset.html'
 	if is_installed():
@@ -139,7 +139,7 @@ def reset(request):
 		return HttpResponseRedirect('/')
 
 	return render_to_response(template,
-							  context_instance=RequestContext(request))
+					context_instance=RequestContext(request))
 
 
 # ============ Misc =======================================
@@ -171,8 +171,8 @@ def signup(request):
 
 	# Don't allow sign up again!
 	if acc.exists():
-		return HttpResponseRedirect('/') 
-		
+		return HttpResponseRedirect('/')
+
 	class CreateAccountForm(forms.Form):
 		"""Form for creating user account"""
 		username = forms.CharField(max_length=30)
@@ -185,21 +185,21 @@ def signup(request):
 	if request.method == 'POST':
 		form = CreateAccountForm(request.POST)
 		if form.is_valid():
-			acc.create(form.cleaned_data['username'], 
-					   form.cleaned_data['password'], 
-					   form.cleaned_data['email'])
+			acc.create(form.cleaned_data['username'],
+						form.cleaned_data['password'],
+						form.cleaned_data['email'])
 
 			# TODO: Login here! 
 			return HttpResponseRedirect('/') # ACCOUNT CREATED!
 
 		return render_to_response('core/backend/create-account.html',
-								 	{'form': form},
+									{'form': form},
 									context_instance=RequestContext(request))
 
 	else:
 		form = CreateAccountForm()
 		return render_to_response('core/backend/create-account.html',
-								 	{'form': form},
+									{'form': form},
 									context_instance=RequestContext(request))
 
 

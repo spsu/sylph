@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 
 class EnsureInstalledMiddleware(object):
 	"""
-	Middleware to ensure that the Sylph portal has been installed 
+	Middleware to ensure that the Sylph portal has been installed
 	properly, and if not, run an installation view.
 	"""
 

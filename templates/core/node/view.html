@@ -4,11 +4,11 @@
 
 {%block content %}
 	<div class="buttons">
-	{% ifequal node.id 1 %}
+	{% if node.is_ours %}
 		<a href="/node/edit/" class="button">Edit Own Node</a>
 	{% else %}
 		<a href="/node/delete/{{ node.id }}/" class="button">Delete Node</a>
-	{% endifequal %}	
+	{% endif %}	
 	</div>
 	<h2> <a href="/node/">Index</a> &gt; Node #{{ node.id }} </h2>
 

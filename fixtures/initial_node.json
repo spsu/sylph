@@ -1,9 +1,14 @@
-[
+[{
+	"model": "resource.Resource",
+	"pk": 2,
+	"fields": {
+		"uri": "http://example.org/my-new-node/"
+	}
+},
 {
 	"model": "node.Node",
-	"pk": 1,
+	"pk": 2,
 	"fields": {
-		"uri": "http://example.org/my-new-node/",
 		"name": "My Node",
 		"description": "My new node",
 		"own_description": "",

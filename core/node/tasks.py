@@ -241,7 +241,7 @@ class KeepResolvingAddedNodes(PeriodicTask):
 
 		nodes = None
 		nodes = Node.objects.filter(is_yet_to_resolve=False) \
-							.exclude(pk=1)
+							.exclude(pk=2)
 
 
 		# TODO: Respond to server overload

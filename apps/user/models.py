@@ -65,6 +65,7 @@ class User(Resource):
 	# ============= Model Fields ==========================
 
 	# Username of the person (The only mandatory field!)
+	# TODO: Rename 'alias' for less of a dull/traditional feel
 	username = models.CharField(blank=False, null=False, max_length=24)
 
 	# Name of the person (Optional)

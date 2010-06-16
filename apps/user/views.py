@@ -113,7 +113,6 @@ def ajax_edit(request):
 	except User.DoesNotExist:
 		raise Exception, "Main user does not exist!!" # TODO: System err
 
-	print request.POST
 	user.datetime_edited = datetime.today()
 
 	if request.POST['id'] == 'bio':
@@ -143,5 +142,6 @@ def ajax_info(request):
 		raise Exception, "Main user does not exist!!" # TODO: System err
 		# TODO: Ajax error
 
+	print request.POST
 	return HttpResponse(user.bio)
 

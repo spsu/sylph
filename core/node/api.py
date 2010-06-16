@@ -21,7 +21,7 @@ def ping_response(request):
 	node = None
 	user = None
 	try:
-		node = Node.objects.get(pk=1)
+		node = Node.objects.get(pk=2)
 		user = User.objects.get(pk=1)
 	except Model.DoesNotExist:
 		raise Exception # XXX: This is a critcal system error!
