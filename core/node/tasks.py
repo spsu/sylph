@@ -231,7 +231,7 @@ class RetryFailedNodesTask(PeriodicTask):
 class KeepResolvingAddedNodes(PeriodicTask):
 	"""Re-resolve nodes that have been successfully added in the past"""
 
-	run_every = timedelta(seconds=20)
+	run_every = timedelta(seconds=10)
 	#run_every = timedelta(hours=2)
 
 	def run(self, **kwargs):

@@ -18,15 +18,23 @@ function updateRow(nodeInfo)
 	var select = "tr[id='node_" + id.toString() + "']";
 
 	var color = 'red';
+	var node_name = 'Nameless node';
+
 	if(nodeInfo.pk == 1) {
 		color = 'white';
 	}
 	if(nodeInfo.fields.status == 'AVAIL') {
 		color = 'green';
 	}
+	if(nodeInfo.fields.name) {
+		node_name = nodeInfo.fields.name;
+	}
 
 	$(select + " > td[class='td_status_color']")
 			.css('background-color', color);
+
+	$(select + " > td[class='td_name_etc'] span[class='name']")
+			.text(node_name);
 }
 
 // Update the page with JSON data
@@ -73,9 +81,11 @@ $(window).load(function () {
 			<td class="td_name_etc">
 				{% if node.is_ours %}<strong>{% endif %}
 				{% if node.name %}
-					<a href="{{ node.get_absolute_url }}">{{node.name}}</a>
+					<a href="{{ node.get_absolute_url }}"><span 
+						class="name">{{node.name}}</span></a>
 				{% else %}
-					<a href="{{ node.get_absolute_url }}">Nameless node</a>
+					<a href="{{ node.get_absolute_url }}"><span
+						class="name">Nameless node</span></a>
 				{% endif %}
 				{% if node.is_ours %}(your node)</strong>{% endif %}	
 				<p>located at <u>{{ node.uri }}</u></p>	
