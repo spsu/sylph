@@ -4,6 +4,7 @@ from django import forms
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.core import serializers
 
 from models import *
 import tasks
@@ -18,7 +19,7 @@ def index(request):
 	nodes = Node.objects.all()
 	return render_to_response('core/node/index.html', {
 									'nodes': nodes,
-							}, 
+							},
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
 
@@ -38,7 +39,8 @@ def edit_own_node(request):
 		class Meta:
 			model = Node
 			fields = ['uri', # TODO: Should we let them edit URI this way?
-					  'name', 'description']
+						'name',
+						'description']
 
 	if request.method == 'POST':
 		form = EditNodeForm(request.POST, instance=node)
@@ -52,8 +54,8 @@ def edit_own_node(request):
 		form = EditNodeForm(instance=node)
 
 	return render_to_response('core/node/edit_own.html',
-							  {'form': form}, 
-							  context_instance=RequestContext(request))
+								{'form': form},
+								context_instance=RequestContext(request))
 
 
 # ============ Edit Other Node ============================
@@ -88,8 +90,8 @@ def edit_other_node(request, node_id):
 		form = EditOtherNodeForm(instance=node)
 
 	return render_to_response('core/node/edit_other.html',
-							  {'node': node, 'form': form}, 
-							  context_instance=RequestContext(request))
+								{'node': node, 'form': form},
+								context_instance=RequestContext(request))
 
 
 # ============ View Node ===============================
@@ -104,7 +106,7 @@ def view_node(request, node_id):
 
 	return render_to_response('core/node/view.html', {
 									'node': node,
-							}, 
+							},
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
 
@@ -141,8 +143,8 @@ def add_node(request):
 
 	return render_to_response('core/node/add.html', {
 								'form': form
-							  }, 
-							  context_instance=RequestContext(request))
+								},
+								context_instance=RequestContext(request))
 
 
 # ============ Delete Node ================================
@@ -157,12 +159,21 @@ def delete_node(request, node_id):
 		node = Node.objects.get(pk=node_id)
 	except Node.DoesNotExist:
 		raise Http404
-	
+
 	if request.method == 'POST':
 		node.delete()
 		return HttpResponseRedirect('/node/')
 
 	return render_to_response('core/node/delete.html',
-							  context_instance=RequestContext(request))
+								context_instance=RequestContext(request))
 
 
+# ============ Ajax =======================================
+
+def ajax_get_info(request):
+	"""Returns info for the requested nodes."""
+	#if not request.is_ajax():
+	#	return HttpResponse('')
+
+	nodes = serializers.serialize("json", Node.objects.all())
+	return HttpResponse(nodes)

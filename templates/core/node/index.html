@@ -2,6 +2,61 @@
 
 {% block title %}Node index{% endblock %}
 
+{% block javascript %}
+<script type="text/javascript">
+
+/**
+ * This is some Ajax that will update the node statuses asynchronously.
+ * Note: I suck at javascript.
+ *
+ * Each node is in an HTML table row with the id 'node_{id}'. 
+ */
+
+function updateRow(nodeInfo) 
+{
+	var id = nodeInfo.pk;
+	var select = "tr[id='node_" + id.toString() + "']";
+
+	var color = 'red';
+	if(nodeInfo.pk == 1) {
+		color = 'white';
+	}
+	if(nodeInfo.fields.status == 'AVAIL') {
+		color = 'green';
+	}
+
+	$(select + " > td[class='td_status_color']")
+			.css('background-color', color);
+}
+
+// Update the page with JSON data
+function updateWithJson(json)
+{
+	if(!json) {
+		return;
+	}
+	for(i in json) {
+		updateRow(json[i]);
+	}
+}
+
+// Do the ajax check for status change.
+function doCheckStatus() {
+	$.getJSON('/node/ajax_get_info/', function(d) {
+		updateWithJson(d);
+	});
+}
+
+
+$(window).load(function () {
+	$('body').everyTime(1000,function(i) {
+		doCheckStatus();
+	});
+});
+
+</script>
+{% endblock %}
+
 {%block content %}
 	<div class="buttons">
 		<a href="/node/add/" class="button">Add Node</a>
@@ -10,12 +65,12 @@
 	<h1> Node Index </h1>
 	<table class="table">
 	{% for node in nodes %}
-		<tr class="row_{% cycle 'odd' 'even' %}">
+		<tr class="row_{% cycle 'odd' 'even' %}" id="node_{{ node.id }}">
 			<td style="background-color:{{ node.status_color }}" 
-				title="{{ node.get_status }}">
+				title="{{ node.get_status }}" class="td_status_color">
 				&nbsp;&nbsp;&nbsp;
 			</td>
-			<td>
+			<td class="td_name_etc">
 				{% if node.is_ours %}<strong>{% endif %}
 				{% if node.name %}
 					<a href="{{ node.get_absolute_url }}">{{node.name}}</a>
@@ -25,7 +80,7 @@
 				{% if node.is_ours %}(your node)</strong>{% endif %}	
 				<p>located at <u>{{ node.uri }}</u></p>	
 			</td>
-			<td>	
+			<td class="td_date">	
 				{% if node.datetime_added %}
 					<p><small>added {{ node.datetime_added }}
 					</small></p>
