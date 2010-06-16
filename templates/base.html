@@ -5,11 +5,12 @@
   <title>{% block title %}NO TITLE{% endblock %}</title>
   <link rel="stylesheet" href="/static/style.css" type="text/css" />
   <script type="text/javascript" src="/static/jquery.js"></script>
-  <script type="text/javascript" src="/static/jquery_timers.js"></script>
+  <script type="text/javascript" src="/static/jquery.timers.js"></script>
+  <script type="text/javascript" src="/static/jquery.jeditable.js"></script>
   <style>
 	{% include "instance_css.html" %}
-	{% block extracss %}{% endblock %}
   </style>
+  {% block css %}{% endblock %}
   {% block javascript %}{% endblock %}
 </head>
   <body>

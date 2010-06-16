@@ -4,6 +4,7 @@ from django import forms
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.core import serializers
 
 from models import *
 
@@ -70,7 +71,7 @@ def edit_own_profile(request):
 			u = form.save(commit=False)
 			u.datetime_edited = datetime.today()
 			u.save()
-			return HttpResponseRedirect('/profile/view/1/')
+			return HttpResponseRedirect('/user/view/1/')
 
 	else:
 		form = EditProfileForm(instance=user)
@@ -92,8 +93,55 @@ def view_profile(request, user_id):
 
 	return render_to_response('apps/user/view_profile.html', {
 									'user': user,
-							}, 
+							},
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
 
+
+# ============ Ajax editing ===============================
+
+def ajax_edit(request):
+	"""Edit the profile with ajax."""
+	if not request.is_ajax() or request.method != 'POST':
+		raise Exception, "Must be ajax post!"
+
+	if 'id' not in request.POST:
+		raise Exception, "No id!" # TODO: Error logging
+
+	try:
+		user = User.objects.get(pk=1)
+	except User.DoesNotExist:
+		raise Exception, "Main user does not exist!!" # TODO: System err
+
+	print request.POST
+	user.datetime_edited = datetime.today()
+
+	if request.POST['id'] == 'bio':
+		user.bio = request.POST['value']
+		user.save()
+		return HttpResponse(user.bio_with_markup())
+
+	if request.POST['id'] == 'name':
+		user.set_name(request.POST['value']) # TODO: Not sanitized!
+		user.save()
+		return HttpResponse(user.get_name())
+
+	if request.POST['id'] == 'username':
+		user.username = request.POST['value'] # TODO: Not sanitized!
+		user.save()
+		return HttpResponse(user.get_username())
+
+	raise Exception, "Unknown request..."
+
+
+def ajax_info(request):
+	"""Load ajax info on the user profile."""
+
+	try:
+		user = User.objects.get(pk=1)
+	except User.DoesNotExist:
+		raise Exception, "Main user does not exist!!" # TODO: System err
+		# TODO: Ajax error
+
+	return HttpResponse(user.bio)
 

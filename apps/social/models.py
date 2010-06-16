@@ -8,6 +8,9 @@ class Knows(ResourceDigraphEdge):
 	maintained at both ends.
 
 	This is in a way similar to foaf:knows and will be built as such.
+
+	Usage:
+		Knows(origin=personA, destination=personB, description='...')
 	"""
 
 	# TODO: Programatically enforce 'origin' and 'destination' to be users

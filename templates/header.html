@@ -13,7 +13,8 @@
 		| --> {% endcomment %}
 		{% if owner %}
 			<strong><a 
-				href="{{ owner.get_absolute_url }}">{{ owner.get_name }}</a></strong> |
+				href="{{ 
+	owner.get_absolute_url }}">{{ owner.get_name_or_username }}</a></strong> |
 		{% endif %}
 		<strong><a href="/reset/">Reset</a></strong>
 	</div>

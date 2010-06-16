@@ -207,7 +207,7 @@ def ping_node(id):
 class RetryFailedNodesTask(PeriodicTask):
 	"""Retry Nodes that failed to add."""
 
-	run_every = timedelta(seconds=30)
+	run_every = timedelta(seconds=20)
 	#run_every = timedelta(minutes=2)
 
 	def run(self, **kwargs):

@@ -103,7 +103,47 @@ class User(Resource):
 
 	# ============= Model-specific methods ================
 
+	def is_owner(self):
+		"""Return whether the user is the owner of *this* node."""
+		return (self.pk == 1)
+
+	def set_name(self, name):
+		"""A heuristic for setting all of the name components based on
+		a single input string. NOTE: DOES NOT CALL SAVE()!"""
+		if not name or type(name) not in [str, unicode]:
+			raise Exception, "Invalid input"
+
+		parts = name.split()
+		ln = len(parts)
+
+		if not parts:
+			return
+
+		self.first_name = parts[0]
+		self.middle_name = ''
+		self.last_name = ''
+
+		if ln == 2:
+			self.last_name = parts[1]
+		elif ln == 3:
+			self.middle_name = parts[1]
+			self.last_name = parts[2]
+
+
 	def get_name(self):
+		"""Get a western-formatted name (if available)."""
+		# TODO: g11n
+		name = "(nameless)"
+		if self.first_name:
+			name = self.first_name
+			if self.middle_name:
+				name += " " + self.middle_name
+			if self.last_name:
+				name += " " + self.last_name
+
+		return name
+
+	def get_name_or_username(self):
 		"""Get a western-formatted name (if available) or the
 		username."""
 		# TODO: g11n
@@ -117,6 +157,13 @@ class User(Resource):
 			if self.last_name:
 				name += " " + self.last_name
 
+		return name
+
+	def get_username(self):
+		"""Get the username (if available)."""
+		name = "(no username)"
+		if self.username:
+			name = self.username
 		return name
 
 	def get_name_and_title(self):
@@ -149,6 +196,9 @@ class User(Resource):
 			self.bio_cache_datetime = datetime.today()
 			self.save()
 
+		if not self.bio:
+			return ''
+
 		return self.bio_markup_cache
 
 	def avatar_or_gravatar(self):
@@ -166,7 +216,7 @@ class User(Resource):
 		return self.username
 
 	def get_absolute_url(self):
-		return '/profile/view/%s/' % self.id
+		return '/user/view/%s/' % self.id
 
 class UserEmail(models.Model):
 	"""Emails are not resources, this is just a 1:m field for users."""

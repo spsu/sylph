@@ -2,17 +2,88 @@
 
 {% block title %}Viewing Profile{% endblock %}
 
+{% block css %}
+<style type="text/css">
+	#bio {
+		background-color: #eee;
+		border: 1px solid #ddd;
+		margin: 0px 18px 0px 10px;
+		padding: 5px;
+	}
+</style>
+{% endblock css %}
+
+{% block javascript %}
+<script type="text/javascript">
+
+{% if user.is_owner %}
+
+$(document).ready(function() {
+	$('.edit').editable('/user/ajax_edit/', {
+		type      : 'text',
+		width     : 200,
+		tooltip   : 'Click to edit...',
+		callback  : function(value, settings) {
+			if(!value) {
+				$("span[id='name']").text("No name. Click to edit...");
+			}
+		}
+	});
+	$('.edit_area').editable('/user/ajax_edit/', {
+		type      : 'textarea',
+		cancel    : 'Cancel',
+		submit    : 'OK',
+		loadurl   : '/user/ajax_info/',
+		tooltip   : 'Click to edit...',
+		callback  : function(value, settings) {
+			if(!value) {
+				$("div[id='bio']").text("No bio. Click to edit...");
+			}
+		}
+	});
+});
+
+{% endif %}
+
+</script>
+{% endblock javascript %}
+
 {%block content %}
 	{% ifequal user owner %}
 		<div class="buttons">
-			<a href="/profile/edit/" class="button">Edit Profile</a>
+			<a href="/user/edit/" class="button">Edit Profile</a>
 		</div>
 	{% endifequal %}
 
-	<h1> <a href="/profile/">Index</a> &gt; {{ user.get_name_and_title }} </h1>
+	<h1> <a href="/user/">Index</a> &gt; View Profile </h1>
+	
+	<p><strong>
+		{% if user.is_owner %}
+			<span 
+				id="name" class="edit">{{ user.get_name }}</span>
+		{% else %}
+			<span id="name">{{ user.get_name_and_title }}</span>
+		{% endif %}
+	</strong></p>
 
-	<p>Bio:</p>
-	{{ user.bio_with_markup|safe }}
+	<p> 
+		alias: <strong>
+		{% if user.is_owner %}
+			<span 
+				id="username" class="edit">{{ user.get_username }}</span>
+		{% else %}
+			<span id="username">{{ user.get_username }}</span>
+		{% endif %}
+		</strong>
+	</p>
 
-	TODO
+	<p>personal bio:</p>
+	<div id="bio" class="edit_area">
+		{% if user.bio %}
+			{{ user.bio_with_markup|safe }}
+		{% else %}
+			No bio. 
+			{% if user.is_owner %}Click to edit...{% endif %}
+		{% endif %}
+	</div>
 {% endblock content %}

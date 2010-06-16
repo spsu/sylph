@@ -4,14 +4,14 @@
 
 {%block content %}
 	<div class="buttons">
-		<a href="/profile/edit/" class="button">Edit Profile</a>
+		<a href="/user/edit/" class="button">Edit Profile</a>
 	</div>
 	<h1> User Index </h1>
 	
 	<div class="table">
 		{% for user in users %}
 		<div class="row_{% cycle 'odd' 'even' %}">
-			<a href="{{ user.get_absolute_url }}">{{ user.get_name }}</a>
+			<a href="{{ user.get_absolute_url }}">{{ user.get_name_or_username }}</a>
 			{% if user.datetime_edited %}
 				<small>profile edited {{ user.datetime_edited }}</small>
 			{% endif %}

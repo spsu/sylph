@@ -27,7 +27,7 @@ urlpatterns = patterns('',
 	# Application level
 	(r'^bootstrap/', include('sylph.apps.bootstrap.urls')),	# bootstrap -> www?
 	(r'^post/', include('sylph.apps.post.urls')),
-	(r'^profile/', include('sylph.apps.user.urls')),
+	(r'^user/', include('sylph.apps.user.urls')),
 
 	# System Level
 	(r'^node/', include('sylph.core.node.urls')),
