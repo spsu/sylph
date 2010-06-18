@@ -8,16 +8,85 @@ from sylph.apps.user.models import User
 from sylph.utils.transport.Communicator import Communicator
 from sylph.utils.transport.Request import Request
 from sylph.utils.data.RdfParser import RdfParser
+from sylph.utils.uri import hashless
 
 from datetime import datetime, timedelta
 import hashlib
 import httplib
 
+# ============ Add Node (Mutual) ==========================
+
+@task
+def add_node(uri):
+	"""
+	Add Node
+	Resolves the remote node and notifies it that we'll be adding
+	them to our list of tracked nodes. (They are free to add us.)
+	"""
+	uri = hashless(uri)
+
+	node = None
+	try:
+		node = Node.objects.get(uri=uri)
+	except Node.DoesNotExist:
+		# XXX: Technically, it should already be in the DB
+		node = Node(uri=uri)
+		node.datetime_added = datetime.today()
+		node.is_yet_to_resolve = True
+		node.status = 'U'
+		node.save()
+
+	# Now let's exchange doorbell key info...
+	state = node.doorbell_state
+	if not node.dispatch_key_ours:
+		node.generate_key()
+		node.save()
+
+	if state not in ['0', '1', '2', '3']:
+		raise Exception, "State is non-normative" # XXX ERROR LOG
+
+	post = {'dispatch': 'node_add'}
+	new_state = None
+
+	# We're contacting them first.
+	if state == '0':
+		post['key_ours'] = node.dispatch_key_ours
+		new_state = '1'
+
+	# We're responding to their request.
+	if state == '1':
+		post['key_ours'] = node.display_key_ours
+		post['key_yours'] = node.display_key_theirs
+		new_state = '3'
+
+	comm = Communicator(node.uri)
+	ret = comm.send_post(post)
+
+	time = datetime.today()
+
+	if not ret or ret == 'NACK':
+		print "No communication return data!!" # TODO: Error log
+		node.status = 'EERR' # TODO
+		node.datetime_last_failed = time
+		node.save()
+		return
+
+	node.is_yet_to_resolve = False
+	node.datetime_last_resolved = time
+	node.datetime_last_pulled_from = time
+	node.doorbell_state = new_state
+	node.save()
+
+	# Unknown other state...
+	raise Exception, "Unknown state."
+
+
 
 # ============ Initial Node Adding ========================
 
+# TODO: DEPRECATED
 @task
-def do_add_node_lookup(uri):
+def do_add_node_lookup(uri): # XXX: DEPRECATED!
 	"""
 	Nodes will get added all the time and in various contexts.
 	This is the task that must run for each of them.
@@ -201,6 +270,9 @@ def ping_node(id):
 		user.save()
 
 	print "COMM WORKED!!!!"
+
+
+
 
 # ============ Retry Failed Nodes =========================
 

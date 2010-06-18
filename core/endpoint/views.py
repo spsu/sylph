@@ -56,10 +56,38 @@ def index(request):
 	dispatch = request.POST['dispatch']
 
 	# TODO: I need to write an actual dispatcher!!!
-	if dispatch == 'ping':
+
+	# ======== Node Disptaching ===========================
+
+	if dispatch in ['ping', 'node_ping']:
 		from sylph.core.node.api import ping_response
 		return ping_response(request)
 
-	return HttpResponse('TODO')
+	if dispatch == 'node_add':
+		from sylph.core.node.api import add
+		return add(request)
+
+	if dispatch == 'node_delete':
+		from sylph.core.node.api import delete
+		return delete(request)
+
+	# ======== User Dispatching ===========================
+
+	if dispatch == 'user_update': # TODO
+		"""Simply ask for the user's profile, updates, etc."""
+		from sylph.apps.user.api import update
+		return update(request)
+
+	if dispatch == 'user_get': # TODO
+		"""Get a user profile from the user's URI."""
+		from sylph.apps.user.api import get
+		return get(request)
+
+	if dispatch == 'user_get_by_node': # TODO
+		"""Look up a user for a node URI."""
+		from sylph.core.user.api import get_by_node
+		return get_by_node(request)
+
+return HttpResponse('TODO')
 
 

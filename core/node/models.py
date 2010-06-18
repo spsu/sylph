@@ -1,6 +1,9 @@
 from django.db import models
 from sylph.core.resource.models import Resource
 from datetime import datetime
+import os
+import math
+from base64 import b64encode
 
 # ============ Nodes ======================================
 
@@ -111,9 +114,43 @@ class Node(Resource):
 	status = models.CharField(max_length=5, choices=STATUS_TYPE_CHOICES,
 								null=False, blank=False, default='U')
 
+	"""
+	In the process of mutually adding nodes, we exchange secret keys.
+	This isn't for security, but rather to avoid 'doorbell ditching'.
+	These keys are uniquely generated for each Node pairing.
+	Once PGP is in place, don't use this anymore.
+	"""
+	# XXX XXX XXX: This isn't based on actual cryptography...
+	doorbell_key_ours = models.CharField(max_length=100)
+	doorbell_key_theirs = model.CharField(max_length=100)
+
+	DOORBELL_STATUS_CHOICES = (
+		('0', 'Ungenerated'),
+		# One party has generated a key
+		('1', 'One key generated.'),
+		# Both parties have generated a key
+		('2', 'Both keys generated.'),
+		# Both parties have generated a key, and the first party confirmed.
+		('3', 'Both keys confirmed!'),
+    )
+	doorbell_status = models.CharField(max_length=1,
+								choices=DOORBELL_STATUS_CHOICES,
+								null=False, blank=False, default='0')
+
+	# ============= Node-specific functionality ===========
+
+	def generate_key(self, replace=False):
+		"""Generate our 'doorbell key' for the other node.
+		NOTE: DOES NOT SAVE!"""
+		if self.doorbell_key_ours and not replace:
+				return
+		self.doorbell_key_ours = b64encode(os.urandom(100)[:-2]
+		return
+
+	def check_keys(self, our_key, their_key):
+		pass
 
 	# ============= RDF Serilization Helpers ==============
-
 
 	def get_ontology_name(self):
 		"""Heuristic to generate the ontology name."""

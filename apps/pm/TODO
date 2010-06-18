@@ -1,0 +1,5 @@
+Private messaging
+	* Should allow 1:1 and 1:n messaging. 
+	* Can't prevent sharing, but don't have any code in the app to share
+	  anything here. (Perhaps do not implement as resources?)
+
