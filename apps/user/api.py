@@ -2,7 +2,9 @@ from sylph.apps.user.models import User
 from sylph.utils.uri import hashless
 from sylph.utils.data.RdfSerializer import RdfSerializer
 
-def update(request):
+# ============ Updated Info on Node Owner =================
+
+def get_profile(request):
 	"""
 	Get up-to-date information on the owner of the node.
 	In the future this will respect privacy issues. There may also be
@@ -17,6 +19,19 @@ def update(request):
 	rs = RdfSerializer(user)
 	return HttpResponse(rs.to_rdf(), mimetype='text/plain')
 
+
+def update_profile(request):
+	"""
+	Handle a profile that has been sent to us.
+	"""
+	pass
+
+
+
+
+# ================= SELDOM USED ===========================
+
+# ============ Get info on an arbitrary user ==============
 
 def get(request):
 	"""
@@ -37,6 +52,8 @@ def get(request):
 	rs = RdfSerializer(user)
 	return HttpResponse(rs.to_rdf(), mimetype='text/plain')
 
+
+# ============ Get info on an arbitrary user ==============
 
 def get_by_node(request):
 	"""

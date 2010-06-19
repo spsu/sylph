@@ -75,8 +75,8 @@ def index(request):
 
 	if dispatch == 'user_update': # TODO
 		"""Simply ask for the user's profile, updates, etc."""
-		from sylph.apps.user.api import update
-		return update(request)
+		from sylph.apps.user.api import get_profile
+		return get_profile(request)
 
 	if dispatch == 'user_get': # TODO
 		"""Get a user profile from the user's URI."""

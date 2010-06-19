@@ -36,10 +36,88 @@ def ping_response(request):
 	return HttpResponse(rs.to_rdf(), mimetype='text/plain')
 
 
-# ============ Add Response ===============================
+# ============ Give Key ===================================
 
-def add(request):
+def give_key(request):
 	"""
+	Another node is telling us that they are granting us the ability to
+	make privledged transactions with them. They are giving us a key we
+	must store. (The key must be verified.)
+	"""
+	# TODO: THIS IS TERRIBLE!
+	p = request.POST
+	uri = hashless(p['uri'])
+	key_theirs = p['key'] if 'key' in p else None
+
+	# Lookup or create node.
+	# TODO: For now assume it exists. Must deal with spam/fraud later.
+	node = None
+	try:
+		node = Node.objects.get(uri=uri)
+	except Node.DoesNotExist:
+		node = Node(uri=uri)
+		node.datetime_added = datetime.today()
+		node.is_yet_to_resolve = True
+		#node.save()
+
+	# Maybe they want to change their key
+	if node.key_theirs and node.key_theirs_confirmed:
+		node.new_key_theirs = key_theirs
+		node.save()
+		# TODO: Schedule a job to confirm the key 
+		return
+
+	node.key_theirs = key_theirs
+	node.key_theirs_confirmed = False
+	node.new_key_theirs = ''
+	node.save()
+
+	# TODO: Schedule a job to confirm the key
+
+def ask_key(request):
+	"""
+	Another node is asking us for a key so they can make priveledged
+	transactions with us. They'll have to verify this with us.
+	"""
+	# TODO: THIS IS TERRIBLE!
+	p = request.POST
+	uri = hashless(p['uri'])
+	#key_theirs = p['key'] if 'key' in p else None
+
+	# Lookup or create node.
+	# TODO: For now assume it exists. Must deal with spam/fraud later.
+	node = None
+	try:
+		node = Node.objects.get(uri=uri)
+	except Node.DoesNotExist:
+		node = Node(uri=uri)
+		node.datetime_added = datetime.today()
+		node.is_yet_to_resolve = True
+		#node.save()
+
+	# XXX: We cannot give them the key in this transaction as anyone could
+	# be making it. We'll have to request the node over HTTP.
+	key = Node.generate_key()
+
+	# Maybe they want a new key
+	if node.key_ours and node.key_ours_confirmed:
+		node.new_key_ours = key
+		node.save()
+		# TODO: Schedule a job to confirm the key 
+		return
+
+	node.key_ours = key
+	node.key_ours_confirmed = False
+	node.new_key_ours = ''
+	node.save()
+
+	# TODO: Schedule a job to confirm the key
+
+
+
+def old_add_DEPRECATED(request):
+	"""...
+	giving us a key to
 	The other node is asking that we mutually form a connection.
 	This usually means that both endpoints will add each other.
 
@@ -56,8 +134,8 @@ def add(request):
 	if not request.method != 'POST':
 		raise Exception, "Not a post..."
 
+	# TODO: THIS IS TERRIBLE!
 	p = request.POST
-
 	uri = hashless(p['uri'])
 	key_ours = p['key_theirs'] if 'key_theirs' in p else None
 	key_theirs = p['key_yours'] if 'key_yours' in p else None

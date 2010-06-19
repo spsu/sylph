@@ -14,7 +14,7 @@ class Request(Message):
 	# ============= High-level API ========================
 
 	def add(self, transportable):
-		"""Add a model object or QuerySet to the serializer in 
+		"""Add a model object or QuerySet to the serializer in
 		preparation to be sent to the remote node."""
 		#XXX: Ideally, it isn't the job of this class to know the 
 		#	  implementation details behind storing this info.
@@ -28,7 +28,7 @@ class Request(Message):
 			raise Exception, "No data to output!"
 		return self.serializer.to_rdf()
 
-	
+
 	# XXX: DATA SHOULDN'T HAVE COMM PARAMS!!! WTF?! DECOUPLE!!
 	"""
 	def set_destination(self):
@@ -43,7 +43,7 @@ class Request(Message):
 			destination = self.destination
 		self.communicator.set_uri(destination)
 		self.return_data = self.communicator.send_post({'dispatch': dispatch})
-		return self.return_data	
+		return self.return_data
 
 
 	def send_async(self, destination, dispatch='ping'):
@@ -65,7 +65,7 @@ class Request(Message):
 			raise Exception, "Must supply Communicator object."
 		ret = self.communicator
 		self.communicator = communicator
-		return ret		
+		return ret
 
 	def get_serializer(self):
 		"""Get a reference to the serializer held by the Payload.

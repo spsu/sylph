@@ -18,11 +18,6 @@ class Node(Resource):
 
 	There can be user-owned Nodes, cache Nodes, directory Nodes, and
 	so forth.
-
-	Endpoint would probably be a better name for this, but I'll go with
-	Node since the graph nature is more visible.
-
-	This is only a first-iteration model.
 	"""
 
 	# XXX NOTE: A user has a node, not a node has a user!
@@ -119,10 +114,21 @@ class Node(Resource):
 	This isn't for security, but rather to avoid 'doorbell ditching'.
 	These keys are uniquely generated for each Node pairing.
 	Once PGP is in place, don't use this anymore.
+
+	If a node wants to deal with us, it uses the key we gave them in
+	all communications (that update anything).
 	"""
 	# XXX XXX XXX: This isn't based on actual cryptography...
-	doorbell_key_ours = models.CharField(max_length=100)
-	doorbell_key_theirs = model.CharField(max_length=100)
+	key_ours = models.CharField(max_length=100)
+	key_ours_confirmed = models.BooleanField(default=False)
+
+	key_theirs = models.CharField(max_length=100)
+	key_theirs_confirmed = models.BooleanField(default=False)
+
+	"""In the event keys are being changed, they need to be stored here
+	until they can be confirmed by both parties."""
+	new_key_ours = models.CharField(max_length=100, null=False, blank=True)
+	new_key_theirs = models.CharField(max_length=100, null=False, blank=True)
 
 	DOORBELL_STATUS_CHOICES = (
 		('0', 'Ungenerated'),
@@ -139,13 +145,11 @@ class Node(Resource):
 
 	# ============= Node-specific functionality ===========
 
-	def generate_key(self, replace=False):
+	@classmethod
+	def generate_key(cls):#, replace=False):
 		"""Generate our 'doorbell key' for the other node.
 		NOTE: DOES NOT SAVE!"""
-		if self.doorbell_key_ours and not replace:
-				return
-		self.doorbell_key_ours = b64encode(os.urandom(100)[:-2]
-		return
+		return b64encode(os.urandom(100))[:-2]
 
 	def check_keys(self, our_key, their_key):
 		pass
