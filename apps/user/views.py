@@ -77,9 +77,9 @@ def edit_own_profile(request):
 		if form.is_valid():
 			u = form.save(commit=False)
 			u.datetime_edited = datetime.today()
-			u.save()
+			u.save() # Save calls signal handler for push_profile.
 
-			tasks.push_profile.delay()
+			#tasks.push_profile.delay()
 			return HttpResponseRedirect('/user/view/1/')
 
 	else:

@@ -10,7 +10,7 @@ import datetime
 # ================ ENDPOINT INDEX =========================
 
 def index(request):
-	"""All endpoint-related communications will be through this one 
+	"""All endpoint-related communications will be through this one
 	view, which will serve to dispatch to the appropriate handler."""
 
 	# TODO: Make endpoint dispatcher here.
@@ -30,14 +30,14 @@ def index(request):
 
 
 	"""
-	Dispatch Key, eg. 
+	Dispatch Key, eg.
 
 		* send_profile
 		* send_post
 		* send_reply
 		* request_profile
 		etc
-	
+
 
 	1. Edit profile locally
 	2. Signal task via celery to tell friends (or subscribers)
@@ -45,8 +45,6 @@ def index(request):
 		state = { pending | error | recieved }
 
 	Is django dispatch appropriate?
-
-	
 	"""
 
 	# TODO: Dispatch key needs to be embedded in RDF request... I think.
@@ -96,5 +94,4 @@ def index(request):
 		return get_by_node(request)
 
 	return HttpResponse('TODO')
-
 

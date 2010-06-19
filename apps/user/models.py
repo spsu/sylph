@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import signals
+from django.dispatch import dispatcher
 from sylph.core.resource.models import Resource, ResourceDigraphEdge
 
 from sylph.utils.markdown2 import markdown
@@ -219,6 +221,7 @@ class User(Resource):
 	def get_absolute_url(self):
 		return '/user/view/%s/' % self.id
 
+
 class UserEmail(models.Model):
 	"""Emails are not resources, this is just a 1:m field for users."""
 
@@ -234,4 +237,15 @@ class UserEmail(models.Model):
 
 	# TODO: organization = models.ForeignKey('Org') (as opposed to User)
 	# OR perhaps just use a different table strictly for organizations!
+
+
+# ============ Signal registration ========================
+
+"""Register signals."""
+def register_signals():
+	import signals as sig_ # To avoid circular imports
+	signals.post_save.connect(sig_.schedule_notify_profile_change,
+								sender=User)
+
+register_signals()
 

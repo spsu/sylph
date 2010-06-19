@@ -238,9 +238,6 @@ def ping_node(id):
 	except:
 		print "No user data, or error. Ignoring."
 
-	print "Datetime edited:"
-	print node_data['datetime_edited']
-
 	# Update the node's status
 	node.datetime_last_resolved = datetime.today()
 	node.status = 'AVAIL'
@@ -265,10 +262,6 @@ def ping_node(id):
 		#user.datetime_created = user_data['datetime_created']
 		#user.datetime_edited = user_data['datetime_edited']
 		user.save()
-
-	print "COMM WORKED!!!!"
-
-
 
 
 # ============ Retry Failed Nodes =========================

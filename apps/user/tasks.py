@@ -23,8 +23,12 @@ def push_profile():
 	# TODO: Subscription system instead
 	# Schedule delivery to each node.
 	for node in nodes:
+		if node.is_ours():
+			continue # Just to make absolutely sure.
+		print "Scheduling profile push to: %s" % node.uri
 		push_profile_to_node.delay(node.uri)
 
+	print "push profile done"
 
 # TODO: Eventually this will be controlled via subscription.
 @task
