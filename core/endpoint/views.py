@@ -51,6 +51,7 @@ def index(request):
 
 	# TODO: Dispatch key needs to be embedded in RDF request... I think.
 	if not request.POST or 'dispatch' not in request.POST:
+		print "No dispatch postdata!"
 		raise ProtocolErrorException, "No dispatch postdata!" # TODO
 
 	dispatch = request.POST['dispatch']

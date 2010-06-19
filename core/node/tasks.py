@@ -11,8 +11,6 @@ from sylph.utils.data.RdfParser import RdfParser
 from sylph.utils.uri import hashless
 
 from datetime import datetime, timedelta
-import hashlib
-import httplib
 
 # ============ Add Node (Mutual) ==========================
 
@@ -209,7 +207,6 @@ def ping_node(id):
 	try:
 		user = User.objects.get(node=node)
 	except User.DoesNotExist:
-		print "Making new user!"
 		user = User()
 
 	# Perform communications. 

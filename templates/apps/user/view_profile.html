@@ -57,7 +57,10 @@ $(document).ready(function() {
 	{% endifequal %}
 
 	<h1> <a href="/user/">Index</a> &gt; View Profile </h1>
-	
+
+	{% if user.datetime_edited %}
+		<p><small>Last edited: {{ user.datetime_edited }}.</small></p>
+	{% endif %}
 	<p><strong>
 		{% if user.is_owner %}
 			<span 

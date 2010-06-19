@@ -18,6 +18,9 @@ class EndpointExceptionHandlerMiddleware(object):
 		for the endpoint urls."""
 		print "process_exception" # TODO: DEBUG
 		path = request.META['PATH_INFO']
+		print path
+
+		print str(exception)
 
 		if not path.startswith(settings.ENDPOINT_URI):
 			return None

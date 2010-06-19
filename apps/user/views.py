@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.core import serializers
 
 from models import *
+import tasks
 
 from datetime import datetime
 import hashlib
@@ -18,7 +19,7 @@ def index(request):
 	users = User.objects.all()
 	return render_to_response('apps/user/index.html', {
 									'users': users,
-							}, 
+							},
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
 
@@ -27,9 +28,9 @@ def index(request):
 
 def add_person_form(request):
 	"""
-	(TODO)		
-	
-	We should have a _single_ text entry where the following can be 
+	(TODO)
+
+	We should have a _single_ text entry where the following can be
 	added:
 		* OpenID (the page will contain metadata to an endpoint)
 		* SylphID (similar to OpenID, but is the person's Resource URI)
@@ -37,12 +38,12 @@ def add_person_form(request):
 		* email address (and we query a directory service and possibly friends)
 
 	This makes it _incredibly_ easy to add a person. If more search capability
-	is required, then we can search a directory w/ info such as phone number, 
-	previous school, company, etc. 
+	is required, then we can search a directory w/ info such as phone number,
+	previous school, company, etc.
 
 	I suppose this makes us "follow" the person...
 
-	Keep this a separate view from simply adding a friend of a friend. 
+	Keep this a separate view from simply adding a friend of a friend.
 	"""
 	pass
 
@@ -62,8 +63,14 @@ def edit_own_profile(request):
 		"""Form for editing one's profile"""
 		class Meta:
 			model = User
-			fields = ['username', 'first_name', 'middle_name', 'last_name',
-					  'title', 'bio']
+			fields = [
+						'username',
+						'first_name',
+						'middle_name',
+						'last_name',
+						'title',
+						'bio'
+					]
 
 	if request.method == 'POST':
 		form = EditProfileForm(request.POST, instance=user)
@@ -71,14 +78,16 @@ def edit_own_profile(request):
 			u = form.save(commit=False)
 			u.datetime_edited = datetime.today()
 			u.save()
+
+			tasks.push_profile.delay()
 			return HttpResponseRedirect('/user/view/1/')
 
 	else:
 		form = EditProfileForm(instance=user)
 
 	return render_to_response('apps/user/edit_profile.html',
-							  {'form': form}, 
-							  context_instance=RequestContext(request))
+								{'form': form},
+								context_instance=RequestContext(request))
 
 
 # ============ View Profile ===============================

@@ -27,12 +27,12 @@ def ping_response(request):
 	user = None
 	try:
 		node = Node.objects.get(pk=2)
-		user = User.objects.get(pk=1)
+		#user = User.objects.get(pk=1) # XXX: Temporary.
 	except Model.DoesNotExist:
 		raise Exception # XXX: This is a critcal system error!
 
 	rs = RdfSerializer(node)
-	rs.add(user) # TODO: Only share minimal info per user's preferences
+	#rs.add(user) # TODO: Only share minimal info per user's preferences
 
 	return HttpResponse(rs.to_rdf(), mimetype='text/plain')
 

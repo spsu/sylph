@@ -4,7 +4,10 @@ from rdflib import Namespace as NS
 
 from RdfSerializer import RdfSerializer
 
-from cStringIO import StringIO
+try:
+	from StringIO import StringIO
+except:
+	from cStringIO import StringIO
 
 class RdfParser(object):
 	"""A basic wrapper for RdfLib's RDF parser.

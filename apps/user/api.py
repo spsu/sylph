@@ -1,6 +1,8 @@
 from sylph.apps.user.models import User
+from sylph.core.node.models import Node
 from sylph.utils.uri import hashless
 from sylph.utils.data.RdfSerializer import RdfSerializer
+from sylph.utils.data.RdfParser import RdfParser
 
 # ============ Get owner's profile ========================
 
@@ -29,15 +31,34 @@ def update_profile(request):
 	"""
 	p = request.POST
 
-	# TODO: Deserialize.
-	uri = hashless(data['uri'])
+	try:
+		ps = RdfParser(p['data'])
+		udata = ps.extract('User')[0]
+	except:
+		raise Exception, "Improper payload."
+
+	uri = udata['uri']
+	node_uri = udata['node']
+
+	del udata['uri']
+	del udata['node']
 
 	try:
 		user = User.objects.get(uri=uri)
 	except User.DoesNotExist:
 		user = User(uri=uri)
 
-	#user.username =
+	try:
+		node = Node.objects.get(uri=node_uri)
+	except Node.DoesNotExist:
+		node = Node(uri=node_uri)
+
+	# TODO: There's no security in this...
+	for k, v in udata.iteritems():
+		setattr(user, k, v)
+
+	user.node = node
+	user.save()
 
 
 # ================= SELDOM USED ===========================
@@ -51,7 +72,7 @@ def get(request):
 	originating source.
 	"""
 	if 'uri' not in request.POST:
-		raise Exception, "No URI in post.'
+		raise Exception, "No URI in post."
 
 	uri = hashless(request.POST['uri'])
 	try:
