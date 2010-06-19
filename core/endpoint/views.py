@@ -59,6 +59,8 @@ def index(request):
 
 	# ======== Node Disptaching ===========================
 
+	print "Attempting to dispatch: %s" %dispatch # TODO DEBUG
+
 	if dispatch in ['ping', 'node_ping']:
 		from sylph.core.node.api import ping_response
 		return ping_response(request)
@@ -92,6 +94,6 @@ def index(request):
 		from sylph.core.user.api import get_by_node
 		return get_by_node(request)
 
-return HttpResponse('TODO')
+	return HttpResponse('TODO')
 
 

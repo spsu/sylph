@@ -5,15 +5,15 @@ import sys
 
 # ================= Version Information ===================
 """
-	Both the software and Sylph protocol (which multiple softwares implement)
-	utilize a similar versioning scheme:
+Both the software and Sylph protocol (which multiple softwares
+may implement) utilize a similar versioning scheme:
 
-		major.minor.bugfix.month.day (as MM and DD respectively)
+	major.minor.bugfix.month.day (as MM and DD respectively)
 """
 
 SOFTWARE_NAME = 'Sylph.py Client'
 SOFTWARE_VERSION = '0.1.0.05.25'
-PROTOCOL_VERSION = '0.1.0.05.25' 
+PROTOCOL_VERSION = '0.1.0.05.25'
 RDF_SERIALIZATION = 'xml' # xml or n3
 
 # ================= Common Configuration ==================
@@ -41,7 +41,7 @@ USE_I18N = False
 INTERNAL_IPS = ('127.0.0.1')
 
 TEMPLATE_LOADERS = (
-	'django.template.loaders.filesystem.load_template_source', 
+	'django.template.loaders.filesystem.load_template_source',
 	'django.template.loaders.app_directories.load_template_source',
 )
 
@@ -102,13 +102,14 @@ INSTALLED_APPS = (
 
 # ================= Virtualization Helpers ================
 """
-	These functions make it easy to run multiple instances of Sylph to test the 
-	communication abilities of the code. They allow binding of different URLs 
-	and database schemas depending on which port the server is told to run on:
+These functions make it easy to run multiple instances of Sylph to test
+the communication abilities of the code. They allow binding of
+different URLs and database schemas depending on which port the server
+is told to run on:
 
-		python manage.py runserver [port]
+	python manage.py runserver [port]
 
-	Port 8000 is considered the default.
+Port 8000 is considered the default.
 """
 
 def get_port():
@@ -122,8 +123,8 @@ def get_port():
 		return 8000
 
 def get_url(path = ""):
-	"""Returns the URL with the port the server is running on, optionally with 
-	a path segment appended."""
+	"""Returns the URL with the port the server is running on,
+	optionally with a path segment appended."""
 	# FIXME: Not capable of binding different IP addresses!
 	port = get_port()
 	p = 'http://127.0.0.1%s/' % ("" if port == 80 else ":"+str(port))
@@ -138,8 +139,8 @@ def get_url(path = ""):
 	return p
 
 def get_db(prefix = "sylph", port = None):
-	"""Return the database name that the running instance will bind to. This
-	varies based on the port django is told to run on."""
+	"""Return the database name that the running instance will bind
+	to. This varies based on the port django is told to run on."""
 	if not port:
 		port = get_port()
 	if port == 8000:
@@ -147,7 +148,7 @@ def get_db(prefix = "sylph", port = None):
 	return prefix + str(port)
 
 def get_rabbit_mq_vhost(prefix="sylph", port=None):
-	"""These must be virtual hosts in /etc/hosts and installed in 
+	"""These must be virtual hosts in /etc/hosts and installed in
 	RabbitMQ. Essentially generated the same way database names are."""
 	return get_db(prefix, port)
 
@@ -155,7 +156,7 @@ def get_rabbit_mq_vhost(prefix="sylph", port=None):
 PORT = get_port() # XXX: Temporary for templates
 
 # ================= Import Specific Configs ===============
-		
+
 try:
     from settings_local import *
 except ImportError:

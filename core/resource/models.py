@@ -3,51 +3,51 @@ import datetime
 import re
 
 """
-Resources are the fundamental datatype of the system. 
-TODO: Documentation. 
+Resources are the fundamental datatype of the system.
+TODO: Documentation.
 """
 
 # TODO: Consider 'ResourceRef' with just uri and make 'Resource' a decendant
 # This will be for the purpose of referencing resources and having no data
-# associated with them. 
+# associated with them.
 
 # ============ Resource ===================================
 
 class Resource(models.Model):
 	"""
-	The _Resource_ is the most fundamental datatype of the early and 
+	The _Resource_ is the most fundamental datatype of the early and
 	prototypical Sylph architecture.
 
 		>> Understanding the Resource is understanding Sylph. <<
 
-	Resources in a sense represent 'network data files' that are 
-	uniquely identified by a URL and can be shared, updated, looked up 
+	Resources in a sense represent 'network data files' that are
+	uniquely identified by a URL and can be shared, updated, looked up
 	at a cache if they go missing, etc. etc.
 
-	Resources are built upon in an OO-hierarchy, adding the features 
-	and fields required by the type of data we are modeling. 
+	Resources are built upon in an OO-hierarchy, adding the features
+	and fields required by the type of data we are modeling.
 
 	Currently, a model may be one of these types:
 
-		* Resource -- A single "file" that doesn't reference other 
+		* Resource -- A single "file" that doesn't reference other
 					  resources unless it is subclassed.
 
-			* ResourceTree -- A linked "file" that can reference a 
-							  root document as well as an immediate 
-							  parent. Think of post or email threads as 
+			* ResourceTree -- A linked "file" that can reference a
+							  root document as well as an immediate
+							  parent. Think of post or email threads as
 							  being a use case that would be well-
 							  represented here.
 
 			* ResourceDigraphEdge -- An edge in a digraph relationship.
-									 It points to the origin and 
+									 It points to the origin and
 									 destination Resources and can be
 									 subclassed as necessary.
 
 		> More resource-types will likely be added as need is found.
 
 	Some of the data modeled in the system will NOT be a resource. Such
-	an example is the 1:n email relation. Email addresses do not 
-	constitute data that changes. They are immutable and will be 
+	an example is the 1:n email relation. Email addresses do not
+	constitute data that changes. They are immutable and will be
 	replaced if changed, not 'edited'.
 	"""
 
@@ -72,33 +72,34 @@ class Resource(models.Model):
 	# ============= Model Fields ==========================
 
 	"""
-	The URI corresponding to the resource. 
-	It is unique, and this can be enforced by ensuring only the 
+	The URI corresponding to the resource.
+	It is unique, and this can be enforced by ensuring only the
 	producer can make a certain subset of URIs at their own domain or
-	path. 
+	path.
 	"""
-	uri = models.URLField(max_length=200, unique=True, blank=False, null=False)
+	uri = models.URLField(max_length=255, unique=True, verify_exists=False,
+							blank=False, null=False)
 
 	"""
-	Describes the ultimate datatype of the resource. In OO 
+	Describes the ultimate datatype of the resource. In OO
 	perspectives, this is the most child type.
 	"""
 	#resource_type = models.ForeignKey('ResourceType')
 	resource_type = models.CharField(max_length=30, null=False, blank=False,
-									 default='TODO') # TODO
+										default='TODO') # TODO
 	# Delete or refresh sementics.
 	# TODO: Do I need a keep or expire flag?
 	# Maybe the semantics of this flag can differ depending on type?
 	# TODO: Can this be inferred from elsewhere in the system?
-	stale = models.PositiveIntegerField(blank=True, default=0) 
+	stale = models.PositiveIntegerField(blank=True, default=0)
 
 	"""
-	Dates corresponding to the producer creating/editing the 
+	Dates corresponding to the producer creating/editing the
 	resource.
 	"""
 	# TODO/XXX: Enforce date semantics in the code!
-	datetime_created = models.DateTimeField(null=True, blank=True) 
-	datetime_edited = models.DateTimeField(null=True, blank=True) 
+	datetime_created = models.DateTimeField(null=True, blank=True)
+	datetime_edited = models.DateTimeField(null=True, blank=True)
 
 	"""
 	Dates corresponding to the consumer using the resource.
@@ -106,13 +107,13 @@ class Resource(models.Model):
 	"""
 	# TODO/XXX: Consumer-only. Cannot send these!!
 	# TODO: Strip any resource metadata being sent marked 'consumer-only'
-	datetime_added = models.DateTimeField(null=True, blank=True) 
-	datetime_retrieved = models.DateTimeField(null=True, blank=True) 
-	datetime_last_accessed = models.DateTimeField(null=True, blank=True) 
+	datetime_added = models.DateTimeField(null=True, blank=True)
+	datetime_retrieved = models.DateTimeField(null=True, blank=True)
+	datetime_last_accessed = models.DateTimeField(null=True, blank=True)
 
 	# TODO: Is this proper? (Should the type itself be responsible?)
 	# A non-tranportable cache of reply count.
-	# reply_count_cache = models.PositiveIntegerField(blank=True, default=0) 
+	# reply_count_cache = models.PositiveIntegerField(blank=True, default=0)
 
 	# ============= RDF Serilization Helpers ==============
 
@@ -130,7 +131,7 @@ class Resource(models.Model):
 	@classmethod
 	def get_transportable_fields(cls):
 		"""
-		Return a list of the names of the fields that can be 
+		Return a list of the names of the fields that can be
 		transported, minus the fields that cannot be transported.
 		"""
 
@@ -199,14 +200,14 @@ class Resource(models.Model):
 class ResourceTree(Resource):
 	"""
 	ResourceTree is a Resource with links to up to two other Resources
-	(of any type). An immediate "parent" of the ResourceTree object, 
+	(of any type). An immediate "parent" of the ResourceTree object,
 	and the absolute "root" of the tree.
 
 	This double-linked capability allows us to potentially build tree
 	structures that can be queried relatively quickly on the "root" and
-	rebuilt in memory by the application via the "parents". 
+	rebuilt in memory by the application via the "parents".
 
-	An example is the posts.Post model, which is a direct decendant of 
+	An example is the posts.Post model, which is a direct decendant of
 	ResourceTree and uses this feature:
 
 		* Root Post
@@ -215,7 +216,7 @@ class ResourceTree(Resource):
 				* Reply to non-root
 
 	Many of our datatypes will inherit from ResourceTree, although the
-	use of both links is not necessary. 
+	use of both links is not necessary.
 	"""
 
 	# ============= Sylph Metadata ========================
@@ -234,12 +235,12 @@ class ResourceTree(Resource):
 	# ============= Model Fields ==========================
 
 	# The absolute root of the response tree
-	reply_to_root = models.ForeignKey('self', 
-									  related_name='resource_set_root',
-									  null=True, blank=True)
+	reply_to_root = models.ForeignKey('self',
+										related_name='resource_set_root',
+										null=True, blank=True)
 
 	# The immediate parent of the response
-	reply_to_parent = models.ForeignKey('self', 
+	reply_to_parent = models.ForeignKey('self',
 										related_name='resource_set_parent',
 										null=True, blank=True)
 
@@ -248,11 +249,11 @@ class ResourceTree(Resource):
 class ResourceDigraphEdge(Resource):
 	"""
 	ResourceDigraphEdge is a representation of a directed graph edge
-	that is itself a resource. It has an origin and a destination 
-	resource. 
+	that is itself a resource. It has an origin and a destination
+	resource.
 
 	An example is the social.Knows model, which is a direct decendant
-	of ResourceDigraphEdge. 
+	of ResourceDigraphEdge.
 	"""
 
 	# ============= Sylph Metadata ========================
@@ -271,12 +272,12 @@ class ResourceDigraphEdge(Resource):
 	# ============= Model Fields ==========================
 
 	# The origin resource
-	origin = models.ForeignKey('Resource', 
+	origin = models.ForeignKey('Resource',
 								related_name='resource_set_origin',
 								null=False, blank=False)
 
 	# The destination resource
-	destination = models.ForeignKey('Resource', 
+	destination = models.ForeignKey('Resource',
 									related_name='resource_set_destination',
 									null=True, blank=True)
 

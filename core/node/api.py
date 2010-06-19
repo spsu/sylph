@@ -22,6 +22,7 @@ def ping_response(request):
 	This returns node information and (optionally) some user
 	information.
 	"""
+	print "ping_response" # TODO DEBUG
 	node = None
 	user = None
 	try:
