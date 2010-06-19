@@ -60,14 +60,14 @@ class RdfSerializer(object):
 		"""Add a query result or model into the RdfSerializer."""
 		if type(obj) not in [list, tuple, QuerySet]:
 			if not isinstance(obj, Resource) and \
-			   not isinstance(obj, Node):
+				not isinstance(obj, Node):
 					raise TypeError, \
-						  "Query Result must be a Resource or Node!\n"
+						"Query Result must be a Resource or Node!\n"
 
 			#mod = self.ModelData(obj)
 			#self.data.append(mod)
 			self.__convert_to_triples(obj)
-			return 
+			return
 
 		# Recurse over list
 		if type(obj) in [list, tuple, QuerySet]:
@@ -76,7 +76,7 @@ class RdfSerializer(object):
 
 
 	def __convert_to_triples(self, model):
-		"""Converts each model/query result into its own graph to be 
+		"""Converts each model/query result into its own graph to be
 		merged the graph returned by to_rdf()."""
 		sylph = self.NAMESPACES['sylph']
 
@@ -105,7 +105,7 @@ class RdfSerializer(object):
 				# TODO/XXX: This is slow as hell. Hits the database every 
 				# single time this codepath is reached. 
 				# For now, forget performance. Work on this later...
-				obj = URIRef(v.uri) 
+				obj = URIRef(v.uri)
 
 			if not obj:
 				obj = Literal(v) # Handles int, float, etc.

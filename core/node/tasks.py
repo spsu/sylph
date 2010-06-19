@@ -86,7 +86,7 @@ def add_node(uri):
 
 # TODO: DEPRECATED
 @task
-def do_add_node_lookup(uri): # XXX: DEPRECATED!
+def do_add_node_lookup(uri):
 	"""
 	Nodes will get added all the time and in various contexts.
 	This is the task that must run for each of them.

@@ -2,11 +2,11 @@ from sylph.apps.user.models import User
 from sylph.utils.uri import hashless
 from sylph.utils.data.RdfSerializer import RdfSerializer
 
-# ============ Updated Info on Node Owner =================
+# ============ Get owner's profile ========================
 
 def get_profile(request):
 	"""
-	Get up-to-date information on the owner of the node.
+	Get up-to-date information on the owner of this node.
 	In the future this will respect privacy issues. There may also be
 	more data than the simple profile serialized into this.
 	"""
@@ -16,6 +16,9 @@ def get_profile(request):
 		raise Exception, "Critical error: no user!" # XXX: Core system error!
 
 	# XXX/TODO/FIXME: Privacy issues!!
+
+	# TODO: Email, etc.
+
 	rs = RdfSerializer(user)
 	return HttpResponse(rs.to_rdf(), mimetype='text/plain')
 
@@ -24,9 +27,17 @@ def update_profile(request):
 	"""
 	Handle a profile that has been sent to us.
 	"""
-	pass
+	p = request.POST
 
+	# TODO: Deserialize.
+	uri = hashless(data['uri'])
 
+	try:
+		user = User.objects.get(uri=uri)
+	except User.DoesNotExist:
+		user = User(uri=uri)
+
+	#user.username =
 
 
 # ================= SELDOM USED ===========================

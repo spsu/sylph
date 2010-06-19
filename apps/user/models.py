@@ -83,7 +83,7 @@ class User(Resource):
 		('R', 'Rev.'),
 	)
 	title = models.CharField(max_length=1, choices=TITLE_CHOICES,
-							 null=False, blank=True)
+								null=False, blank=True)
 	suffix = models.CharField(max_length=10, null=False, blank=True)
 
 	bio = models.TextField(blank=True)
