@@ -247,5 +247,8 @@ def register_signals():
 	signals.post_save.connect(sig_.schedule_notify_profile_change,
 								sender=User)
 
+	signals.pre_save.connect(sig_.auto_apply_editdate,
+								sender=User)
+
 register_signals()
 

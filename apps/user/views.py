@@ -7,6 +7,7 @@ from django.db.models import Q
 from django.core import serializers
 
 from models import *
+from sylph.apps.social.models import ProfilePost
 import tasks
 
 from datetime import datetime
@@ -100,8 +101,15 @@ def view_profile(request, user_id):
 	except User.DoesNotExist:
 		raise Http404
 
+	posts = []
+	try:
+		posts = ProfilePost.objects.filter(for_user=user)
+	except ProfilePost.DoesNotExist:
+		pass
+
 	return render_to_response('apps/user/view_profile.html', {
 									'user': user,
+									'posts': posts,
 							},
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')

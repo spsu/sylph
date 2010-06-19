@@ -49,17 +49,13 @@ class Post(ResourceTree):
 		('X', 'Unknown'),
 	)
 	markup_type = models.CharField(max_length=1, choices=MARKUP_TYPE_CHOICES,
-								   null=False, default='M')
+									null=False, default='M')
 
 	# Cannot send marked-up contents
 	contents_markup_cache = models.TextField(blank=True)
 	contents_cache_datetime = models.DateTimeField(null=True, blank=True)
 
 	# ============= Model-specific methods ================
-
-	def contents_markdown(self):
-		print "contents_markdown is deprecated" # XXX: DEPRECATED 
-		return self.contents_with_markup()
 
 	def contents_with_markup(self):
 		"""Get the contents with markup."""
@@ -79,6 +75,10 @@ class Post(ResourceTree):
 			self.save()
 
 		return self.contents_markup_cache
+
+	def contents_markdown(self): # XXX: DEPRECATED
+		print "contents_markdown is deprecated" # XXX: DEPRECATED 
+		return self.contents_with_markup()
 
 	# ============= Django Methods and Metadata ===========
 

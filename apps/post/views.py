@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 from sylph.apps.user.models import User
+from sylph.utils.uri import generate_uuid
 
 from datetime import datetime
 import hashlib
@@ -122,11 +123,8 @@ def reply_post(request, post_id):
 			post = form.save(commit=False)
 			post.datetime_created = datetime.today()
 			post.title = "Re: " + parent.title
-			# FIXME TEMP URL
 			post.reply_to_root = parent
-			post.uri = 'http://temp/post/' + \
-						hashlib.md5(str(datetime.today())).hexdigest() 
-
+			post.uri = generate_uuid() # FIXME: TEMP URL
 			user = User.objects.get(pk=1)
 			post.author = user
 
@@ -138,8 +136,8 @@ def reply_post(request, post_id):
 
 	return render_to_response('apps/post/reply.html', {
 									'form': form
-							  }, 
-							  context_instance=RequestContext(request))
+								},
+								context_instance=RequestContext(request))
 
 
 # ============ Edit Post ======================

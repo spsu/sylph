@@ -90,4 +90,35 @@ $(document).ready(function() {
 			{% if user.is_owner %}Click to edit...{% endif %}
 		{% endif %}
 	</div>
+
+	<!-- Profile Posts -->
+	<hr />
+	<h4>Responses 
+		[<a href="/social/post/create/{{user.id}}/">add</a> |
+		 <a href="/social/post/index/{{user.id}}/">view</a> ]</h4>
+
+	 {% if posts %}
+	 	<table class="table">
+			{% for post in posts %}
+				<tr class="row_{% cycle 'odd' 'even' %}">
+					<td width="20%">
+						<small>
+						by <a href="{{post.author.get_absolute_url}}"
+							>{{post.author.get_name_or_username}}</a>
+						<br />
+						<a href="/social/post/view/{{post.id}}/">view</a> | 
+						{% if post.author.is_owner %}
+							<a href="/social/post/edit/{{post.id}}/">edit</a> |
+						{% endif %}
+						<a href="/social/post/delete/{{post.id}}/">delete</a>
+						</small>
+					</td>
+					<td width="80%">
+						{{post.contents_with_markup|safe}}
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% endif %}
+
 {% endblock content %}

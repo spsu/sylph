@@ -1,5 +1,6 @@
-from django.db import model
+from django.db import models
 from sylph.core.resource.models import Resource, ResourceDigraphEdge
+from sylph.apps.post.models import Post
 
 class Knows(ResourceDigraphEdge):
 	"""
@@ -16,4 +17,16 @@ class Knows(ResourceDigraphEdge):
 	# TODO: Programatically enforce 'origin' and 'destination' to be users
 
 	description = models.CharField(max_length=255, null=False, blank=True)
+
+
+class ProfilePost(Post):
+	"""
+	A profile post is similar to a Facebook 'wall post'.
+
+	(I think those are kind of stupid, but whatever... they may be
+	practical.)
+	"""
+
+	for_user = models.ForeignKey('user.User')
+
 

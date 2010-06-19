@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Viewing Post{% endblock %}
+
+{%block content %}
+	{% for post in posts %}
+		{% if forloop.first %}
+			<div class="buttons">
+				<a href="/post/reply/{{ post.pk }}/" class="button">Reply to Post</a>
+			</div>
+			<h1><a href="/post/">Index</a> &gt; {{ post.title }}</h1>
+		{% endif %}
+
+		<div class="post">
+			<p><em>Posted by <a 
+				href="{{post.author.get_absolute_url }}">{{ post.author.get_name }}</a>
+			</em></p>
+			{{ post.contents_with_markup|safe }}
+
+			<p><small>(Posted on {{ post.datetime_created }}.)</small></p>
+		</div>
+	{% endfor %}
+{% endblock content %}

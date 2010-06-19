@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}View Post{% endblock %}
+
+{%block content %}
+	<div class="buttons">
+		<a href="/post/create/" class="button">Create Post</a>
+	</div>
+	<h1> Post Index 
+		[ <a href="/post/">r</a> |
+		  <a href="/post/all/">all</a> ]</h1>
+	<div class="table">
+		{% for post in posts %}
+		<div class="row_{% cycle 'odd' 'even' %}">
+			<a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+			{% if post.datetime_created %}
+				<small>posted {{ post.datetime_created }}</small>
+			{% endif %}
+			by <a 
+				href="{{post.author.get_absolute_url }}">{{ post.author }}</a>
+		</div>
+		{% endfor %}
+	</div>
+{% endblock %}
