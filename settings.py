@@ -31,6 +31,8 @@ MEDIA_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/media/'
 ENDPOINT_URI = '/endpoint/'
 
+FULL_BASE_URI = '' # The full URI (generated below)
+
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 
@@ -98,6 +100,7 @@ INSTALLED_APPS = (
 	'sylph.apps.blog',
 	'sylph.apps.user',
 	'sylph.apps.bootstrap',
+	'sylph.apps.social',
 )
 
 # ================= Virtualization Helpers ================
@@ -128,6 +131,9 @@ def get_url(path = ""):
 	# FIXME: Not capable of binding different IP addresses!
 	port = get_port()
 	p = 'http://127.0.0.1%s/' % ("" if port == 80 else ":"+str(port))
+	if not path or len(path) < 1:
+		return p
+
 	if path[0] == '/':
 		p += path[1:]
 	else:
@@ -154,6 +160,9 @@ def get_rabbit_mq_vhost(prefix="sylph", port=None):
 
 
 PORT = get_port() # XXX: Temporary for templates
+
+FULL_BASE_URI = get_url()
+
 
 # ================= Import Specific Configs ===============
 

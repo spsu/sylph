@@ -3,6 +3,7 @@
 *swp
 *swo
 *swn
+*swm
 
 # Django / Celery
 settings_local.py
