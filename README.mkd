@@ -59,7 +59,7 @@ And what about edge-cases, such as programmers and researchers?
 
 License
 =======
-The code is currently under the AGPL 3. As soon as I get more developers, we'll probably license it under the MIT/BSD. 
+The code is currently under the AGPL 3. As soon as I get more developers, we'll probably license it under the MIT/BSD as well. 
 
 Project Setup
 =============
