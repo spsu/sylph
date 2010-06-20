@@ -7,6 +7,7 @@ from models import ProfilePost
 from sylph.apps.user.models import User
 from sylph.utils.uri import generate_uuid
 
+from datetime import datetime
 
 def profile_post_index(request, user_id):
 	"""Show all the profile posts for a user."""
@@ -17,7 +18,8 @@ def profile_post_index(request, user_id):
 
 	posts = []
 	try:
-		posts = ProfilePost.objects.filter(for_user=user)
+		posts = ProfilePost.objects.filter(for_user=user) \
+									.order_by('-datetime_created')
 	except:
 		pass
 
@@ -71,6 +73,7 @@ def profile_post_create(request, user_id):
 			post.uri = generate_uuid()
 			post.for_user = user
 			post.author = User.objects.get(pk=1)
+			post.datetime_created = datetime.today()
 			post.save()
 
 			return HttpResponseRedirect('/user/view/%d/'%user.id)

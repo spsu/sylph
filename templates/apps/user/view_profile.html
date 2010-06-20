@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load humanize %}
+
 {% block title %}Viewing Profile{% endblock %}
 
 {% block css %}
@@ -106,6 +108,9 @@ $(document).ready(function() {
 						by <a href="{{post.author.get_absolute_url}}"
 							>{{post.author.get_name_or_username}}</a>
 						<br />
+						posted {{post.datetime_created|naturalday}}
+						at {{post.datetime_created|time}}
+						<br />
 						<a href="/social/post/view/{{post.id}}/">view</a> | 
 						{% if post.author.is_owner %}
 							<a href="/social/post/edit/{{post.id}}/">edit</a> |
@@ -115,6 +120,12 @@ $(document).ready(function() {
 					</td>
 					<td width="80%">
 						{{post.contents_with_markup|safe}}
+						{% if post.datetime_edited %}
+							<p><em><small>edited 
+							{{post.datetime_created|naturalday}}
+							at {{post.datetime_created|time}}
+							</small></em></p>
+						{% endif %}
 					</td>
 				</tr>
 			{% endfor %}

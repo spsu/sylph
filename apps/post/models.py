@@ -86,6 +86,7 @@ class Post(ResourceTree):
 		verbose_name = 'post'
 		verbose_name_plural = 'posts'
 		#ordering = ['-datetime_created']
+		get_latest_by = 'datetime_created'
 
 	def get_absolute_url(self):
 		return "/post/view/%i/" % self.id

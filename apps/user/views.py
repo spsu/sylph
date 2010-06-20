@@ -103,7 +103,8 @@ def view_profile(request, user_id):
 
 	posts = []
 	try:
-		posts = ProfilePost.objects.filter(for_user=user)
+		posts = ProfilePost.objects.filter(for_user=user) \
+									.order_by('-datetime_created')
 	except ProfilePost.DoesNotExist:
 		pass
 
