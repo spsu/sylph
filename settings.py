@@ -24,6 +24,9 @@ TEMPLATE_DIRS = (os.path.join(os.path.abspath('.'), 'templates'),)
 MEDIA_ROOT = os.path.join(os.path.abspath('.'), 'public_static')
 
 APPEND_SLASH = True
+
+# TODO: Utility to generate *ALL* absolute and relative system urls.
+
 LOGIN_URL = '/system/login/'
 LOGIN_REDIRECT_URL = '/'
 
@@ -31,7 +34,8 @@ MEDIA_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/media/'
 ENDPOINT_URI = '/endpoint/'
 
-FULL_BASE_URI = '' # The full URI (generated below)
+FULL_BASE_URI = '' 		# The full URI (generated below)
+FULL_ENDPOINT_URI = ''	# The full endpoint URI (generated below)
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -94,6 +98,7 @@ INSTALLED_APPS = (
 	'sylph.core.node',
 	'sylph.core.backend',
 	'sylph.core.jobs',
+	'sylph.core.subscription',
 	#'sylph.core.frontend',
 
 	'sylph.apps.post',
@@ -162,6 +167,7 @@ def get_rabbit_mq_vhost(prefix="sylph", port=None):
 PORT = get_port() # XXX: Temporary for templates
 
 FULL_BASE_URI = get_url()
+FULL_ENDPOINT_URI = get_url('/endpoint/')
 
 
 # ================= Import Specific Configs ===============

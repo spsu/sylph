@@ -10,6 +10,9 @@ from sylph.utils.transport.Request import Request
 from sylph.utils.data.RdfParser import RdfParser
 from sylph.utils.uri import hashless
 
+from sylph.core.subscription.utils import create_subscriptions_to
+from sylph.core.subscription.utils import create_subscriptions_from
+
 from datetime import datetime, timedelta
 
 # ============ Add Node (Mutual) ==========================
@@ -145,6 +148,7 @@ def do_add_node_lookup(uri):
 		on_failure(node)
 		return
 
+	user_data = None
 	try:
 		user_data = ret.extract('User')[0]
 	except:
@@ -177,7 +181,14 @@ def do_add_node_lookup(uri):
 		user.node = node
 		user.save()
 
-	print "COMM WORKED!!!!"
+	# Now have the node add us
+	comm = Communicator(uri)
+	post = {'dispatch': 'node_ask_to_add'}
+	post['uri'] = settings.FULL_ENDPOINT_URI
+	ret = comm.send_post(post)
+
+	create_subscriptions_to(node)
+	create_subscriptions_from(node)
 
 def query_node_status(uri):
 	"""Query a node to see its status."""

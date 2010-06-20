@@ -12,7 +12,7 @@ def clean(uri):
 
 def hashless(uri):
 	"""Remove any trailing hash from a URI."""
-	return uri.split('#')[1]
+	return uri.split('#')[0]
 
 def generate_uuid(path=''):
 	"""Generate a unique UUID uri for a resource."""

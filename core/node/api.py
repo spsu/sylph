@@ -11,8 +11,9 @@ from sylph.apps.user.models import User
 from sylph.core.node.models import Node
 
 from sylph.utils.uri import hashless
+import tasks
 
-import datetime
+from datetime import datetime
 
 # ============ Ping Response ==============================
 
@@ -36,6 +37,32 @@ def ping_response(request):
 
 	return HttpResponse(rs.to_rdf(), mimetype='text/plain')
 
+
+# ============ Ask Node to Add Us =========================
+
+def ask_to_add(request):
+	"""Ask to add a node. Just have to provide the node uri.
+	Note: this is very insecure and subject to spamming, thus
+	this should only be considered a temporary solution."""
+	p = request.POST
+
+	uri = hashless(p['uri'])
+	node = None
+	try:
+		node = Node.objects.get(uri=uri)
+		return HttpResponse('ALREADY EXISTS') # TODO BAD
+	except Node.DoesNotExist:
+		pass
+
+	node = Node(uri=uri)
+	node.datetime_added = datetime.today()
+	node.is_yet_to_resolve = True
+	node.save()
+
+	tasks.do_add_node_lookup.delay(uri)
+	return HttpResponse('ACK')
+
+# XXX XXX XXX Everything below is non-functional/unused XXX XXX XXX
 
 # ============ Give Key ===================================
 

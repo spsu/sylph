@@ -12,6 +12,13 @@ from models import *
 
 from datetime import datetime
 
+# XXX Right now, node subscriptions are created by adding a node.
+# XXX They are deleted by deleting a node.
+# XXX
+# XXX In the future, we'll have a specific system to handle them.
+
+# XXX XXX XXX XXX THIS ISN'T USED YET!!! XXX XXX XXX XXX
+
 def list_subscriptions_offered(request):
 	"""Another node is asking us which subscriptions we offer."""
 	pass # TODO

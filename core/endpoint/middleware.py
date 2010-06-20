@@ -16,11 +16,9 @@ class EndpointExceptionHandlerMiddleware(object):
 		"""Process the exception.
 		This runs for ALL pages, but we need to ensure we only run it
 		for the endpoint urls."""
-		print "process_exception" # TODO: DEBUG
+		print "process_exception: %s" % str(exception) # TODO: DEBUG
 		path = request.META['PATH_INFO']
 		print path
-
-		print str(exception)
 
 		if not path.startswith(settings.ENDPOINT_URI):
 			return None

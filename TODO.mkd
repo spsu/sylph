@@ -1,15 +1,24 @@
 TODO File
 =========
 
+Rules:
+------
+1. **Does not need to be perfect in 1st iteration.**
+	1. Unnecessary items should be saved for final sprint.
+	2. Don't worry about integrating or improving UI until nearing
+	   completion of the first iteration.
+
+2. **Keep it simple. Very simple.**
+
 Temp:
 -----
 
 1. Post
 2. Subscriptions
-	2.1 Social (kind of goes hand in hand)
+	1. Social (kind of goes hand in hand)
 3. Feeds
 4. Ratings
-	4.1 (The above two go with data mining)
+	1. (The above two go with data mining)
 5. Bootstrap content
 6. Cache/directory servers
 

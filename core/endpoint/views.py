@@ -72,6 +72,10 @@ def index(request):
 		from sylph.core.node.api import delete
 		return delete(request)
 
+	if dispatch == 'node_ask_to_add':
+		from sylph.core.node.api import ask_to_add
+		return ask_to_add(request)
+
 	# ======== User Dispatching ===========================
 
 	if dispatch == 'user_update': # TODO
