@@ -27,8 +27,27 @@ def profile_post_index(request, user_id):
 								},
 								context_instance=RequestContext(request))
 
+
 def profile_post_view(request, post_id):
-	pass
+	"""View a single profile post (Not very useful...)"""
+	try:
+		post = ProfilePost.objects.get(id=post_id)
+	except ProfilePost.DoesNotExist:
+		raise Http404
+
+	user = None
+	try:
+		user = post.for_user
+		#user = User.objects.get(post.for_user)
+	except:
+		pass
+
+	return render_to_response('apps/social/profile_post/view.html', {
+									'user': user,
+									'post': post,
+								},
+								context_instance=RequestContext(request))
+
 
 def profile_post_create(request, user_id):
 	"""Create a new profile post on a given user."""
