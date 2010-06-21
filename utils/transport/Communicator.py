@@ -4,6 +4,13 @@ import hashlib
 import httplib
 import urllib
 from urlparse import urlparse
+from BeautifulSoup import BeautifulSoup # for debug
+from sylph.utils.termcolor import colored # for debug
+
+try:
+	from StringIO import StringIO
+except:
+	from cStringIO import StringIO
 
 class Communicator(object):
 	"""This class is for delivering data to another node. It
@@ -54,7 +61,15 @@ class Communicator(object):
 
 			if response.status != 200:
 				print "Non-200 response!" # TODO DEBUG ONLY
-				print response.read()[0:300]
+				html = response.read()
+
+				# Print Trace
+				soup = BeautifulSoup(html)
+				trace = soup.find('textarea', id='traceback_area').string
+				trace = trace.split('Traceback:')[1]
+				head = 'Remote Trace for %s:\n' % str(self.uri.geturl())
+				print colored(head+trace, 'yellow')
+
 				raise httplib.HTTPException, "Non-200 response"
 
 			data = response.read()

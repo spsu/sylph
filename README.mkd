@@ -61,6 +61,8 @@ License
 =======
 The code is currently under the AGPL 3. As soon as I get more developers, we'll probably license it under the MIT/BSD as well. 
 
+**The termcolor script is GPL code**, and as such will need to be removed if we want to release under BSD/MIT.
+
 Project Setup
 =============
 
