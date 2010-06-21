@@ -189,7 +189,7 @@ class Node(Resource):
 			self.datetime_last_pushed_to_us = now
 		elif term == 'from':
 			self.datetime_last_pushed_from = now
-		elif term == 'from_us
+		elif term == 'from_us':
 			self.datetime_last_pushed_from_us = now
 
 		if save:
