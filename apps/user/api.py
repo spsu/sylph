@@ -1,3 +1,5 @@
+from django.http import HttpResponse
+
 from sylph.apps.user.models import User
 from sylph.core.node.models import Node
 from sylph.utils.uri import hashless
@@ -24,22 +26,23 @@ def get_profile(request):
 	rs = RdfSerializer(user)
 	return HttpResponse(rs.to_rdf(), mimetype='text/plain')
 
-
-def update_profile(request):
-	"""
-	Handle a profile that has been sent to us.
-	"""
+# TODO: Uniform naming scheme
+# XXX/TODO: This is subject to spam and/or fraud.
+def push_profile(request):
+	"""Handle a profile that has been pushed to us."""
 	p = request.POST
 
 	try:
 		ps = RdfParser(p['data'])
 		udata = ps.extract('User')[0]
+
+		uri = udata['uri']
+		node_uri = udata['node']
+
 	except:
 		raise Exception, "Improper payload."
 
-	uri = udata['uri']
-	node_uri = udata['node']
-
+	# These are handled specially
 	del udata['uri']
 	del udata['node']
 
@@ -53,12 +56,14 @@ def update_profile(request):
 	except Node.DoesNotExist:
 		node = Node(uri=node_uri)
 
-	# TODO: There's no security in this...
+	# XXX/TODO: There's no security in this...
 	for k, v in udata.iteritems():
 		setattr(user, k, v)
 
 	user.node = node
 	user.save()
+
+	return HttpResponse('ACK')
 
 
 # ================= SELDOM USED ===========================

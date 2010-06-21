@@ -41,25 +41,17 @@ def create_subscriptions_to(node):
 	"""Creates ALL POSSIBLE subscriptions to a node."""
 	subscriptions = __make_default_subscriptions(node)
 
-	print "create_subscriptions_to start"
-
 	for subs in subscriptions:
 		subs.is_ours = True
 		subs.save()
-
-	print "create_subscriptions_to finished" # TODO DEBUG
 
 def create_subscriptions_from(node):
 	"""Creates ALL POSSIBLE subscriptions from a node."""
 	subscriptions = __make_default_subscriptions(node)
 
-	print "create_subscriptions_from start"
-
 	for subs in subscriptions:
 		subs.is_ours = False
 		subs.save()
-
-	print "create_subscriptions_from finished" # TODO DEBUG
 
 def delete_subscriptions_to(node):
 	"""Deletes ALL POSSIBLE subscriptions to a node."""

@@ -152,7 +152,7 @@ def do_add_node_lookup(uri):
 	try:
 		user_data = ret.extract('User')[0]
 	except:
-		print "No user data, or error. Ignoring."
+		print "1. No user data, or error. Ignoring."
 
 	# Update the node's status
 	node.is_yet_to_resolve = False
@@ -202,10 +202,10 @@ def ping_node(id):
 	"""Ping a node that has already been added and succesfully resolved
 	in the past. This keeps info up to date."""
 
-	def on_failure(node):
-		node.status = 'EERR' # TODO
-		node.datetime_last_failed = datetime.today()
-		node.save()
+	#def on_failure(node):
+	#	node.status = 'EERR' # TODO
+	#	node.datetime_last_failed = datetime.today()
+	#	node.save()
 
 	node = None
 	try:
@@ -215,11 +215,12 @@ def ping_node(id):
 		print "Node does not exist!!!"
 		return
 
-	user = None
-	try:
-		user = User.objects.get(node=node)
-	except User.DoesNotExist:
-		user = User()
+	# XXX: Temporarily disabled
+	#user = None
+	#try:
+	#	user = User.objects.get(node=node)
+	#except User.DoesNotExist:
+	#	user = User()
 
 	# Perform communications. 
 	comm = Communicator(node.uri)
@@ -227,7 +228,7 @@ def ping_node(id):
 
 	if not ret:
 		print "No communication return data!!" # TODO: Error log
-		on_failure(node)
+		node.just_failed(save=True)
 		return
 
 	node_data = None
@@ -239,16 +240,17 @@ def ping_node(id):
 
 	except:
 		print "Error parsing RDF" # TODO: Error log
-		on_failure(node)
+		node.just_failed(save=True)
 		return
 
-	try:
-		user_data = ret.extract('User')
-		if not user_data or len(user_data) != 1:
-			raise Exception, "Error with data"
-		user_data = user_data[0]
-	except:
-		print "No user data, or error. Ignoring."
+	# XXX: Temporarily disabled
+	#try:
+	#	user_data = ret.extract('User')
+	#	if not user_data or len(user_data) != 1:
+	#		raise Exception, "Error with data"
+	#	user_data = user_data[0]
+	#except:
+	#	pass
 
 	# Update the node's status
 	node.datetime_last_resolved = datetime.today()
@@ -256,24 +258,27 @@ def ping_node(id):
 	node.protocol_version = node_data['protocol_version']
 	node.software_name = node_data['software_name']
 	node.software_version = node_data['software_version']
-	node.node_type = 'U' # TODO
+	node.node_type = 'U' # TODO: Codes are messy
 	node.name = node_data['name']
 	node.description = node_data['description']
 	#node.datetime_edited = node_data['datetime_edited'] # TODO
 	node.save()
 
+	node.just_pulled_from(save=True)
+
+	# XXX: Temporarily disabled
 	# Update the user's status, if we have user data.
-	if user_data:
-		user.username = user_data['username']
-		user.first_name = user_data['first_name']
-		user.middle_name = user_data['middle_name']
-		user.last_name = user_data['last_name']
-		user.bio = user_data['bio']
-		user.title = user_data['title']
-		user.suffix = user_data['suffix']
-		#user.datetime_created = user_data['datetime_created']
-		#user.datetime_edited = user_data['datetime_edited']
-		user.save()
+	#if user_data:
+	#	user.username = user_data['username']
+	#	user.first_name = user_data['first_name']
+	#	user.middle_name = user_data['middle_name']
+	#	user.last_name = user_data['last_name']
+	#	user.bio = user_data['bio']
+	#	user.title = user_data['title']
+	#	user.suffix = user_data['suffix']
+	#	#user.datetime_created = user_data['datetime_created']
+	#	#user.datetime_edited = user_data['datetime_edited']
+	#	user.save()
 
 
 # ============ Retry Failed Nodes =========================

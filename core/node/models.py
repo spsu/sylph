@@ -93,8 +93,8 @@ class Node(Resource):
 	datetime_last_pulled_from = models.DateTimeField(null=True)
 
 	"""For events originating at the remote node"""
-	datetime_last_pulled_from_us = models.DateTimeField(null=True)
 	datetime_last_pushed_to_us = models.DateTimeField(null=True)
+	datetime_last_pulled_from_us = models.DateTimeField(null=True)
 
 	"""The types of status a node can have"""
 	STATUS_TYPE_CHOICES = (
@@ -153,6 +153,48 @@ class Node(Resource):
 
 	def check_keys(self, our_key, their_key):
 		pass
+
+	# ============= Shortcut methods ======================
+
+	def just_failed(self, save=False):
+		"""Set the node state as having just failed to connect."""
+		self.datetime_last_failed = datetime.today()
+		if save:
+			self.save()
+
+	def just_pulled_from(self, save=False):
+		"""Set the node state as having pulled from."""
+		self.__set_timestamp(save, 'from')
+
+	def just_pushed_to(self, save=False):
+		"""Set the node state as having just pushed to."""
+		self.__set_timestamp(save, 'to')
+
+	def just_pulled_from_us(self, save=False):
+		"""Set the node state as having pulled from us."""
+		self.__set_timestamp(save, 'from_us')
+
+	def just_pushed_to_us(self, save=False):
+		"""Set the node state as having just pushed to us."""
+		self.__set_timestamp(save, 'to_us')
+
+	def __set_timestamp(self, save, term):
+		now = datetime.today()
+		self.is_yet_to_resolve = False
+		self.datetime_last_resolved = now
+
+		if term == 'to':
+			self.datetime_last_pushed_to = now
+		elif term == 'to_us':
+			self.datetime_last_pushed_to_us = now
+		elif term == 'from':
+			self.datetime_last_pushed_from = now
+		elif term == 'from_us
+			self.datetime_last_pushed_from_us = now
+
+		if save:
+			self.save()
+
 
 	# ============= RDF Serilization Helpers ==============
 

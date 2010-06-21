@@ -10,6 +10,10 @@ Rules:
 
 2. **Keep it simple. Very simple.**
 
+* Task I'm working on now: pull user. (I think? or pull 
+  see the celery errors...)
+* reset page needs 'dump data without dropping tables' mode (faster)
+
 Needed:
 -------
 * An actual endpoint dispatcher
