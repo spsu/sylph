@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Subscription List{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{%block content %}
+<h1> Subscription Index </h1>
+
+<h3> Our Subscriptions </h3>
+<hr />
+	{% if ours %}
+		<table class="table">
+			{% for sub in ours %}
+				<tr class="row_{% cycle 'odd' 'even' %}">
+					<td>
+						<strong>{{sub.key}}</strong><br />
+						{{sub.node.uri}}
+					</td>
+					<td>	
+						Created: <br />
+						Edited: <br />
+					</td>
+					<td>
+						Misc...
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% endif %}
+	<br />
+
+	<h3> Their Subscriptions </h3>
+	<hr />
+	{% if theirs %}
+		<table class="table">
+			{% for sub in theirs %}
+				<tr class="row_{% cycle 'odd' 'even' %}">
+					<td>
+						<strong>{{sub.key}}</strong><br />
+						{{sub.node.uri}}
+					</td>
+					<td>	
+						Created: <br />
+						Edited: <br />
+					</td>
+					<td>
+						Misc...
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% endif %}
+
+
+
+{% endblock %}

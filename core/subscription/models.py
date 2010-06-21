@@ -33,22 +33,23 @@ class Subscription(models.Model):
 
 	"""The last time the subscription parameters were edited (by us
 	or by the remote node)."""
-	datetime_edited = models.DateTimeField(blank=True, null=False)
+	datetime_edited = models.DateTimeField(blank=True, null=True)
 
 	# TODO: perhaps replace the following with:
 	# push_to, pull_from, pushed_to_us, pulled_from_us
 
 	"""The last time a communication was instigated remotely."""
-	datetime_last_inbound = models.DateTimeField(blank=True, null=False)
+	datetime_last_inbound = models.DateTimeField(blank=True, null=True)
 
 	"""The last time a communication was instigated locally."""
-	datetime_last_outbound = models.DateTimeField(blank=True, null=False)
+	datetime_last_outbound = models.DateTimeField(blank=True, null=True)
 
 	"""The last time an error in communication occurred."""
-	datetime_last_error = models.DateTimeField(blank=True, null=False)
+	datetime_last_error = models.DateTimeField(blank=True, null=True)
 
 	"""The number of consecutive errors if the last communication
 	resulted in an error. (This can be used to find problems in
 	communication.)"""
-	consecutive_error_count = models.IntegerField(blank=True, null=False)
+	consecutive_error_count = models.IntegerField(blank=True, null=False,
+													default=0)
 

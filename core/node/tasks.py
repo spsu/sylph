@@ -187,6 +187,7 @@ def do_add_node_lookup(uri):
 	post['uri'] = settings.FULL_ENDPOINT_URI
 	ret = comm.send_post(post)
 
+	print "CREATING SUBSCRIPTIONS:"
 	create_subscriptions_to(node)
 	create_subscriptions_from(node)
 

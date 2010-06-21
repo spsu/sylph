@@ -10,6 +10,12 @@ Rules:
 
 2. **Keep it simple. Very simple.**
 
+Needed:
+-------
+* An actual endpoint dispatcher
+* Integrated subscriptions system
+* Integrated feeds/notification system
+
 Temp:
 -----
 

@@ -16,31 +16,32 @@ def __make_default_subscriptions(node):
 
 	subs.append(Subscription())
 	subs[0].key = 'node'
-	subs[0].node = node
 	subs[0].push_on_edit = True
-	subs[0].datetime_added = now
 
 	subs.append(Subscription())
 	subs[1].key = 'user_profile'
-	subs[1].node = node
 	subs[1].push_on_edit = True
-	subs[1].datetime_added = now
 
 	# TODO: Might be some issues with semantics of receiving posts,
 	# esp. wrt. posts not for users we follow.
 	# (maybe we can just ignore those though...)
 	subs.append(Subscription())
 	subs[2].key = 'user_profile_posts'
-	subs[2].node = node
 	subs[2].push_on_create = True
 	subs[2].push_on_edit = True
-	subs[2].datetime_added = now
+
+	# Stuff all subscriptions need
+	for sub in subs:
+		sub.datetime_created = now
+		sub.node = node
 
 	return subs
 
 def create_subscriptions_to(node):
 	"""Creates ALL POSSIBLE subscriptions to a node."""
 	subscriptions = __make_default_subscriptions(node)
+
+	print "create_subscriptions_to start"
 
 	for subs in subscriptions:
 		subs.is_ours = True
@@ -51,6 +52,8 @@ def create_subscriptions_to(node):
 def create_subscriptions_from(node):
 	"""Creates ALL POSSIBLE subscriptions from a node."""
 	subscriptions = __make_default_subscriptions(node)
+
+	print "create_subscriptions_from start"
 
 	for subs in subscriptions:
 		subs.is_ours = False
