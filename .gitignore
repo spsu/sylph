@@ -7,3 +7,6 @@
 # Django / Celery
 settings_local.py
 celerybeat-schedule
+
+# Linked external libs
+utils/web2feed.py
