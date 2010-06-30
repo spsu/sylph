@@ -11,9 +11,15 @@
 	border: 1px solid #ddd;
 	background-color: #eee;
 	margin-bottom: 10px;
+	padding: 10px;
 }
 .blogitem h3 {
-	margin: 3px 5px 10px 5px;
+	margin: 0px 0px 8px 0px;
+}
+.blogitem_management {
+	margin-top: 15px;
+	border-top: 1px solid #999;
+	padding-top: 3px;
 }
 </style>
 {% endblock css %}
@@ -31,9 +37,12 @@
 				{{item.contents_or_summary|safe}}
 			</div>
 
-			<a href="/blog/edit/{{item.id}}/">edit</a> |
-			<a href="/blog/delete/{{item.id}}/">delete</a>
-			<p><small>Published at {{item.uri}}</small></p>
+			<div class="blogitem_management">
+				<small>Published at {{item.uri}}</small><br />
+				<strike><a href="#">share</a></strike> |
+				<a href="/blog/edit/{{item.id}}/">edit</a> |
+				<a href="/blog/delete/{{item.id}}/">delete</a>
+			</div>
 
 		</div>
 	{% endfor %}
