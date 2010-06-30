@@ -5,26 +5,50 @@
 {% block javascript %}
 {% endblock %}
 
+{% block css %}
+<style type="text/css">
+.blogitem {
+	border: 1px solid #ddd;
+	background-color: #eee;
+	margin-bottom: 10px;
+}
+.blogitem h3 {
+	margin: 3px 5px 10px 5px;
+}
+</style>
+{% endblock css %}
+
 {%block content %}
 	<h1> Recent Blog items</h1>
 
 	<p><b><a href="/blog/subscription/">Manage subscriptions</a></b></p>
 
-	<table class="table">
-	{% for it in items %}
-		<tr class="row_{% cycle 'odd' 'even' %}" 
-			id="blogitem_{{ it.id }}">
-			<td>
-				<a href="/blog/view/{{it.id}}">{{ it.title }}</a>
-			</td>
-			<td class="td_date">	
-				Temp
-			</td>
-			<td>
-				<a href="/blog/edit/{{ it.id }}/">edit</a> |
-				<a href="/blog/delete/{{ it.id }}/">delete</a>
-			</td>
-		</tr>
+	{% for item in items.object_list %}
+		<div class="blogitem">
+			<h3><a href="/blog/view/{{item.id}}">{{item.title}}</a></h3>
+
+			<div class="blogitem_contents">
+				{{item.contents_or_summary|safe}}
+			</div>
+
+			<a href="/blog/edit/{{item.id}}/">edit</a> |
+			<a href="/blog/delete/{{item.id}}/">delete</a>
+			<p><small>Published at {{item.uri}}</small></p>
+
+		</div>
 	{% endfor %}
-	</table>
+
+	<div class="pagination">
+		<span class="step-links">	
+			<strong>Page {{ items.number }} of {{ items.paginator.num_pages }}.</strong>
+			<a href="?page=1">first</a> |
+			{% if items.has_previous %}
+				<a href="?page={{ items.previous_page_number }}">previous ({{items.previous_page_number}})</a> |
+			{% endif %}	
+			{% if items.has_next %}
+				<a href="?page={{ items.next_page_number }}">next ({{items.next_page_number}})</a> |
+			{% endif %}
+		</span>
+		<a href="?page={{items.paginator.num_pages}}">last</a>
+	</div>
 {% endblock %}

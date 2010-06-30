@@ -11,12 +11,13 @@
 			class="button">Add Subscription</a>
 	</div>
 	<h1> Subscription Index </h1>
+	<p><b><a href="/blog/">Blog Item index</a></b></p>
 	<table class="table">
 	{% for subs in subscriptions %}
 		<tr class="row_{% cycle 'odd' 'even' %}" 
 			id="subscription_{{ subs.id }}">
 			<td>
-				Temp
+				{{subs.node.uri}}
 			</td>
 			<td class="td_date">	
 				Temp

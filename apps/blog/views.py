@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django import forms
 from django.template import RequestContext
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 # Models
 from models import BlogItem, BootstrapBlogItem
@@ -12,23 +13,37 @@ from datetime import datetime
 
 def blogitem_index(request):
 	"""List latest blogitems."""
-	items = BlogItem.objects.all()
+	all_items = BlogItem.objects.all() \
+								.order_by('-datetime_created')
+	paginator = Paginator(all_items, 15) # TODO: Preference for num
+
+	try:
+		p = int(request.GET.get('page', '1'))
+	except ValueError:
+		p = 1
+
+	try:
+		items = paginator.page(p)
+	except (EmptyPage, InvalidPage):
+		raise Http404
+
 	return render_to_response('apps/blog/index.html', {
-									'items': items,
-							},
+									'items': items,													},
 							context_instance=RequestContext(request))
 
-"""
+
 def blogitem_create(request):
 	pass
 
-Instead of creating blog items in this software, let's *NOT*.
-Let's concentrate on building what this software is meant to do--
-proving that a distributed web api is useful/necessary for the future.
+# XXX
+# Instead of creating blog items in this software, let's *NOT*.
+# Let's concentrate on building what this software is meant to do--
+# proving that a distributed web api is useful/necessary for the 
+# future.
+# Let's rely on other tools--blogger, wordpress, etc.--to create 
+# the blog items. Sylph will serve them, share them, and transmit 
+# them around.
 
-Let's rely on other tools--blogger, wordpress, etc.--to create the blog
-items. Sylph will serve them, share them, and transmit them around.
-"""
 
 # XXX: This is key! Make it VERY readable.
 def blogitem_view(request, item_id):
@@ -50,6 +65,8 @@ def blogitem_edit(request, item_id):
 def blogitem_delete(request, item_id):
 	pass
 
+# =========================================================
+# =========================================================
 # =========================================================
 # Subscription Management
 # =========================================================

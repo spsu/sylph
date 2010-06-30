@@ -64,8 +64,8 @@ def get_comments(blogitem_id):
 class PeriodicPullBlogFeed(PeriodicTask):
 	"""Periodically pull blog feeds."""
 
-	run_every = timedelta(seconds=10)
-	#run_every = timedelta(minutes=5)
+	#run_every = timedelta(seconds=10)
+	run_every = timedelta(minutes=5)
 
 	def run(self, **kwargs):
 		print "PeriodicPullBlogFeed" # TODO: Debug
