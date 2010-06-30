@@ -2,11 +2,12 @@
 
 body {
 	font-family: arial;
+	padding: 10px;
 }
 #main { 
 	border: 1px solid #ccc; 
 	margin: 0px auto 0px auto;
-	width: 800px;
+	/*width: 800px;*/
 }
 #topbar {
 	margin-bottom: 8px;
@@ -36,8 +37,8 @@ body {
 }
 #sidebar {
 	width: 160px;
-	float: left;
-	border-right: 1px solid #aaa;
+	float: right;
+	border-left: 1px solid #aaa;
 	padding: 0px 10px 10px 7px;
 }
 #sidebar ul { padding: 0px 0px 0px 20px; }
@@ -54,9 +55,8 @@ body {
 	margin: 0px 0px 8px;
 }
 #content {
-	margin: 0px;
-	width: 600px;
-	float: right;
+	padding-right: 170px;
+	padding-left: 10px;
 }
 #aftercontent {
 	clear: both;
