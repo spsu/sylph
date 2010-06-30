@@ -3,14 +3,6 @@ from django.conf import settings
 from django.contrib import admin
 from sylph.core.backend.utils.install_state import is_installed
 
-"""
-The URLs for Sylph will only be defined if the installation process has been
-followed by the user.
-
-In the future it is important to consider how new modules will be installed. 
-A database-driven URL system may need to replace Django's URL dispatcher. 
-"""
-
 # Note: This file is only interpreted once: at webserver startup!
 
 #admin.autodiscover()
@@ -29,6 +21,7 @@ urlpatterns = patterns('',
 	(r'^post/', include('sylph.apps.post.urls')),
 	(r'^user/', include('sylph.apps.user.urls')),
 	(r'^social/', include('sylph.apps.social.urls')),
+	(r'^blog/', include('sylph.apps.blog.urls')),
 
 	# System Level
 	(r'^node/', include('sylph.core.node.urls')),
@@ -42,7 +35,7 @@ urlpatterns = patterns('',
 if settings.DEBUG:
 	urlpatterns += patterns('',
 		(r'^%s(?P<path>.*)$' % settings.MEDIA_URL[1:],
-			'django.views.static.serve', 
+			'django.views.static.serve',
 			{'document_root': settings.MEDIA_ROOT}),
 	)
 

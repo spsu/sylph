@@ -144,7 +144,7 @@ class PeriodicPullProfile(PeriodicTask):
 	#run_every = timedelta(hours=2)
 
 	def run(self, **kwargs):
-		print "PeriodicPullProfile" # TODO: Debug
+		#print "PeriodicPullProfile" # TODO: Debug
 		logger = self.get_logger(**kwargs)
 		logger.info("Pulling profiles")
 

@@ -8,7 +8,6 @@ from base64 import b64encode
 # ============ Nodes ======================================
 
 # TODO: UserNodes and MachineNodes
-# TODO: FollowerNodes and FollowingNodes
 # TODO: Generic and Advanced permissions
 
 class Node(Resource):
@@ -60,6 +59,7 @@ class Node(Resource):
 		('U', 'User Node'),
 		('C', 'Cache Node'), # Usually static files
 		('D', 'Directory Node'), # Look up people or resources
+		('Z', 'Non-sylph'),	# eg Webpage, Webservice, etc
 		#('G', 'Group Node'), # TODO: More types... eg. software repository		
 	)
 	node_type = models.CharField(max_length=1, choices=NODE_TYPE_CHOICES)
@@ -223,6 +223,8 @@ class Node(Resource):
 		"""Return a status color for visualization. Temporary."""
 		if self.id == 2:
 			return 'white'
+		if self.node_type == 'Z':
+			return 'gray'
 		if self.is_yet_to_resolve:
 			return 'red'
 		if self.status == 'AVAIL':
@@ -254,4 +256,22 @@ class Node(Resource):
 
 	def __unicode__(self):
 		return "node: " + self.uri
+
+class SylphNode(Node): # TODO
+	"""Represents a sylph protocol-aware endpoint."""
+	pass
+
+class WebPageNode(Node):
+	"""Represents a non-interactive webpage."""
+	pass
+
+class WebFeedNode(Node):
+	"""Represents a non-interactive RSS/Atom feed."""
+	pass
+
+class WebServiceNode(Node):
+	"""Represents an interactive website or service.
+	In this way, we can manage one or more accounts per service
+	"""
+	pass
 

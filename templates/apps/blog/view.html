@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block title %}Viewing Blog Post{% endblock %}
+
+{% block css %}
+{% endblock css %}
+
+{% block javascript %}
+{% endblock javascript %}
+
+{%block content %}
+	{% ifequal user owner %}
+		<div class="buttons">
+			<a href="/blog/delete/{{item.id}}/" class="button">Delete Post</a>
+		</div>
+		{% endifequal %}
+
+	<h1>{{item.title}}</h1>
+
+	<p><a href="/blog/">Blog Index</a> | <a href="/blog/subscription/">Subscription Index</a></p>
+
+	{{item.contents_or_summary|safe}}
+	
+{% endblock content %}

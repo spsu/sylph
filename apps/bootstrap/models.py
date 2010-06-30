@@ -82,27 +82,3 @@ class Site(Resource): # TODO: Could a site be a 'dumb node' instead?
 #	name = models.CharField(max_length=30, blank=True, null=False)
 #
 
-class BootstrapBlogItem(BlogItem):
-	"""
-	A BlogItem that is retrieved from a 'dumb' website (with no
-	semantic cabability). 
-
-	Will also have:
-		* Author[s]
-		* Comments
-		* Photos/Gallery
-		* Rating (there are different scales depending on the site)
-	"""
-
-	# ============= Sylph Metadata ========================
-
-	rdf_fields = [
-		'site',
-	]
-
-
-	# ============= Model Fields ==========================
-
-	site = models.ForeignKey('Site')
-
-

@@ -120,7 +120,11 @@ def do_add_node_lookup(uri):
 		node = Node.objects.get(uri=uri)
 	except Node.DoesNotExist:
 		# TODO: ERROR LOG FILE
-		print "Node does not exist!!!"
+		print "cannot do_add_node_lookup: Node does not exist!!!"
+		return
+
+	if node.node_type == 'Z':
+		print "cannot do_add_node_lookup: non-sylph nodes (type Z)"
 		return
 
 	user = None
@@ -295,7 +299,8 @@ class RetryFailedNodesTask(PeriodicTask):
 
 		nodes = None
 		try:
-			nodes = Node.objects.filter(is_yet_to_resolve=True)
+			nodes = Node.objects.filter(is_yet_to_resolve=True) \
+								.exclude(node_type='Z') # non-sylph
 		except:
 			return
 
@@ -320,6 +325,7 @@ class KeepResolvingAddedNodes(PeriodicTask):
 
 		nodes = None
 		nodes = Node.objects.filter(is_yet_to_resolve=False) \
+							.exclude(node_type='Z') \
 							.exclude(pk=2)
 
 

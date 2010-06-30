@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Blog Subscription index{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{%block content %}
+	<div class="buttons">
+		<a href="/blog/subscription/add/" 
+			class="button">Add Subscription</a>
+	</div>
+	<h1> Subscription Index </h1>
+	<table class="table">
+	{% for subs in subscriptions %}
+		<tr class="row_{% cycle 'odd' 'even' %}" 
+			id="subscription_{{ subs.id }}">
+			<td>
+				Temp
+			</td>
+			<td class="td_date">	
+				Temp
+			</td>
+			<td>
+				<a href="/blog/subscription/edit/{{ subs.id }}/">edit</a> |
+				<a href="/blog/subscription/delete/{{ subs.id }}/">delete</a>
+			</td>
+		</tr>
+	{% endfor %}
+	</table>
+{% endblock %}

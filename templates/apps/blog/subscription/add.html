@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Add Subscription{% endblock %}
+
+{%block content %}
+	<h1> Add Blog Subscription </h1>
+	<p><em>Note:</em> Just enter the URL of the blog you want to add.
+	Sylph will scrape it using <em><a 
+			href="http://github.com/echelon/web2feed">web2feed</a></em>.</p>
+	<form action="" method="post">
+		{% for field in form %}
+		<div class="field">
+			<span class="error">{{ field.errors }}</span>
+			{{ field.label_tag }} {{ field }}
+		</div>
+		{% endfor %}
+
+		<input type="submit" value="Submit" />
+	</form>
+{% endblock content %}

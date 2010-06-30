@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block title %}Viewing Profile{% endblock %}
+
+{% block css %}
+<style type="text/css">
+	#bio {
+		background-color: #eee;
+		border: 1px solid #ddd;
+		margin: 0px 18px 0px 10px;
+		padding: 5px;
+	}
+</style>
+{% endblock css %}
+
+{% block javascript %}
+<script type="text/javascript">
+
+{% if user.is_owner %}
+
+$(document).ready(function() {
+	$('.edit').editable('/user/ajax_edit/', {
+		type      : 'text',
+		width     : 200,
+		tooltip   : 'Click to edit...',
+		style     : 'display: inline',
+		callback  : function(value, settings) {
+			if(!value) {
+				$("span[id='name']").text("No name. Click to edit...");
+			}
+		}
+	});
+	$('.edit_area').editable('/user/ajax_edit/', {
+		type      : 'textarea',
+		cancel    : 'Cancel',
+		submit    : 'OK',
+		loadurl   : '/user/ajax_info/',
+		tooltip   : 'Click to edit...',
+		callback  : function(value, settings) {
+			if(!value) {
+				$("div[id='bio']").text("No bio. Click to edit...");
+			}
+		}
+	});
+});
+
+{% endif %}
+
+</script>
+{% endblock javascript %}
+
+{%block content %}
+	{% ifequal user owner %}
+		<div class="buttons">
+			<a href="/user/edit/" class="button">Edit Profile</a>
+		</div>
+	{% endifequal %}
+
+	<h1> <a href="/user/">Index</a> &gt; View Profile </h1>
+
+	{% if user.datetime_edited %}
+		<p><small>Last edited: {{ user.datetime_edited }}.</small></p>
+	{% endif %}
+	<p><strong>
+		{% if user.is_owner %}
+			<span 
+				id="name" class="edit">{{ user.get_name }}</span>
+		{% else %}
+			<span id="name">{{ user.get_name_and_title }}</span>
+		{% endif %}
+	</strong></p>
+
+	<p> 
+		alias: <strong>
+		{% if user.is_owner %}
+			<span 
+				id="username" class="edit">{{ user.get_username }}</span>
+		{% else %}
+			<span id="username">{{ user.get_username }}</span>
+		{% endif %}
+		</strong>
+	</p>
+
+	<p>personal bio:</p>
+	<div id="bio" class="edit_area">
+		{% if user.bio %}
+			{{ user.bio_with_markup|safe }}
+		{% else %}
+			No bio. 
+			{% if user.is_owner %}Click to edit...{% endif %}
+		{% endif %}
+	</div>
+
+	<!-- Profile Posts -->
+	<hr />
+	<h4>Responses 
+		[<a href="/social/post/create/{{user.id}}/">add</a> |
+		 <a href="/social/post/index/{{user.id}}/">view</a> ]</h4>
+
+	 {% if posts %}
+	 	<table class="table">
+			{% for post in posts %}
+				<tr class="row_{% cycle 'odd' 'even' %}">
+					<td width="20%">
+						<small>
+						by <a href="{{post.author.get_absolute_url}}"
+							>{{post.author.get_name_or_username}}</a>
+						<br />
+						posted {{post.datetime_created|naturalday}}
+						at {{post.datetime_created|time}}
+						<br />
+						<a href="/social/post/view/{{post.id}}/">view</a> | 
+						{% if post.author.is_owner %}
+							<a href="/social/post/edit/{{post.id}}/">edit</a> |
+						{% endif %}
+						<a href="/social/post/delete/{{post.id}}/">delete</a>
+						</small>
+					</td>
+					<td width="80%">
+						{{post.contents_with_markup|safe}}
+						{% if post.datetime_edited %}
+							<p><em><small>edited 
+							{{post.datetime_created|naturalday}}
+							at {{post.datetime_created|time}}
+							</small></em></p>
+						{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+		</table>
+	{% endif %}
+
+{% endblock content %}

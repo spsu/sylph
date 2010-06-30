@@ -4,8 +4,12 @@ from sylph.utils.markdown2 import markdown
 
 from datetime import datetime
 
+# XXX/TODO/IMPORTANT: Should I merge Post & BlogItem? 
+# Probably not... but this is a _lot_ of segmentation.
 class Post(ResourceTree):
 	"""
+	Resource > ResourceTree > Post
+
 	Posts represent any content with a title and a main body of text.
 
 	As Post decends from ResourceTree, posts have the capability to
@@ -48,12 +52,21 @@ class Post(ResourceTree):
 		('H', 'HTML (lite)'), # XXX: HTML must be filtered extensively. 
 		('X', 'Unknown'),
 	)
-	markup_type = models.CharField(max_length=1, choices=MARKUP_TYPE_CHOICES,
+	contents_markup_type = models.CharField(max_length=1,
+									choices=MARKUP_TYPE_CHOICES,
 									null=False, default='M')
 
 	# Cannot send marked-up contents
 	contents_markup_cache = models.TextField(blank=True)
 	contents_cache_datetime = models.DateTimeField(null=True, blank=True)
+
+	"""Copyright terms of the item.
+		* CC (-BY, -BY-SA, -BY-SA-NC) + version; default = CC-BY-SA
+		* Public Domain
+		* Copyrighted
+		* Unknown (Assume Copyrighted)
+	"""
+	license = models.CharField(max_length=25, blank=True, null=False)
 
 	# ============= Model-specific methods ================
 
@@ -117,7 +130,6 @@ class PostCacheData(models.Model):
 
 	"""An optional email address."""
 	email = models.CharField(max_length=60, blank=True, null=False)
-
 
 class PostReferences(models.Model):
 	"""

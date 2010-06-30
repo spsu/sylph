@@ -3,6 +3,9 @@
 import os
 import sys
 
+# XXX XXX XXX TEMPORARY FOR web2feed
+sys.path.append(os.path.abspath('../web2feed'))
+
 # ================= Version Information ===================
 """
 Both the software and Sylph protocol (which multiple softwares
