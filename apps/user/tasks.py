@@ -82,7 +82,7 @@ def pull_profile_from_node(node_id):
 
 	node = None
 	try:
-		node = Node.objects.get(id=node_id)
+		node = Node.objects.get(pk=node_id)
 	except Node.DoesNotExist:
 		# TODO: ERROR LOG FILE
 		print "Node does not exist!!!"
@@ -117,7 +117,7 @@ def pull_profile_from_node(node_id):
 		if v == chk:
 			continue
 		if k == 'node':
-			if v == node.id:
+			if v == node.pk:
 				continue
 			# XXX: The following could be used to hijack other users
 			user.node = node # TODO: This isn't correct.
@@ -159,7 +159,7 @@ class PeriodicPullProfile(PeriodicTask):
 		# TODO: Respond to server overload
 		for sub in subs:
 			node = sub.node
-			print "Scheduling profile pull from node %d" % node.id
-			pull_profile_from_node.delay(node.id)
+			print "Scheduling profile pull from node %d" % node.pk
+			pull_profile_from_node.delay(node.pk)
 
 

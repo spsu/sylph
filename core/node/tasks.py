@@ -213,7 +213,7 @@ def ping_node(id):
 
 	node = None
 	try:
-		node = Node.objects.get(id=id)
+		node = Node.objects.get(pk=id)
 	except Node.DoesNotExist:
 		# TODO: ERROR LOG FILE
 		print "Node does not exist!!!"
@@ -306,7 +306,7 @@ class RetryFailedNodesTask(PeriodicTask):
 
 		# TODO: Respond to server overload
 		for node in nodes:
-			print "Scheduling node %d" % node.id
+			print "Scheduling node %d" % node.pk
 			do_add_node_lookup.delay(node.uri)
 
 
@@ -331,7 +331,7 @@ class KeepResolvingAddedNodes(PeriodicTask):
 
 		# TODO: Respond to server overload
 		for node in nodes:
-			print "Scheduling node %d" % node.id
-			ping_node.delay(node.id)
+			print "Scheduling node %d" % node.pk
+			ping_node.delay(node.pk)
 
 

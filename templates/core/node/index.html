@@ -73,7 +73,7 @@ $(window).load(function () {
 	<h1> Node Index </h1>
 	<table class="table">
 	{% for node in nodes %}
-		<tr class="row_{% cycle 'odd' 'even' %}" id="node_{{ node.id }}">
+		<tr class="row_{% cycle 'odd' 'even' %}" id="node_{{ node.pk }}">
 			<td style="background-color:{{ node.status_color }}" 
 				title="{{ node.get_status }}" class="td_status_color">
 				&nbsp;&nbsp;&nbsp;
@@ -104,8 +104,8 @@ $(window).load(function () {
 				{% if node.is_ours %}
 					<a href="/node/edit/">edit</a>
 				{% else %}
-					<a href="/node/edit/{{ node.id }}/">edit</a> |
-					<a href="/node/delete/{{ node.id }}/">delete</a>
+					<a href="/node/edit/{{ node.pk }}/">edit</a> |
+					<a href="/node/delete/{{ node.pk }}/">delete</a>
 				{% endif %}
 			</td>
 		</tr>

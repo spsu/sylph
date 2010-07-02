@@ -39,7 +39,7 @@ def install_main(request):
 
 	user = None
 	try:
-		user = User.objects.get(id=1)
+		user = User.objects.get(pk=1)
 	except:
 		# TODO
 		raise Exception, "TODO: resync-database!"
@@ -87,7 +87,7 @@ def install_main(request):
 				return p
 
 			# Set our node endpoint URI
-			node = Node.objects.get(id=2)
+			node = Node.objects.get(pk=2)
 			node.uri = make_path_uri('/endpoint/') # TODO: More custom
 			node.protocol_version = settings.PROTOCOL_VERSION
 			node.software_name = settings.SOFTWARE_NAME

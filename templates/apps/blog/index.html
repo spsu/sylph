@@ -31,7 +31,7 @@
 
 	{% for item in items.object_list %}
 		<div class="blogitem">
-			<h3><a href="/blog/view/{{item.id}}">{{item.title}}</a></h3>
+			<h3><a href="/blog/view/{{item.pk}}">{{item.title}}</a></h3>
 
 			<div class="blogitem_contents">
 				{{item.contents_or_summary|safe}}
@@ -40,8 +40,8 @@
 			<div class="blogitem_management">
 				<small>Published at {{item.uri}}</small><br />
 				<strike><a href="#">share</a></strike> |
-				<a href="/blog/edit/{{item.id}}/">edit</a> |
-				<a href="/blog/delete/{{item.id}}/">delete</a>
+				<a href="/blog/edit/{{item.pk}}/">edit</a> |
+				<a href="/blog/delete/{{item.pk}}/">delete</a>
 			</div>
 
 		</div>

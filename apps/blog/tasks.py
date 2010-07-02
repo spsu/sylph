@@ -15,7 +15,7 @@ from datetime import datetime, timedelta
 def get_feed(node_id):
 	"""Get the feed of 'latest' blogitem posts."""
 	try:
-		node = Node.objects.get(id=node_id)
+		node = Node.objects.get(pk=node_id)
 	except Node.DoesNotExist:
 		print "blog.task.get_feed failure: node %d doesn't exist" % node_id
 		return
@@ -83,8 +83,8 @@ class PeriodicPullBlogFeed(PeriodicTask):
 		# TODO: Respond to server overload
 		for sub in subs:
 			node = sub.node
-			print "Scheduling blogfeed fetch from node %d" % node.id
-			get_feed.delay(node.id)
+			print "Scheduling blogfeed fetch from node %d" % node.pk
+			get_feed.delay(node.pk)
 
 
 

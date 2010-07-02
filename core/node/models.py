@@ -213,15 +213,15 @@ class Node(Resource):
 
 	def is_ours(self):
 		"""Returns whether this node is ours."""
-		return self.id == 2
+		return self.pk == 2
 
 	def is_not_ours(self):
 		"""Returns whether this node is not ours."""
-		return self.id != 2
+		return self.pk != 2
 
 	def status_color(self):
 		"""Return a status color for visualization. Temporary."""
-		if self.id == 2:
+		if self.pk == 2:
 			return 'white'
 		if self.node_type == 'Z':
 			return 'gray'
@@ -232,7 +232,7 @@ class Node(Resource):
 		return 'red'
 
 	def get_status(self):
-		if self.id == 2:
+		if self.pk == 2:
 			return 'Our node'
 		if self.is_yet_to_resolve:
 			return 'Unresolved'
@@ -247,7 +247,7 @@ class Node(Resource):
 		verbose_name_plural = 'nodes'
 
 	def get_absolute_url(self):
-		return "/node/view/%i/" % self.id
+		return "/node/view/%i/" % self.pk
 
 	def protocol_compatibility(self, proto_version):
 		"""Compare the protocol version with a compatibility checklist."""

@@ -7,10 +7,10 @@
 	{% if node.is_ours %}
 		<a href="/node/edit/" class="button">Edit Own Node</a>
 	{% else %}
-		<a href="/node/delete/{{ node.id }}/" class="button">Delete Node</a>
+		<a href="/node/delete/{{ node.pk }}/" class="button">Delete Node</a>
 	{% endif %}	
 	</div>
-	<h2> <a href="/node/">Index</a> &gt; Node #{{ node.id }} </h2>
+	<h2> <a href="/node/">Index</a> &gt; Node #{{ node.pk }} </h2>
 
 	<table class="table">
 		<tr>
@@ -42,7 +42,7 @@
 			{% else %}
 				None
 			{% endif %}
-			<a href="/node/edit/{{ node.id }}/">(edit)</a>
+			<a href="/node/edit/{{ node.pk }}/">(edit)</a>
 		</p>
 
 		<table class="table">

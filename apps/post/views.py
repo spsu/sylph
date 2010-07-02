@@ -106,11 +106,11 @@ def reply_post(request, post_id):
 		"""Form for creating replies"""
 		reply_to_root = forms.IntegerField(
 							widget=forms.widgets.HiddenInput(),
-							initial = parent.id)
+							initial = parent.pk)
 
 		reply_to_parent = forms.IntegerField(
 							widget=forms.widgets.HiddenInput(),
-							initial = parent.id)
+							initial = parent.pk)
 
 		class Meta:
 			model = Post

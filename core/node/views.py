@@ -104,7 +104,7 @@ def edit_other_node(request, node_id):
 			# Note: Don't change datetime_edited--that's only for owner
 			n = form.save(commit=False)
 			n.save()
-			node_uri = '/node/view/%d/' % node.id
+			node_uri = '/node/view/%d/' % node.pk
 			return HttpResponseRedirect(node_uri)
 
 	else:

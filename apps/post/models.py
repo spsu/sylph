@@ -102,7 +102,7 @@ class Post(ResourceTree):
 		get_latest_by = 'datetime_created'
 
 	def get_absolute_url(self):
-		return "/post/view/%i/" % self.id
+		return "/post/view/%i/" % self.pk
 
 	def __unicode__(self):
 		return self.title

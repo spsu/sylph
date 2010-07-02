@@ -25,7 +25,7 @@ def owner_user_ref(request):
 		return {}
 
 	try:
-		user = User.objects.get(id=1)
+		user = User.objects.get(pk=1)
 	except User.DoesNotExist:
 		return {} # TODO: Is it wise to surpress this?
 

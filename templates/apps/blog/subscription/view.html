@@ -96,8 +96,8 @@ $(document).ready(function() {
 	<!-- Profile Posts -->
 	<hr />
 	<h4>Responses 
-		[<a href="/social/post/create/{{user.id}}/">add</a> |
-		 <a href="/social/post/index/{{user.id}}/">view</a> ]</h4>
+		[<a href="/social/post/create/{{user.pk}}/">add</a> |
+		 <a href="/social/post/index/{{user.pk}}/">view</a> ]</h4>
 
 	 {% if posts %}
 	 	<table class="table">
@@ -111,11 +111,11 @@ $(document).ready(function() {
 						posted {{post.datetime_created|naturalday}}
 						at {{post.datetime_created|time}}
 						<br />
-						<a href="/social/post/view/{{post.id}}/">view</a> | 
+						<a href="/social/post/view/{{post.pk}}/">view</a> | 
 						{% if post.author.is_owner %}
-							<a href="/social/post/edit/{{post.id}}/">edit</a> |
+							<a href="/social/post/edit/{{post.pk}}/">edit</a> |
 						{% endif %}
-						<a href="/social/post/delete/{{post.id}}/">delete</a>
+						<a href="/social/post/delete/{{post.pk}}/">delete</a>
 						</small>
 					</td>
 					<td width="80%">

@@ -49,7 +49,7 @@ def blogitem_create(request):
 def blogitem_view(request, item_id):
 	"""View a blogitem"""
 	try:
-		item = BlogItem.objects.get(id=item_id)
+		item = BlogItem.objects.get(pk=item_id)
 	except BlogItem.DoesNotExist:
 		return Http404
 

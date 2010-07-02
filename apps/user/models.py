@@ -219,7 +219,7 @@ class User(Resource):
 		return self.username
 
 	def get_absolute_url(self):
-		return '/user/view/%s/' % self.id
+		return '/user/view/%s/' % self.pk
 
 
 class UserEmail(models.Model):

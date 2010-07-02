@@ -12,7 +12,7 @@ from datetime import datetime
 def profile_post_index(request, user_id):
 	"""Show all the profile posts for a user."""
 	try:
-		user = User.objects.get(id=user_id)
+		user = User.objects.get(pk=user_id)
 	except User.DoesNotExist:
 		raise Http404
 
@@ -33,7 +33,7 @@ def profile_post_index(request, user_id):
 def profile_post_view(request, post_id):
 	"""View a single profile post (Not very useful...)"""
 	try:
-		post = ProfilePost.objects.get(id=post_id)
+		post = ProfilePost.objects.get(pk=post_id)
 	except ProfilePost.DoesNotExist:
 		raise Http404
 
@@ -54,7 +54,7 @@ def profile_post_view(request, post_id):
 def profile_post_create(request, user_id):
 	"""Create a new profile post on a given user."""
 	try:
-		user = User.objects.get(id=user_id)
+		user = User.objects.get(pk=user_id)
 	except User.DoesNotExist:
 		raise Http404
 
@@ -76,7 +76,7 @@ def profile_post_create(request, user_id):
 			post.datetime_created = datetime.today()
 			post.save()
 
-			return HttpResponseRedirect('/user/view/%d/'%user.id)
+			return HttpResponseRedirect('/user/view/%d/'%user.pk)
 
 	else:
 		form = NewProfilePostForm()

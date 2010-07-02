@@ -7,7 +7,7 @@
 
 	<h1>Profile Post for <a 
 		href="{{user.get_absolute_url}}"/>{{user.get_name_or_username}}</a></h1>
-	<p><a href="/social/post/index/{{user.id}}/">View All</a></p>
+	<p><a href="/social/post/index/{{user.pk}}/">View All</a></p>
 
 	<table class="table">
 		<tr class="row_even">
@@ -19,11 +19,11 @@
 				posted {{post.datetime_created|naturalday}}
 				at {{post.datetime_created|time}}
 				<br />
-				<a href="/social/post/view/{{post.id}}/">view</a> | 
+				<a href="/social/post/view/{{post.pk}}/">view</a> | 
 				{% if post.author.is_owner %}
-					<a href="/social/post/edit/{{post.id}}/">edit</a> |
+					<a href="/social/post/edit/{{post.pk}}/">edit</a> |
 				{% endif %}
-				<a href="/social/post/delete/{{post.id}}/">delete</a>
+				<a href="/social/post/delete/{{post.pk}}/">delete</a>
 				</small>
 			</td>
 			<td width="80%">

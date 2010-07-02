@@ -189,7 +189,7 @@ class Resource(models.Model):
 		verbose_name_plural = 'resources'
 
 	def get_absolute_url(self):
-		return "/resource/view/%i/" % self.id
+		return "/resource/view/%i/" % self.pk
 
 	def __unicode__(self):
 		return self.uri

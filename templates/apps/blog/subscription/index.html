@@ -15,16 +15,18 @@
 	<table class="table">
 	{% for subs in subscriptions %}
 		<tr class="row_{% cycle 'odd' 'even' %}" 
-			id="subscription_{{ subs.id }}">
-			<td>
+			id="subscription_{{ subs.pk }}">
+			<td width="70%">
 				{{subs.node.uri}}
 			</td>
 			<td class="td_date">	
 				Temp
 			</td>
 			<td>
-				<a href="/blog/subscription/edit/{{ subs.id }}/">edit</a> |
-				<a href="/blog/subscription/delete/{{ subs.id }}/">delete</a>
+				<a href="/blog/subscription/edit/{{ subs.pk }}/">edit</a> |
+				<a href="/blog/subscription/disable/{{subs.pk}}/">disable</a> | 
+				<a href="/blog/subscription/delete/{{subs.pk}}/">delete</a> 
+					(TODO: delete can purge the node or leave it alone)
 			</td>
 		</tr>
 	{% endfor %}

@@ -5,7 +5,7 @@
 
 {%block content %}
 	<div class="buttons">
-		<a href="/social/post/create/{{user.id}}/" 
+		<a href="/social/post/create/{{user.pk}}/" 
 			class="button">Create Post</a>
 	</div>
 
@@ -24,11 +24,11 @@
 						posted {{post.datetime_created|naturalday}}
 						at {{post.datetime_created|time}}
 						<br />
-						<a href="/social/post/view/{{post.id}}/">view</a> | 
+						<a href="/social/post/view/{{post.pk}}/">view</a> | 
 						{% if post.author.is_owner %}
-							<a href="/social/post/edit/{{post.id}}/">edit</a> |
+							<a href="/social/post/edit/{{post.pk}}/">edit</a> |
 						{% endif %}
-						<a href="/social/post/delete/{{post.id}}/">delete</a>
+						<a href="/social/post/delete/{{post.pk}}/">delete</a>
 						</small>
 					</td>
 					<td width="80%">
