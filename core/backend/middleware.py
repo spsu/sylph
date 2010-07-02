@@ -1,5 +1,4 @@
 from sylph.core.backend.utils.install_state import is_installed
-from sylph.core.backend.views import install_main
 
 from django.conf import settings
 from django.http import HttpResponseRedirect
@@ -33,5 +32,6 @@ class EnsureInstalledMiddleware(object):
 			return False
 
 		# Call installation view instead!
+		from sylph.core.backend.views import install_main
 		return install_main(request)
 

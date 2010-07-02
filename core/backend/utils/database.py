@@ -1,5 +1,6 @@
 from django.core import management
 from django.db import connection
+from django.conf import settings
 
 from sylph.core.resource.models import Resource
 
@@ -31,28 +32,34 @@ def sync_empty_database():
 
 def reset_database():
 	"""Resets the django database, dropping and re-adding each table."""
-	# MODIFIED FROM CODE FOUND AT:
-	# http://groups.google.com/group/django-users/browse_thread/
-	# thread/456539bfad0c8a93/f7f57f3cc75eec5b?lnk=raot
 
-	cursor = connection.cursor()
-	saveTables = [] # List of tables to spare execution
+	def drop_tables(save_tables=[]):
+		"""Drop database tables not in save_tables
+		Not to be used on non-relational backends.
+		FROM CODE FOUND AT:
+		http://groups.google.com/group/django-users/browse_thread/
+		thread/456539bfad0c8a93/f7f57f3cc75eec5b?lnk=raot
+		"""
+		cursor = connection.cursor()
+		cur_tables = connection.introspection.table_names()
 
-	currentTables = connection.introspection.table_names()
-
-	for table in currentTables:
-		if table not in saveTables:
+		for table in cur_tables:
+			if table in save_tables:
+				continue
 			try:
 				cursor.execute("drop table %s" % table)
 			except Exception,e:
 				raise e
 
-	management.call_command('syncdb', interactive=False) 
-	management.call_command('loaddata', 'fixtures/initial_configs.json', 
-					verbosity=1, interactive=False) 
-	management.call_command('loaddata', 'fixtures/initial_node.json', 
-					verbosity=1, interactive=False) 
-	management.call_command('loaddata', 'fixtures/initial_user.json', 
-					verbosity=1, interactive=False) 
+	if not settings.IS_GOOGLE_APP_ENGINE:
+		drop_tables()
+
+	management.call_command('syncdb', interactive=False)
+	management.call_command('loaddata', 'fixtures/initial_configs.json',
+					verbosity=1, interactive=False)
+	management.call_command('loaddata', 'fixtures/initial_node.json',
+					verbosity=1, interactive=False)
+	management.call_command('loaddata', 'fixtures/initial_user.json',
+					verbosity=1, interactive=False)
 
 
