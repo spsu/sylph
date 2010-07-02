@@ -3,6 +3,7 @@ from django.db import connection
 from django.conf import settings
 
 from sylph.core.resource.models import Resource
+from sylph.core.node.models import Node
 
 # TODO: perhaps mv utilities.py db_utilities.py or similar..
 
@@ -51,8 +52,22 @@ def reset_database():
 			except Exception,e:
 				raise e
 
+
+	def delete_resources():
+		"""Crude Google App Engine delete for resources."""
+		# XXX/TODO: This won't work if there are over 1000 resources!
+		resources = Resource.objects.all()
+		for res in resources:
+			res.delete()
+
+		nodes = Node.objects.all()
+		for n in nodes:
+			n.delete()
+
 	if not settings.IS_GOOGLE_APP_ENGINE:
 		drop_tables()
+	else:
+		delete_resources()
 
 	management.call_command('syncdb', interactive=False)
 	management.call_command('loaddata', 'fixtures/initial_configs.json',

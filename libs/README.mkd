@@ -1,0 +1,29 @@
+If a library is not installed on the system, or another version is preferred,
+we keep them here. This directory is placed in the python path.
+
+_For practical considerations, we will not distribute any software packages in
+this directory._ The links are included so you can download them. 
+
+Required Libraries
+------------------
+* [Django](http://www.djangoproject.com/) version 1.1.x to 1.2.x _(Unless using
+  a non-relational database, see below.)
+
+Optional Libraries
+------------------
+**If you want to use a message queue:**
+* [Celery](http://celeryproject.org/) [[src](http://github.com/ask/celery)]
+	* [django-celery](http://pypi.python.org/pypi/django-celery) 
+	  [[src](http://github.com/ask/django-celery/)]
+* RabbitMQ or similar (see Celery for info on what it supports)
+
+Experimental / Work in progress
+-------------------------------
+
+**If you want to run on Google App Engine or use a Non-Relational backend:**
+* [django-nonrel](http://www.allbuttonspressed.com/projects/django-nonrel) 
+  (experimental) [[src](http://bitbucket.org/wkornewald/django-nonrel/src)]
+	* [djangoappengine](http://www.allbuttonspressed.com/projects/djangoappengine)
+	  [[src](http://bitbucket.org/wkornewald/djangoappengine/src)]
+	* [djangotoolbox](http://bitbucket.org/wkornewald/djangotoolbox/src)
+
