@@ -47,6 +47,8 @@
 		</div>
 	{% endfor %}
 
+	{% if items.object_list %}
+
 	<div class="pagination">
 		<span class="step-links">	
 			<strong>Page {{ items.number }} of {{ items.paginator.num_pages }}.</strong>
@@ -62,5 +64,6 @@
 	</div>
 
 	<p><b><a href="/blog/subscription/">Manage subscriptions</a></b></p>
+	{% endif %}
 
 {% endblock %}

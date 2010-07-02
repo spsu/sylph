@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models import signals
+from django.dispatch import dispatcher
+
 from sylph.core.resource.models import Resource
 from sylph.core.resource.models import register_type
 
@@ -265,7 +268,9 @@ class SylphNode(Node): # TODO
 
 class WebPageNode(Node):
 	"""Represents a non-interactive webpage."""
-	pass
+
+	# XXX: This is kind of stupid... Just for a signal handler.
+	had_first_lookup_scheduled = models.BooleanField(default=False)
 
 class WebFeedNode(Node):
 	"""Represents a non-interactive RSS/Atom feed."""
@@ -284,4 +289,13 @@ register_type(SylphNode)
 register_type(WebPageNode)
 register_type(WebFeedNode)
 register_type(WebServiceNode)
+
+def register_signals():
+	"""Register Node signals"""
+	import signals as sig_ # To avoid circular imports
+	signals.pre_save.connect(sig_.auto_lookup_feed_on_add_blog,
+								sender=WebPageNode)
+
+register_signals()
+
 
