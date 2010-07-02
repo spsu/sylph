@@ -2,6 +2,7 @@ from celery.decorators import task
 from celery.task.base import PeriodicTask
 
 from django.conf import settings
+from django.db.models import Q
 
 from models import BlogItem, BootstrapBlogItem
 from sylph.core.node.models import Node, WebPageNode
@@ -51,10 +52,48 @@ def get_feed(node_id):
 
 			blog.save()
 
+			# Schedule fetch of contents
+			if not blog.contents:
+				get_fulltext.delay(blog.pk)
+
 		except Exception as e:
 			print type(e)
 			print e
 			continue
+
+@task
+def get_fulltext(blogitem_id):
+	"""Fetch the fulltext of a summary-only item."""
+	try:
+		item = BootstrapBlogItem.objects.get(pk=blogitem_id)
+	except BootstrapBlogItem.DoesNotExist:
+		print "blog.task.get_fulltext item doesn't exist"
+		return
+
+	try:
+		feed = web2feed(item.uri)
+	except Exception as e:
+		print e
+		return
+
+	if type(feed) != dict:
+		print "NOT DICT"
+		return
+
+	if feed['uri'] != item.uri:
+		print "WARNING: BLOGITEM URIS DO NOT MATCH"
+
+	if 'title' in feed:
+		item.title = feed['title']
+	if 'date' in feed:
+		item.datetime_created = feed['date']
+	if 'contents' in feed:
+		item.contents = feed['contents']
+	if 'author' in feed:
+		item.author = feed['author']
+
+	item.save()
+
 
 def get_comments(blogitem_id):
 	pass
@@ -86,5 +125,27 @@ class PeriodicPullBlogFeed(PeriodicTask):
 			print "Scheduling blogfeed fetch from node %d" % node.pk
 			get_feed.delay(node.pk)
 
+class PeriodicUpdateSummaryOnlyItems(PeriodicTask):
+	"""Periodically check for fulltext on summary-only"""
 
+	run_every = timedelta(seconds=20)
+	#run_every = timedelta(minutes=5)
+
+	def run(self, **kwargs):
+		print "PeriodicUpdateSummaryItemsOnly" # TODO: Debug
+		logger = self.get_logger(**kwargs)
+		logger.info("Pulling blog feeds (updating)")
+
+		try:
+			items = BootstrapBlogItem.objects.filter(
+								~Q('contents')
+					)
+		except BootstrapBlogItem.DoesNotExist:
+			return
+
+		print items
+
+		# TODO: Respond to server overload
+		for item in items:
+			get_fulltext.delay(item.pk)
 
