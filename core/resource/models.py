@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models import signals
+from django.dispatch import dispatcher
+
 import datetime
 import re
 
@@ -191,6 +194,15 @@ class Resource(models.Model):
 	def get_absolute_url(self):
 		return "/resource/view/%i/" % self.pk
 
+	def wrap_uri(self, length=45):
+		ret = ''
+		ln = 0
+		while ln*length < len(self.uri):
+			ret += self.uri[ln*length:(ln+1)*length] + "\n"
+			ln += 1
+
+		return ret[0:-1]
+
 	def __unicode__(self):
 		return self.uri
 
@@ -302,4 +314,17 @@ class ResourceType(models.Model):
 #		return self.get(uri=res_uri)
 
 #Resource.objects = ResourceManager()
+
+# ============ Signals ====================================
+
+def register_type(ModelType):
+	"""Register the type of each created resource.
+	This must be called in the models.py for each model type."""
+	import signals as sig_ # To avoid circular imports
+	signals.pre_save.connect(sig_.auto_apply_resource_type,
+								sender=ModelType)
+
+register_type(Resource)
+register_type(ResourceTree)
+register_type(ResourceDigraphEdge)
 

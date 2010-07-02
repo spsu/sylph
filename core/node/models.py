@@ -1,5 +1,7 @@
 from django.db import models
 from sylph.core.resource.models import Resource
+from sylph.core.resource.models import register_type
+
 from datetime import datetime
 import os
 import math
@@ -274,4 +276,12 @@ class WebServiceNode(Node):
 	In this way, we can manage one or more accounts per service
 	"""
 	pass
+
+# ============ Register Signals ===========================
+
+register_type(Node)
+register_type(SylphNode)
+register_type(WebPageNode)
+register_type(WebFeedNode)
+register_type(WebServiceNode)
 

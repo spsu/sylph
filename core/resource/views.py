@@ -38,3 +38,18 @@ def resource_view(request, res_id):
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
 
+# ============ Redirect Resource ==========================
+
+def resource_redirect(request, res_type, res_id):
+	"""Redirect to the resource's appropriate view page
+	(assuming it has one.)"""
+
+	print res_type
+	res_id = int(res_id)
+
+	if res_type == 'User':
+		return HttpResponseRedirect('/user/view/%d/'%res_id)
+
+	# Unknown types
+	return HttpResponseRedirect('/resource/view/%d/'%res_id)
+

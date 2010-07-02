@@ -2,7 +2,8 @@
 	"model": "resource.Resource",
 	"pk": 2,
 	"fields": {
-		"uri": "http://example.org/my-new-node/"
+		"uri": "http://example.org/my-new-node/",
+		"resource_type": "Node"
 	}
 },
 {

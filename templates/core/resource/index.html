@@ -8,6 +8,11 @@
 {%block content %}
 	<h1> Resource Index </h1>
 
+	<p>Almost every entity in Sylph is a resource (with the exception of a
+	few convenience tables here and there). This just means we can 
+	expect some standard metadata associated with every type. The resource
+	type system is polymorphic with single-inheritance.</p>
+
 	{% if resources %}
 		<table class="table">
 			<tr>
@@ -24,8 +29,8 @@
 		{% for res in resources %}
 			<tr class="row_{% cycle 'odd' 'even' %}">
 				<td>
-					<b>Resource #{{res.pk}}</b><br />
-					{{res.uri}}
+					<b><a href="/resource/redirect/{{res.resource_type}}/{{res.pk}}/">Resource ID #{{res.pk}}</a></b> (<a href="/resource/view/{{res.pk}}/">info page</a>)<br />
+					{{res.wrap_uri}}
 				</td>
 				<td>	
 					{{res.resource_type}}

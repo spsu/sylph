@@ -1,71 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}Viewing Node{% endblock %}
+{% block title %}Viewing Resource{% endblock %}
 
 {%block content %}
-	<div class="buttons">
-	{% if node.is_ours %}
-		<a href="/node/edit/" class="button">Edit Own Node</a>
-	{% else %}
-		<a href="/node/delete/{{ node.id }}/" class="button">Delete Node</a>
-	{% endif %}	
-	</div>
-	<h2> <a href="/node/">Index</a> &gt; Node #{{ node.id }} </h2>
+	<h2> <a href="/resource/">Index</a> &gt; Resource #{{resource.pk}} </h2>
 
 	<table class="table">
 		<tr>
-			<th colspan="2">Basic Info</th>
+			<th colspan="2">Resource Basic Info</th>
 		</tr>
 		<tr>
-			<td>Name</td>
-			<td><strong>{{ node.name }}</strong></td>
+			<td>ID</td>
+			<td>{{resource.pk}} (<a href="/resource/redirect/{{resource.resource_type}}/{{resource.pk}}/">view</a>)</td>
 		</tr>
 		<tr>
 			<td>URI</td>
-			<td>{{ node.uri }}</td>
+			<td>{{ resource.uri }}</td>
 		</tr>
 		<tr>
-			<td>Description</td>
-			<td>{{ node.description }}</td>
+			<td>Type</td>
+			<td><a href="#">{{ resource.resource_type }}</a></td>
+		</tr>
+		<tr>
+		<td>Date Created</td>
+			<td>{{resource.datetime_created}}</td>
 		</tr>
 		<tr>
 			<td>Date Edited</td>
-			<td>{{ node.datetime_edited }}</td>
+			<td>{{resource.datetime_edited}}</td>
 		</tr>
-	</table>
-
-	{% if node.is_not_ours %}
-		<p>
-			<strong>Personal Notes:</strong> 
-			{% if node.own_description %}
-				{{ node.own_description }}
-			{% else %}
-				None
-			{% endif %}
-			<a href="/node/edit/{{ node.id }}/">(edit)</a>
-		</p>
-
-		<table class="table">
-			<tr>
-				<th colspan="2">Resolve Details</th>
-			</tr>
+		<tr>
+			<td>TODO</td>
+			<td>Try to query the resource type-specific info (would require an up-to-date view)</td>
+		</tr>
+		<tr>
+			<th colspan="2">Access Information</th>
+		</tr>
 			<tr>
 				<td>Date Added</td>
-				<td>{{ node.datetime_added }}</td>
+				<td>{{resource.datetime_added}}</td>
 			</tr>
 			<tr>
-				<td>Last Resolved</td>
-				<td>
-					{% if node.is_yet_to_resolve %}
-						<em>Has never been resolved!!</em>
-					{% else %}
-						{{ node.datetime_last_resolved }}
-					{% endif %}
-				</td>
+				<td>Last Accessed (locally)</td>
+				<td>{{resource.datetime_last_accessed}}</td>
 			</tr>
 			<tr>
-				<td>Last Error</td>
-				<td>{{ node.datetime_last_failed }}</td>
+				<td>Last Retrieved (remotely)</td>
+				<td>{{resource.datetime_last_retrieved}}</td>
 			</tr>
 		</table>
 
@@ -73,33 +54,13 @@
 
 		<table class="table">
 			<tr>
-				<th colspan="2">Communication Originating Here</th>
-				<th colspan="2">Communication Originating Remotely</th>
+				<th colspan="2">Extended Type Information</th>
 			</tr>
 			<tr>
-				<td>Last pushed to</td>
-				<td>{{ node.datetime_last_pushed_to }}</td>
-				<td>Last pushed to us</td>
-				<td>{{ node.datetime_pushed_to_us }}</td>
-			</tr>
-			<tr>
-				<td>Last pulled from</td>
-				<td>{{ node.datetime_last_pulled_from }}</td>
-				<td>Last pulled from us</td>
-				<td>{{ node.datetime_pulled_from_us }}</td>
+				<td>TODO</td>
+				<td>Try to query the resource type-specific info (would require an up-to-date view)</td>
 			</tr>
 		</table>
-
-	{% endif %}
-	<br />
-
-	<p>TODO - More info</p>
-	<ul>
-		<li>Show a feed from the node</li>
-		<li>Show an "about" block... describing the person or service.</li>
-		<li>Show status of node graphically</li>
-		<li>Etc.</li>
-	</ul>
 
 {% endblock content %}
 

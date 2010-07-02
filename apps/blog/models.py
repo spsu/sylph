@@ -1,6 +1,7 @@
 from django.db import models
 from sylph.apps.post.models import Post
 from sylph.core.resource.models import Resource
+from sylph.core.resource.models import register_type
 
 # XXX XXX XXX IDEA: comments are a *separate app* entirely!
 
@@ -138,4 +139,8 @@ class BootstrapBlogItem(BlogItem):
 	www_author_website = models.CharField(max_length=255, blank=True, null=False)
 	www_author_email = models.CharField(max_length=60, blank=True, null=False)
 
+# ============ Register Signals ===========================
+
+register_type(BlogItem)
+register_type(BootstrapBlogItem)
 
