@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Resource index{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{%block content %}
+	<h1> Resource Index </h1>
+
+	{% if resources %}
+		<table class="table">
+			<tr>
+				<th>
+					Resource
+				</th>
+				<th>
+					Type
+				</th>
+				<th colspan="2">
+					Dates
+				</th>
+			</tr>
+		{% for res in resources %}
+			<tr class="row_{% cycle 'odd' 'even' %}">
+				<td>
+					<b>Resource #{{res.pk}}</b><br />
+					{{res.uri}}
+				</td>
+				<td>	
+					{{res.resource_type}}
+				</td>
+				<td>
+					Created: {{res.datetime_created}}<br />
+					Edited: {{res.datetime_edited}}
+				</td>
+				<td>
+					Added: {{res.datetime_added }}<br />
+					Last-accessed: {{res.datetime_last_accessed}}
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+	{% else %}
+		<p><strong>No resources!! (WTF? How?)</strong></p>
+	{% endif %}
+
+{% endblock %}

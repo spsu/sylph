@@ -108,8 +108,8 @@ class Resource(models.Model):
 	# TODO/XXX: Consumer-only. Cannot send these!!
 	# TODO: Strip any resource metadata being sent marked 'consumer-only'
 	datetime_added = models.DateTimeField(null=True, blank=True)
-	datetime_retrieved = models.DateTimeField(null=True, blank=True)
-	datetime_last_accessed = models.DateTimeField(null=True, blank=True)
+	datetime_retrieved = models.DateTimeField(null=True, blank=True) # XXX What??
+	datetime_last_accessed = models.DateTimeField(null=True, blank=True) # XXX
 
 	# TODO: Is this proper? (Should the type itself be responsible?)
 	# A non-tranportable cache of reply count.
@@ -292,13 +292,14 @@ class ResourceType(models.Model):
 	"""A description of the resource type."""
 	description = models.CharField(max_length=255, blank=True, null=False)
 
-
 # ============ Model Managers =============================
 
-class ResourceManager(models.Manager):
-	"""Custom manager for resources"""
-	def get_by_natural_key(self, res_uri):
-		return self.get(uri=res_uri)
+# XXX: Causes exception: 'NoneType' object has no attribute '_meta'
 
-Resource.objects = ResourceManager()
+#class ResourceManager(models.Manager):
+#	"""Custom manager for resources"""
+#	def get_by_natural_key(self, res_uri):
+#		return self.get(uri=res_uri)
+
+#Resource.objects = ResourceManager()
 
