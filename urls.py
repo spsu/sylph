@@ -28,6 +28,7 @@ urlpatterns = patterns('',
 	(r'^jobs/', include('sylph.core.jobs.urls')),
 	(r'^system/', include('sylph.core.backend.urls')), # Manage the system
 	(r'^subscription/', include('sylph.core.subscription.urls')),
+	(r'^resource/', include('sylph.core.resource.urls')),
 	#(r'main/', include('sylph.system.frontend.urls')),
 )
 
