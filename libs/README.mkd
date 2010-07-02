@@ -12,6 +12,7 @@ Required Libraries
 Optional Libraries
 ------------------
 **If you want to use a message queue:**
+
 * [Celery](http://celeryproject.org/) [[src](http://github.com/ask/celery)]
 	* [django-celery](http://pypi.python.org/pypi/django-celery) 
 	  [[src](http://github.com/ask/django-celery/)]
@@ -21,6 +22,7 @@ Experimental / Work in progress
 -------------------------------
 
 **If you want to run on Google App Engine or use a Non-Relational backend:**
+
 * [django-nonrel](http://www.allbuttonspressed.com/projects/django-nonrel) 
   (experimental) [[src](http://bitbucket.org/wkornewald/django-nonrel/src)]
 	* [djangoappengine](http://www.allbuttonspressed.com/projects/djangoappengine)
