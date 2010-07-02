@@ -3,21 +3,39 @@
 import os
 import sys
 
-# XXX XXX XXX TEMPORARY FOR web2feed
-sys.path.append(os.path.abspath('../web2feed'))
-
 # ================= Version Information ===================
 """
 Both the software and Sylph protocol (which multiple softwares
 may implement) utilize a similar versioning scheme:
 
-	major.minor.bugfix.month.day (as MM and DD respectively)
+major.minor.bugfix-year.month.day (as MM and DD respectively)
 """
 
 SOFTWARE_NAME = 'Sylph.py Client'
-SOFTWARE_VERSION = '0.1.0.05.25'
-PROTOCOL_VERSION = '0.1.0.05.25'
+SOFTWARE_VERSION = '0.1.0-10.05.25'
+PROTOCOL_VERSION = '0.1.0-10.05.25'
 RDF_SERIALIZATION = 'xml' # xml or n3
+
+# ================= Environment ===========================
+
+# Ensure local libraries can be loaded
+sys.path.insert(0, os.path.abspath(
+					os.path.join(os.path.dirname(__file__), 'libs')))
+sys.path.insert(0, os.path.abspath(os.path.dirname(__file__))) # Necessary on GAE?
+
+# XXX XXX XXX TEMPORARY FOR web2feed
+sys.path.append(os.path.abspath('../web2feed'))
+
+# Google App Engine deployment
+IS_GOOGLE_APP_ENGINE = False
+try:
+	import google.appengine.ext.webapp
+	IS_GOOGLE_APP_ENGINE = True
+except:
+	pass
+
+print "IS GOOGLE APP ENGINE: "
+print IS_GOOGLE_APP_ENGINE
 
 # ================= Common Configuration ==================
 
@@ -110,6 +128,18 @@ INSTALLED_APPS = (
 	'sylph.apps.bootstrap',
 	'sylph.apps.social',
 )
+
+if IS_GOOGLE_APP_ENGINE:
+	try:
+		from djangoappengine.settings_base import *
+		has_djangoappengine = True
+	except ImportError:
+		has_djangoappengine = False
+
+	INSTALLED_APPS += (
+		'djangotoolbox',
+	)
+
 
 # ================= Virtualization Helpers ================
 """
