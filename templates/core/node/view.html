@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load naturaltime %}
+
 {% block title %}Viewing Node{% endblock %}
 
 {%block content %}
@@ -34,7 +36,8 @@
 		</tr>
 		<tr>
 			<td>Date Edited</td>
-			<td>{{ node.datetime_edited }}</td>
+			<td>{{ node.datetime_edited }} 
+				{% if node.datetime_edited %}({{node.datetime_edited|naturaltime}}) {% endif %}</td>
 		</tr>
 	</table>
 
@@ -55,7 +58,9 @@
 			</tr>
 			<tr>
 				<td>Date Added</td>
-				<td>{{ node.datetime_added }}</td>
+				<td>{{ node.datetime_added }}
+					{% if node.datetime_added %}({{node.datetime_added|naturaltime}}){% endif %}
+				</td>
 			</tr>
 			<tr>
 				<td>Last Resolved</td>
@@ -63,13 +68,17 @@
 					{% if node.is_yet_to_resolve %}
 						<em>Has never been resolved!!</em>
 					{% else %}
-						{{ node.datetime_last_resolved }}
+						{{ node.datetime_last_resolved }} 
+						({{node.datetime_last_resolved|naturaltime}})
 					{% endif %}
 				</td>
 			</tr>
 			<tr>
 				<td>Last Error</td>
-				<td>{{ node.datetime_last_failed }}</td>
+				<td>
+					{{ node.datetime_last_failed }}
+					{%if node.datetime_last_failed%}({{node.datetime_last_failed|naturaltime}}){%endif%}
+				</td>
 			</tr>
 		</table>
 
@@ -82,15 +91,23 @@
 			</tr>
 			<tr>
 				<td>Last pushed to</td>
-				<td>{{ node.datetime_last_pushed_to }}</td>
+				<td>{{ node.datetime_last_pushed_to }}
+					{%if node.datetime_last_pushed_to%}({{node.datetime_last_pushed_to|naturaltime}}){%endif%}
+				</td>
 				<td>Last pushed to us</td>
-				<td>{{ node.datetime_last_pushed_to_us }}</td>
+				<td>{{ node.datetime_last_pushed_to_us }}
+					{%if node.datetime_last_pushed_to_us%}({{node.datetime_last_pushed_to_us|naturaltime}}){%endif%}
+				</td>
 			</tr>
 			<tr>
 				<td>Last pulled from</td>
-				<td>{{ node.datetime_last_pulled_from }}</td>
+				<td>{{ node.datetime_last_pulled_from }}
+					{%if node.datetime_last_pulled_from%}({{node.datetime_last_pulled_from|naturaltime}}){%endif%}
+				</td>
 				<td>Last pulled from us</td>
-				<td>{{ node.datetime_last_pulled_from_us }}</td>
+				<td>{{ node.datetime_last_pulled_from_us }}
+					{%if node.datetime_last_pulled_from_us%}({{node.datetime_last_pulled_from_us|naturaltime}}){%endif%}
+				</td>
 			</tr>
 		</table>
 
