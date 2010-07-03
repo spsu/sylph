@@ -1,7 +1,7 @@
 from django.db import models
 from sylph.apps.post.models import Post
 from sylph.core.resource.models import Resource
-from sylph.core.resource.models import register_type
+#from sylph.core.resource.models import register_type
 
 # XXX XXX XXX IDEA: comments are a *separate app* entirely!
 
@@ -82,6 +82,17 @@ class BlogItem(Post):
 	"""
 	is_multipage = models.BooleanField(default=False)
 
+
+	"""Author string. Useful to keep in the event the author isn't yet
+	in the distributed web. (Of course, we may get that info somehow.)
+	"""
+	www_author_name = models.CharField(max_length=60, blank=True, null=False)
+
+	"""Contact methods for the author."""
+	www_author_website = models.CharField(max_length=255, blank=True, null=False)
+	www_author_email = models.CharField(max_length=60, blank=True, null=False)
+
+
 	# TODO: Authors table (n:m)
 
 	# TODO: Gallery table?
@@ -103,44 +114,47 @@ class BlogItem(Post):
 		if self.summary:
 			return "(Summary) " + self.summary
 
+	class Meta(Post.Meta):
+		pass
+
 # ============ BootstrapBlogItem ==========================
 
 # XXX: Do a monolithic app with both bootstrap and distributed (for now)
 
-class BootstrapBlogItem(BlogItem):
-	"""
-	Resouce > ResourceTree > Post > BlogItem > BootstrapBlogItem
-
-	A BlogItem that is retrieved from a 'dumb' www website (with no
-	semantic cabability).
-
-		* uri = webpage where obtained (best if original loc.)
-		* author = null (usually)
-		* datetime_created = date
-		* datetime_edited = edit date (rarely available)
-	"""
-
-	# ============= Sylph Metadata ========================
-
-	rdf_fields = [
-		#'site',
-	]
-
-	# ============= Model Fields ==========================
-
-	#site = models.ForeignKey('Site')
-
-	"""Author string. Useful to keep in the event the author isn't yet
-	in the distributed web. (Of course, we may get that info somehow.)
-	"""
-	www_author_name = models.CharField(max_length=60, blank=True, null=False)
-
-	"""Contact methods for the author."""
-	www_author_website = models.CharField(max_length=255, blank=True, null=False)
-	www_author_email = models.CharField(max_length=60, blank=True, null=False)
+#class BootstrapBlogItem(BlogItem):
+#	"""
+#	Resouce > ResourceTree > Post > BlogItem > BootstrapBlogItem
+#
+#	A BlogItem that is retrieved from a 'dumb' www website (with no
+#	semantic cabability).
+#
+#		* uri = webpage where obtained (best if original loc.)
+#		* author = null (usually)
+#		* datetime_created = date
+#		* datetime_edited = edit date (rarely available)
+#	"""
+#
+#	# ============= Sylph Metadata ========================
+#
+#	rdf_fields = [
+#		#'site',
+#	]
+#
+#	# ============= Model Fields ==========================
+#
+#	#site = models.ForeignKey('Site')
+#
+#	"""Author string. Useful to keep in the event the author isn't yet
+#	in the distributed web. (Of course, we may get that info somehow.)
+#	"""
+#	www_author_name = models.CharField(max_length=60, blank=True, null=False)
+#
+#	"""Contact methods for the author."""
+#	www_author_website = models.CharField(max_length=255, blank=True, null=False)
+#	www_author_email = models.CharField(max_length=60, blank=True, null=False)
 
 # ============ Register Signals ===========================
 
-register_type(BlogItem)
-register_type(BootstrapBlogItem)
+#register_type(BlogItem)
+#register_type(BootstrapBlogItem)
 

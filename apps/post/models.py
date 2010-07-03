@@ -95,7 +95,8 @@ class Post(ResourceTree):
 
 	# ============= Django Methods and Metadata ===========
 
-	class Meta:
+	class Meta(ResourceTree.Meta):
+		abstract = True
 		verbose_name = 'post'
 		verbose_name_plural = 'posts'
 		#ordering = ['-datetime_created']
@@ -107,47 +108,47 @@ class Post(ResourceTree):
 	def __unicode__(self):
 		return self.title
 
-class PostCacheData(models.Model):
-	"""
-	NOT A RESOURCE
+#class PostCacheData(models.Model):
+#	"""
+#	NOT A RESOURCE
+#
+#	In the case where we download posts by users not tracked by our
+#	system, we store some basic info on them here.
+#	"""
+#	post = models.ForeignKey('Post')
+#
+#	"""Name stored with a post. Can be a username, first name, whatever."""
+#	name = models.CharField(max_length=60, blank=True, null=False)
+#
+#	"""URI of the user resource in the event we want to look them up."""
+#	user_uri = models.CharField(max_length=255, blank=True, null=False)
+#
+#	#"""URI of the user's node in the event we want to look them up."""
+#	#node_uri = models.CharField(max_length=255, blank=True, null=False)
+#
+#	"""An optional website URI."""
+#	web_uri = models.CharField(max_length=255, blank=True, null=False)
+#
+#	"""An optional email address."""
+#	email = models.CharField(max_length=60, blank=True, null=False)
 
-	In the case where we download posts by users not tracked by our
-	system, we store some basic info on them here.
-	"""
-	post = models.ForeignKey('Post')
-
-	"""Name stored with a post. Can be a username, first name, whatever."""
-	name = models.CharField(max_length=60, blank=True, null=False)
-
-	"""URI of the user resource in the event we want to look them up."""
-	user_uri = models.CharField(max_length=255, blank=True, null=False)
-
-	#"""URI of the user's node in the event we want to look them up."""
-	#node_uri = models.CharField(max_length=255, blank=True, null=False)
-
-	"""An optional website URI."""
-	web_uri = models.CharField(max_length=255, blank=True, null=False)
-
-	"""An optional email address."""
-	email = models.CharField(max_length=60, blank=True, null=False)
-
-class PostReferences(models.Model):
-	"""
-	NOT A RESOURCE
-
-	Aggregate the links to other resources, either computationally via
-	the assistance of a backend job, or delivered along with a payload,
-	eg: <references>URI</references>.
-
-	This allows fast querying and graph search (theoretically).\
-
-	Nomenclature (work in progress):
-		* A _link_ is an html/web anchor.
-		* A _reference_ is a Sylph connection between resources.
-	"""
-
-	post = models.ForeignKey('Post', related_name='set_post')
-	linked_resource = models.ForeignKey('resource.Resource')
-
-	# TODO: dynamic = models.CharField() # explain the semantics of the linkage
+#class PostReferences(models.Model):
+#	"""
+#	NOT A RESOURCE
+#
+#	Aggregate the links to other resources, either computationally via
+#	the assistance of a backend job, or delivered along with a payload,
+#	eg: <references>URI</references>.
+#
+#	This allows fast querying and graph search (theoretically).\
+#
+#	Nomenclature (work in progress):
+#		* A _link_ is an html/web anchor.
+#		* A _reference_ is a Sylph connection between resources.
+#	"""
+#
+#	post = models.ForeignKey('Post', related_name='set_post')
+#	linked_resource = models.ForeignKey('resource.Resource')
+#
+#	# TODO: dynamic = models.CharField() # explain the semantics of the linkage
 

@@ -5,6 +5,7 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.core import serializers
+from django.conf import settings
 
 from models import *
 from sylph.core.resource.models import Resource
@@ -31,7 +32,7 @@ def edit_own_node(request):
 	"""Edit the details on our own node."""
 	node = None
 	try:
-		node = Node.objects.get(pk=2)
+		node = Node.objects.get(pk=settings.OUR_NODE_PK)
 	except Node.DoesNotExist:
 		raise Http404 # TODO: This is actually a core system failure!
 

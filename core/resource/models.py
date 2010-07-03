@@ -188,6 +188,7 @@ class Resource(models.Model):
 	# ============= Django Methods and Metadata ===========
 
 	class Meta:
+		abstract = True
 		verbose_name = 'resource'
 		verbose_name_plural = 'resources'
 
@@ -256,42 +257,49 @@ class ResourceTree(Resource):
 										related_name='resource_set_parent',
 										null=True, blank=True)
 
+	class Meta(Resource.Meta):
+		abstract = True
+
 # ============ Resource Digraph Edge ======================
 
-class ResourceDigraphEdge(Resource):
-	"""
-	ResourceDigraphEdge is a representation of a directed graph edge
-	that is itself a resource. It has an origin and a destination
-	resource.
-
-	An example is the social.Knows model, which is a direct decendant
-	of ResourceDigraphEdge.
-	"""
-
-	# ============= Sylph Metadata ========================
-
-	"""A list of transportable RDF fields."""
-	rdf_fields = [
-			'origin',
-			'destination',
-	]
-
-	"""A list of fields *not* to transport."""
-	rdf_ignore = []
-
-	class_name = 'endpoint.ResourceDigraphEdge'
-
-	# ============= Model Fields ==========================
-
-	# The origin resource
-	origin = models.ForeignKey('Resource',
-								related_name='resource_set_origin',
-								null=False, blank=False)
-
-	# The destination resource
-	destination = models.ForeignKey('Resource',
-									related_name='resource_set_destination',
-									null=True, blank=True)
+#class ResourceDigraphEdge(Resource):
+#	"""
+#	ResourceDigraphEdge is a representation of a directed graph edge
+#	that is itself a resource. It has an origin and a destination
+#	resource.
+#
+#	An example is the social.Knows model, which is a direct decendant
+#	of ResourceDigraphEdge.
+#	"""
+#
+#	# ============= Sylph Metadata ========================
+#
+#	"""A list of transportable RDF fields."""
+#	rdf_fields = [
+#			'origin',
+#			'destination',
+#	]
+#
+#	"""A list of fields *not* to transport."""
+#	rdf_ignore = []
+#
+#	class_name = 'endpoint.ResourceDigraphEdge'
+#
+#	# ============= Model Fields ==========================
+#
+#	# The origin resource
+#	origin = models.ForeignKey('Resource',
+#								related_name='resource_set_origin',
+#								null=False, blank=False)
+#
+#	# The destination resource
+#	destination = models.ForeignKey('Resource',
+#									related_name='resource_set_destination',
+#									null=True, blank=True)
+#
+#
+#	class Meta(Resource.Meta):
+#		abstract = True
 
 # ============ ResourceTypes ==============================
 
@@ -317,14 +325,14 @@ class ResourceType(models.Model):
 
 # ============ Signals ====================================
 
-def register_type(ModelType):
-	"""Register the type of each created resource.
-	This must be called in the models.py for each model type."""
-	import signals as sig_ # To avoid circular imports
-	signals.pre_save.connect(sig_.auto_apply_resource_type,
-								sender=ModelType)
-
-register_type(Resource)
-register_type(ResourceTree)
-register_type(ResourceDigraphEdge)
+#def register_type(ModelType):
+#	"""Register the type of each created resource.
+#	This must be called in the models.py for each model type."""
+#	import signals as sig_ # To avoid circular imports
+#	signals.pre_save.connect(sig_.auto_apply_resource_type,
+#								sender=ModelType)
+#
+#register_type(Resource)
+#register_type(ResourceTree)
+#register_type(ResourceDigraphEdge)
 

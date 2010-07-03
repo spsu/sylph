@@ -1,4 +1,5 @@
 from django.db import models
+from sylph.core.node.models import Node
 
 class Subscription(models.Model):
 	"""
@@ -14,7 +15,7 @@ class Subscription(models.Model):
 	key = models.CharField(max_length=60, blank=False, null=False)
 
 	"""The node that this subscription involves."""
-	node = models.ForeignKey('node.Node')
+	node = models.ForeignKey(Node)
 
 	"""Represents whether this is our subscription (that we're
 	requesting from the remote node), or is another node's (that they

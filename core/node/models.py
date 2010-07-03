@@ -3,7 +3,7 @@ from django.db.models import signals
 from django.dispatch import dispatcher
 
 from sylph.core.resource.models import Resource
-from sylph.core.resource.models import register_type
+#from sylph.core.resource.models import register_type
 
 from datetime import datetime
 import os
@@ -68,6 +68,15 @@ class Node(Resource):
 		#('G', 'Group Node'), # TODO: More types... eg. software repository		
 	)
 	node_type = models.CharField(max_length=1, choices=NODE_TYPE_CHOICES)
+
+	NODE_CLASS_CHOICES = (
+		('unknown', 'Unknown'),
+		('sylph', 'SylphNode'),
+		('webpage', 'WebPageNode'),
+		('feed', 'WebFeedNode'),
+		('service', 'WebServiceNode'),
+	)
+	node_class = models.CharField(max_length=10, choices=NODE_CLASS_CHOICES)
 
 	"""Sylph Protocol version"""
 	protocol_version = models.CharField(max_length=15, null=False, blank=True)
@@ -218,15 +227,15 @@ class Node(Resource):
 
 	def is_ours(self):
 		"""Returns whether this node is ours."""
-		return self.pk == 2
+		return self.pk == 1
 
 	def is_not_ours(self):
 		"""Returns whether this node is not ours."""
-		return self.pk != 2
+		return self.pk != 1
 
 	def status_color(self):
 		"""Return a status color for visualization. Temporary."""
-		if self.pk == 2:
+		if self.pk == 1:
 			return 'white'
 		if self.node_type == 'Z':
 			return 'gray'
@@ -237,7 +246,7 @@ class Node(Resource):
 		return 'red'
 
 	def get_status(self):
-		if self.pk == 2:
+		if self.pk == 1:
 			return 'Our node'
 		if self.is_yet_to_resolve:
 			return 'Unresolved'
@@ -247,7 +256,8 @@ class Node(Resource):
 
 	# ============= Django Methods and Metadata ===========
 
-	class Meta:
+	class Meta(Resource.Meta):
+		abstract = False
 		verbose_name = 'node'
 		verbose_name_plural = 'nodes'
 
@@ -262,40 +272,40 @@ class Node(Resource):
 	def __unicode__(self):
 		return "node: " + self.uri
 
-class SylphNode(Node): # TODO
-	"""Represents a sylph protocol-aware endpoint."""
-	pass
+#class SylphNode(Node): # TODO
+#	"""Represents a sylph protocol-aware endpoint."""
+#	pass
 
-class WebPageNode(Node):
-	"""Represents a non-interactive webpage."""
+#class WebPageNode(Node):
+#	"""Represents a non-interactive webpage."""
+#
+#	# XXX: This is kind of stupid... Just for a signal handler.
+#	had_first_lookup_scheduled = models.BooleanField(default=False)
 
-	# XXX: This is kind of stupid... Just for a signal handler.
-	had_first_lookup_scheduled = models.BooleanField(default=False)
+#class WebFeedNode(Node):
+#	"""Represents a non-interactive RSS/Atom feed."""
+#	pass
 
-class WebFeedNode(Node):
-	"""Represents a non-interactive RSS/Atom feed."""
-	pass
-
-class WebServiceNode(Node):
-	"""Represents an interactive website or service.
-	In this way, we can manage one or more accounts per service
-	"""
-	pass
+#class WebServiceNode(Node):
+#	"""Represents an interactive website or service.
+#	In this way, we can manage one or more accounts per service
+#	"""
+#	pass
 
 # ============ Register Signals ===========================
 
-register_type(Node)
-register_type(SylphNode)
-register_type(WebPageNode)
-register_type(WebFeedNode)
-register_type(WebServiceNode)
+#register_type(Node)
+#register_type(SylphNode)
+#register_type(WebPageNode)
+#register_type(WebFeedNode)
+#register_type(WebServiceNode)
 
-def register_signals():
-	"""Register Node signals"""
-	import signals as sig_ # To avoid circular imports
-	signals.pre_save.connect(sig_.auto_lookup_feed_on_add_blog,
-								sender=WebPageNode)
+#def register_signals():
+#	"""Register Node signals"""
+#	import signals as sig_ # To avoid circular imports
+#	signals.pre_save.connect(sig_.auto_lookup_feed_on_add_blog,
+#								sender=WebPageNode)
 
-register_signals()
+#register_signals()
 
 

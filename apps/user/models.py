@@ -1,7 +1,8 @@
 from django.db import models
 from django.db.models import signals
 from django.dispatch import dispatcher
-from sylph.core.resource.models import Resource, ResourceDigraphEdge
+from sylph.core.resource.models import Resource
+#from sylph.core.resource.models import ResourceDigraphEdge
 
 from sylph.utils.markdown2 import markdown
 
@@ -211,7 +212,7 @@ class User(Resource):
 
 	# ============= Django Methods and Metadata ===========
 
-	class Meta:
+	class Meta(Resource.Meta):
 		verbose_name = 'user'
 		verbose_name_plural = 'users'
 
@@ -241,14 +242,15 @@ class UserEmail(models.Model):
 
 # ============ Signal registration ========================
 
-"""Register signals."""
-def register_signals():
-	import signals as sig_ # To avoid circular imports
-	signals.post_save.connect(sig_.schedule_notify_profile_change,
-								sender=User)
-
-	signals.pre_save.connect(sig_.auto_apply_editdate,
-								sender=User)
-
-register_signals()
+# XXX: Signals temporarily disabled for Resource conversion
+#"""Register signals."""
+#def register_signals():
+#	import signals as sig_ # To avoid circular imports
+#	signals.post_save.connect(sig_.schedule_notify_profile_change,
+#								sender=User)
+#
+#	signals.pre_save.connect(sig_.auto_apply_editdate,
+#								sender=User)
+#
+#register_signals()
 

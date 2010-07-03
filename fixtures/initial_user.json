@@ -1,15 +1,9 @@
 [{
-	"model": "resource.Resource",
-	"pk": 1,
-	"fields": {
-		"uri": "http://sylph/new-user/",
-		"resource_type": "User"
-	}
-},
-{
 	"model": "user.User",
 	"pk": 1,
 	"fields": {
+		"uri": "http://sylph/new-user/",
+		"resource_type": "User",
 		"username": "new user"
 	}
 }]

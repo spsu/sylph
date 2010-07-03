@@ -3,6 +3,7 @@ from django.db.models import Model
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.conf import settings
 
 from sylph.core.endpoint.exceptions import ProtocolErrorException
 from sylph.utils.data.RdfSerializer import RdfSerializer
@@ -27,7 +28,7 @@ def ping_response(request):
 	node = None
 	user = None
 	try:
-		node = Node.objects.get(pk=2)
+		node = Node.objects.get(pk=settings.OUR_NODE_PK)
 		#user = User.objects.get(pk=1) # XXX: Temporary.
 	except Model.DoesNotExist:
 		raise Exception # XXX: This is a critcal system error!

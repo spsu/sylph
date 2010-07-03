@@ -140,6 +140,11 @@ if IS_GOOGLE_APP_ENGINE:
 		'djangotoolbox',
 	)
 
+# ================= Important DB Primary Keys =============
+
+OUR_NODE_PK = 1
+OUR_USER_PK = 1
+
 
 # ================= Virtualization Helpers ================
 """

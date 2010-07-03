@@ -1,8 +1,10 @@
 from django.db import models
-from sylph.core.resource.models import Resource, ResourceDigraphEdge
+from sylph.core.resource.models import Resource
+#from sylph.core.resource.models import ResourceDigraphEdge
 from sylph.apps.post.models import Post
+from sylph.apps.user.models import User
 
-class Knows(ResourceDigraphEdge):
+class Knows(Resource):
 	"""
 	Knows represents a connection between two users, but is realized as
 	a digraph instead of a forced, edgeless connection that must be
@@ -18,6 +20,11 @@ class Knows(ResourceDigraphEdge):
 
 	description = models.CharField(max_length=255, null=False, blank=True)
 
+	origin = models.ForeignKey(User, related_name='set_origin', null=True, blank=True)
+	destination = models.ForeignKey(User, related_name='set_destination', null=True, blank=True)
+
+	class Meta(Resource.Meta):
+		pass
 
 class ProfilePost(Post):
 	"""
@@ -27,6 +34,8 @@ class ProfilePost(Post):
 	practical.)
 	"""
 
-	for_user = models.ForeignKey('user.User')
+	for_user = models.ForeignKey(User, related_name='for_user')
 
+	class Meta(Post.Meta):
+		pass
 

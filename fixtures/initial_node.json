@@ -1,15 +1,9 @@
 [{
-	"model": "resource.Resource",
-	"pk": 2,
-	"fields": {
-		"uri": "http://example.org/my-new-node/",
-		"resource_type": "Node"
-	}
-},
-{
 	"model": "node.Node",
-	"pk": 2,
+	"pk": 1,
 	"fields": {
+		"uri": "http://example.org/my-new/node/",
+		"resource_type": "Node",
 		"name": "My Node",
 		"description": "My new node",
 		"own_description": "",
