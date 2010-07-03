@@ -10,7 +10,7 @@ def auto_lookup_feed_on_add_blog(sender, instance, **kwargs):
 
 	# Can't reasonably be guaranteed this data is set yet.
 	# Depends on the order the callbacks were dispathed.
-	if node.resource_type in ['Node', 'SylphNode', 'WebServiceNode']:
+	if node.node_class in ['Node', 'SylphNode', 'WebServiceNode']:
 		return
 
 	# This field is only for this signal...

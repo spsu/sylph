@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import signals
 from sylph.core.resource.models import ResourceTree
 from sylph.utils.markdown2 import markdown
 
@@ -44,6 +45,9 @@ class Post(ResourceTree):
 
 	# Contents of the post
 	contents = models.TextField(blank=True)
+
+	# If contents isn't blank (Computed val, do not set directly.)
+	has_contents = models.BooleanField(default=True)
 
 	# How the content is marked up. 
 	MARKUP_TYPE_CHOICES = (
@@ -150,4 +154,13 @@ class PostReferences(models.Model):
 	linked_resource = models.ForeignKey('resource.Resource')
 
 	# TODO: dynamic = models.CharField() # explain the semantics of the linkage
+
+
+# ============ Register Signals ===========================
+
+def register_signals():
+	"""Register signals"""
+	import signals as sig_ # To avoid circular imports
+	signals.pre_save.connect(sig_.auto_apply_presave_metadata,
+								sender=Post)
 

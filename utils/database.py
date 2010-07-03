@@ -12,7 +12,7 @@ from sylph.core.node.models import Node
 
 def sync_database():
 	"""Simple call to sync the database."""
-	management.call_command('syncdb', interactive=False) 
+	management.call_command('syncdb', interactive=False)
 
 
 # ============ Sync On Empty Schema =============
@@ -52,22 +52,7 @@ def reset_database():
 			except Exception,e:
 				raise e
 
-
-	def delete_resources():
-		"""Crude Google App Engine delete for resources."""
-		# XXX/TODO: This won't work if there are over 1000 resources!
-		resources = Resource.objects.all()
-		for res in resources:
-			res.delete()
-
-		nodes = Node.objects.all()
-		for n in nodes:
-			n.delete()
-
-	if not settings.IS_GOOGLE_APP_ENGINE:
-		drop_tables()
-	else:
-		delete_resources()
+	drop_tables()
 
 	management.call_command('syncdb', interactive=False)
 	management.call_command('loaddata', 'fixtures/initial_configs.json',

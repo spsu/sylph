@@ -5,8 +5,8 @@ from django.template import RequestContext
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 # Models
-from models import BlogItem, BootstrapBlogItem
-from sylph.core.node.models import Node, WebPageNode
+from models import BlogItem
+from sylph.core.node.models import Node
 from sylph.core.subscription.models import Subscription
 
 from datetime import datetime
@@ -90,24 +90,25 @@ def subscription_view(request, subs_id):
 
 def subscription_add(request):
 	"""Add a new subscription
-		1. Create WebPageNode (if doesn't exist)
+		1. Create Node (if doesn't exist)
 		2. Create subscription
 	"""
 
-	class AddWebPageNodeForm(forms.ModelForm):
+	class AddNodeForm(forms.ModelForm):
 		"""Form for adding nodes"""
 		class Meta:
-			model = WebPageNode
+			model = Node
 			fields = ['uri', 'own_description']
 
 	if request.method == 'POST':
-		form = AddWebPageNodeForm(request.POST)
+		form = AddNodeForm(request.POST)
 		if form.is_valid():
 			node = form.save(commit=False)
 			node.datetime_added = datetime.today()
 			node.is_yet_to_resolve = True
 			node.status = 'U'
-			node.node_type = 'Z' # NON-SYLPH!
+			node.node_type = 'Z' # NON-SYLPH! (TODO: Deprecated)
+			node.node_class = 'webpage'
 			node.save()
 
 			# Create subscription
@@ -124,7 +125,7 @@ def subscription_add(request):
 
 			return HttpResponseRedirect('/blog/subscription/')
 	else:
-		form = AddWebPageNodeForm()
+		form = AddNodeForm()
 
 	return render_to_response('apps/blog/subscription/add.html', {
 									'form': form,

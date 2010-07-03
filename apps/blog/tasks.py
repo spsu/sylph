@@ -4,8 +4,8 @@ from celery.task.base import PeriodicTask
 from django.conf import settings
 from django.db.models import Q
 
-from models import BlogItem, BootstrapBlogItem
-from sylph.core.node.models import Node, WebPageNode
+from models import BlogItem
+from sylph.core.node.models import Node
 from sylph.core.subscription.models import Subscription
 
 from web2feed import web2feed
@@ -34,11 +34,10 @@ def get_feed(node_id):
 
 	for item in feed:
 		try:
-			blog = BootstrapBlogItem()
+			blog = BlogItem()
 
 			# uniqueness constraint prevents duplicates
 			blog.uri = item['uri']
-
 			blog.title = item['title']
 
 			if 'date' in item:
@@ -65,8 +64,8 @@ def get_feed(node_id):
 def get_fulltext(blogitem_id):
 	"""Fetch the fulltext of a summary-only item."""
 	try:
-		item = BootstrapBlogItem.objects.get(pk=blogitem_id)
-	except BootstrapBlogItem.DoesNotExist:
+		item = BlogItem.objects.get(pk=blogitem_id)
+	except BlogItem.DoesNotExist:
 		print "blog.task.get_fulltext item doesn't exist"
 		return
 
@@ -137,10 +136,8 @@ class PeriodicUpdateSummaryOnlyItems(PeriodicTask):
 		logger.info("Pulling blog feeds (updating)")
 
 		try:
-			items = BootstrapBlogItem.objects.filter(
-								~Q('contents')
-					)
-		except BootstrapBlogItem.DoesNotExist:
+			items = BlogItem.objects.filter(has_contents=False)
+		except BlogItem.DoesNotExist:
 			return
 
 		print items

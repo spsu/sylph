@@ -69,6 +69,16 @@ class Node(Resource):
 	)
 	node_type = models.CharField(max_length=1, choices=NODE_TYPE_CHOICES)
 
+	"""Node class will replace node type."""
+	NODE_CLASS_CHOICES = (
+		('unknown', 'Unknown'),
+		('sylph', 'SylphNode'),
+		('webpage', 'WebPageNode'),
+		('feed', 'WebFeedNode'),
+		('service', 'WebServiceNode'),
+	)
+	node_class = models.CharField(max_length=10, choices=NODE_CLASS_CHOICES)
+
 	"""Sylph Protocol version"""
 	protocol_version = models.CharField(max_length=15, null=False, blank=True)
 
@@ -147,6 +157,9 @@ class Node(Resource):
 	doorbell_status = models.CharField(max_length=1,
 								choices=DOORBELL_STATUS_CHOICES,
 								null=False, blank=False, default='0')
+
+	"""TEMP"""
+	had_first_lookup_scheduled = models.BooleanField(default=False)
 
 	# ============= Node-specific functionality ===========
 
@@ -262,39 +275,15 @@ class Node(Resource):
 	def __unicode__(self):
 		return "node: " + self.uri
 
-class SylphNode(Node): # TODO
-	"""Represents a sylph protocol-aware endpoint."""
-	pass
-
-class WebPageNode(Node):
-	"""Represents a non-interactive webpage."""
-
-	# XXX: This is kind of stupid... Just for a signal handler.
-	had_first_lookup_scheduled = models.BooleanField(default=False)
-
-class WebFeedNode(Node):
-	"""Represents a non-interactive RSS/Atom feed."""
-	pass
-
-class WebServiceNode(Node):
-	"""Represents an interactive website or service.
-	In this way, we can manage one or more accounts per service
-	"""
-	pass
-
 # ============ Register Signals ===========================
 
 register_type(Node)
-register_type(SylphNode)
-register_type(WebPageNode)
-register_type(WebFeedNode)
-register_type(WebServiceNode)
 
 def register_signals():
 	"""Register Node signals"""
 	import signals as sig_ # To avoid circular imports
 	signals.pre_save.connect(sig_.auto_lookup_feed_on_add_blog,
-								sender=WebPageNode)
+								sender=Node)
 
 register_signals()
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import signals
 from sylph.apps.post.models import Post
 from sylph.core.resource.models import Resource
 from sylph.core.resource.models import register_type
@@ -66,7 +67,10 @@ class BlogItem(Post):
 	An optional description of or excerpt from the contents of the
 	posting.
 	"""
-	summary = models.CharField(max_length=255, blank=True, null=False)
+	summary = models.TextField(blank=True, null=False)
+
+	"""Computed value."""
+	has_summary = models.BooleanField(default=False)
 
 	"""
 	An optional excerpt from the contents that has been algorithmically
@@ -81,6 +85,15 @@ class BlogItem(Post):
 	should be able to override or autoset this clientside.
 	"""
 	is_multipage = models.BooleanField(default=False)
+
+	"""Author string. Useful to keep in the event the author isn't yet
+	in the distributed web. (Of course, we may get that info somehow.)
+	"""
+	www_author_name = models.CharField(max_length=60, blank=True, null=False)
+
+	"""Contact methods for the author."""
+	www_author_website = models.CharField(max_length=255, blank=True, null=False)
+	www_author_email = models.CharField(max_length=60, blank=True, null=False)
 
 	# TODO: Authors table (n:m)
 
@@ -103,44 +116,13 @@ class BlogItem(Post):
 		if self.summary:
 			return "(Summary) " + self.summary
 
-# ============ BootstrapBlogItem ==========================
-
-# XXX: Do a monolithic app with both bootstrap and distributed (for now)
-
-class BootstrapBlogItem(BlogItem):
-	"""
-	Resouce > ResourceTree > Post > BlogItem > BootstrapBlogItem
-
-	A BlogItem that is retrieved from a 'dumb' www website (with no
-	semantic cabability).
-
-		* uri = webpage where obtained (best if original loc.)
-		* author = null (usually)
-		* datetime_created = date
-		* datetime_edited = edit date (rarely available)
-	"""
-
-	# ============= Sylph Metadata ========================
-
-	rdf_fields = [
-		#'site',
-	]
-
-	# ============= Model Fields ==========================
-
-	#site = models.ForeignKey('Site')
-
-	"""Author string. Useful to keep in the event the author isn't yet
-	in the distributed web. (Of course, we may get that info somehow.)
-	"""
-	www_author_name = models.CharField(max_length=60, blank=True, null=False)
-
-	"""Contact methods for the author."""
-	www_author_website = models.CharField(max_length=255, blank=True, null=False)
-	www_author_email = models.CharField(max_length=60, blank=True, null=False)
-
 # ============ Register Signals ===========================
 
 register_type(BlogItem)
-register_type(BootstrapBlogItem)
+
+def register_signals():
+	"""Register signals"""
+	import signals as sig_ # To avoid circular imports
+	signals.pre_save.connect(sig_.auto_apply_presave_metadata,
+								sender=BlogItem)
 
