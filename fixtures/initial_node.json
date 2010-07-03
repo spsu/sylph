@@ -13,7 +13,7 @@
 		"name": "My Node",
 		"description": "My new node",
 		"own_description": "",
-		"node_type": "U",
+		"node_class": "sylph",
 		"is_yet_to_resolve": "False",
 		"status": "A"
 	}

@@ -33,11 +33,15 @@ class Node(Resource):
 			'uri',
 			'name',
 			'description', # TODO: own_description?
-			'node_type',
+			'node_class',
 			'protocol_version',
 			'software_name',
 			'software_version',
 			'datetime_edited',
+	]
+
+	rdf_ignore = [
+			'node_class_guess',
 	]
 
 	class_name = 'Node'
@@ -56,20 +60,6 @@ class Node(Resource):
 	# TODO: Media access suburl (is that even necessary?)
 	#media_url = models.URLField(max_length=200)
 
-	# TODO: The type of node.
-	# Maybe just User Nodes and Machine/Utility Nodes, whereby utility nodes
-	# will provide a certain number of services.  
-	NODE_TYPE_CHOICES = (
-		('X', 'Unknown'),
-		('U', 'User Node'),
-		('C', 'Cache Node'), # Usually static files
-		('D', 'Directory Node'), # Look up people or resources
-		('Z', 'Non-sylph'),	# eg Webpage, Webservice, etc
-		#('G', 'Group Node'), # TODO: More types... eg. software repository		
-	)
-	node_type = models.CharField(max_length=1, choices=NODE_TYPE_CHOICES)
-
-	"""Node class will replace node type."""
 	NODE_CLASS_CHOICES = (
 		('unknown', 'Unknown'),
 		('sylph', 'SylphNode'),
@@ -77,7 +67,14 @@ class Node(Resource):
 		('feed', 'WebFeedNode'),
 		('service', 'WebServiceNode'),
 	)
-	node_class = models.CharField(max_length=10, choices=NODE_CLASS_CHOICES)
+
+	"""The type of node."""
+	node_class = models.CharField(max_length=10, choices=NODE_CLASS_CHOICES,
+									null=False, blank=False)
+
+	"""The type of node the user tells us it is."""
+	node_class_guess = models.CharField(max_length=10, choices=NODE_CLASS_CHOICES,
+									null=False, blank=True)
 
 	"""Sylph Protocol version"""
 	protocol_version = models.CharField(max_length=15, null=False, blank=True)
@@ -91,17 +88,11 @@ class Node(Resource):
 	"""First time nodes are added, they must be resolved."""
 	is_yet_to_resolve = models.BooleanField()
 
-	"""Date the node was first added to the server."""
-	#datetime_added = models.DateTimeField(default=datetime.today)
-
 	"""Date the last successful communication with the node occurred on."""
 	datetime_last_resolved = models.DateTimeField(null=True)
 
 	"""Date the last failed communication occurred."""
 	datetime_last_failed = models.DateTimeField(null=True)
-
-	"""Date when node parameters were changed by the owner"""
-	#datetime_edited = models.DateTimeField(null=True)
 
 	"""For events originating at the local node"""
 	datetime_last_pushed_to = models.DateTimeField(null=True)
@@ -111,7 +102,7 @@ class Node(Resource):
 	datetime_last_pushed_to_us = models.DateTimeField(null=True)
 	datetime_last_pulled_from_us = models.DateTimeField(null=True)
 
-	"""The types of status a node can have"""
+	"""The types of status a node can have""" # XXX: Serious refactor.
 	STATUS_TYPE_CHOICES = (
 		('U', 'Unknown status'),
 		('HOST', 'Host does not resolve.'),
@@ -241,7 +232,7 @@ class Node(Resource):
 		"""Return a status color for visualization. Temporary."""
 		if self.pk == 2:
 			return 'white'
-		if self.node_type == 'Z':
+		if self.node_class == 'unknown':
 			return 'gray'
 		if self.is_yet_to_resolve:
 			return 'red'

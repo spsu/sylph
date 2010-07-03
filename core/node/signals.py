@@ -8,10 +8,11 @@ def auto_lookup_feed_on_add_blog(sender, instance, **kwargs):
 	# TODO/XXX: I'm assuming these are bootstrapped
 	node = instance
 
-	# Can't reasonably be guaranteed this data is set yet.
-	# Depends on the order the callbacks were dispathed.
-	if node.node_class in ['Node', 'SylphNode', 'WebServiceNode']:
-		return
+	# Only try for 'webpage' and 'feed' TODO: what about 'unknown'?
+	accept = ['webpage', 'feed']
+	if node.node_class not in accept and \
+		node.node_class_guess not in accept:
+			return
 
 	# This field is only for this signal...
 	try:

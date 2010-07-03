@@ -107,8 +107,8 @@ def subscription_add(request):
 			node.datetime_added = datetime.today()
 			node.is_yet_to_resolve = True
 			node.status = 'U'
-			node.node_type = 'Z' # NON-SYLPH! (TODO: Deprecated)
-			node.node_class = 'webpage'
+			node.node_class = 'unknown'
+			node.node_class_guess = 'webpage'
 			node.save()
 
 			# Create subscription

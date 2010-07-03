@@ -123,8 +123,12 @@ def do_add_node_lookup(uri):
 		print "cannot do_add_node_lookup: Node does not exist!!!"
 		return
 
-	if node.node_type == 'Z':
-		print "cannot do_add_node_lookup: non-sylph nodes (type Z)"
+	if node.node_class in ['webpage', 'service', 'feed']:
+		print "cannot do_add_node_lookup: non-sylph or unknown nodes"
+		return
+
+	if node.node_class_guess in ['webpage', 'service', 'feed']:
+		print "(TEMP) cannot do_add_node_lookup: non-sylph"
 		return
 
 	user = None
@@ -165,7 +169,8 @@ def do_add_node_lookup(uri):
 	node.protocol_version = node_data['protocol_version']
 	node.software_name = node_data['software_name']
 	node.software_version = node_data['software_version']
-	node.node_type = 'U' # TODO
+	node.node_class = 'sylph'
+	node.node_class_guess = ''
 	node.name = node_data['name']
 	node.description = node_data['description']
 	#node.datetime_edited = node_data['datetime_edited'] # TODO
@@ -262,7 +267,8 @@ def ping_node(id):
 	node.protocol_version = node_data['protocol_version']
 	node.software_name = node_data['software_name']
 	node.software_version = node_data['software_version']
-	node.node_type = 'U' # TODO: Codes are messy
+	node.node_class = 'sylph'
+	node.node_class_guess = ''
 	node.name = node_data['name']
 	node.description = node_data['description']
 	#node.datetime_edited = node_data['datetime_edited'] # TODO
@@ -300,7 +306,7 @@ class RetryFailedNodesTask(PeriodicTask):
 		nodes = None
 		try:
 			nodes = Node.objects.filter(is_yet_to_resolve=True) \
-								.exclude(node_type='Z') # non-sylph
+								.filter(node_class_guess__in=['sylph', 'unknown'])
 		except:
 			return
 
@@ -325,7 +331,7 @@ class KeepResolvingAddedNodes(PeriodicTask):
 
 		nodes = None
 		nodes = Node.objects.filter(is_yet_to_resolve=False) \
-							.exclude(node_type='Z') \
+							.exclude(node_class='sylph') \
 							.exclude(pk=settings.OUR_NODE_PK)
 
 
