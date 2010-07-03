@@ -29,7 +29,7 @@
 		{% for res in resources %}
 			<tr class="row_{% cycle 'odd' 'even' %}">
 				<td>
-					<b><a href="/resource/redirect/{{res.resource_type}}/{{res.pk}}/">Resource ID #{{res.pk}}</a></b> (<a href="/resource/view/{{res.pk}}/">info page</a>)<br />
+					<b><a href="/resource/view/{{res.pk}}/">Resource ID #{{res.pk}}</a></b> (<a href="/resource/redirect/{{res.resource_type}}/{{res.pk}}/">redirect</a>)<br />
 					{{res.wrap_uri}}
 				</td>
 				<td>	

@@ -49,7 +49,7 @@ class Node(Resource):
 	# ============= Model Fields ==========================
 
 	"""A short name for the node."""
-	name = models.CharField(max_length=20, null=False, blank=True)
+	name = models.CharField(max_length=50, null=False, blank=True)
 
 	"""A description for the node (as set by the node owner)."""
 	description = models.CharField(max_length=255, null=False, blank=True)
@@ -84,6 +84,8 @@ class Node(Resource):
 
 	"""Client Software version"""
 	software_version = models.CharField(max_length=15, null=False, blank=True)
+
+	# ======== XXX: There's an API for this ... see methods XXX =====
 
 	"""First time nodes are added, they must be resolved."""
 	is_yet_to_resolve = models.BooleanField()
@@ -207,9 +209,9 @@ class Node(Resource):
 		elif term == 'to_us':
 			self.datetime_last_pushed_to_us = now
 		elif term == 'from':
-			self.datetime_last_pushed_from = now
+			self.datetime_last_pulled_from = now
 		elif term == 'from_us':
-			self.datetime_last_pushed_from_us = now
+			self.datetime_last_pulled_from_us = now
 
 		if save:
 			self.save()

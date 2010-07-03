@@ -26,14 +26,25 @@ def get_feed(node_id):
 	# When blogitems are shared in sylph (very soon), then we'll use
 	# the sylph protocol
 	try:
-		feed = web2feed(node.uri)
+		data = web2feed(node.uri)
+		feed = data['feed']
+		meta = data['meta']
 	except Exception as e:
 		node.just_failed(save=True)
 		print e
 		raise e
 
-	# XXX: I really need a wrapper around *all* node comms.
-	node.just_pulled_from(save=True)
+	node.just_pulled_from(save=False)
+
+	try:
+		if 'title' in meta:
+			node.name = meta['title']
+		if 'description' in meta:
+			node.description = meta['description']
+	except:
+		pass
+
+	node.save()
 
 	print "fetched %d blogitems from %s" %(len(feed), node.uri)
 
@@ -81,7 +92,9 @@ def get_fulltext(blogitem_id):
 	item.tried_fetch_count += 1 # XXX: Verify increment works
 
 	try:
-		feed = web2feed(item.uri)
+		data = web2feed(item.uri)
+		feed = data['feed']
+		meta = data['meta']
 		if not feed or type(feed) != dict:
 			raise Exception, "web2feed did not return a dictionary."
 	except Exception as e:
