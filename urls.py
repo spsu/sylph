@@ -12,7 +12,7 @@ urlpatterns = patterns('',
 	#(r'^admin/', include(admin.site.urls)),
 
 	# Specific views
-	(r'^/?$', 'sylph.core.frontend.views.index'),
+	(r'^/?$', 'sylph.core.backend.views.index'),
 	(r'^reset/$', 'sylph.core.backend.views.reset'),
 	(r'^endpoint/$', 'sylph.core.endpoint.views.index'),
 
@@ -27,6 +27,7 @@ urlpatterns = patterns('',
 	(r'^node/', include('sylph.core.node.urls')),
 	(r'^jobs/', include('sylph.core.jobs.urls')),
 	(r'^system/', include('sylph.core.backend.urls')), # Manage the system
+	(r'^sylph/', include('sylph.core.backend.urls')), # Manage the system
 	(r'^subscription/', include('sylph.core.subscription.urls')),
 	(r'^resource/', include('sylph.core.resource.urls')),
 	#(r'main/', include('sylph.system.frontend.urls')),

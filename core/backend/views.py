@@ -11,24 +11,43 @@ from sylph.core.node.models import Node
 from sylph.apps.user.models import User
 
 from utils.install_state import is_installed, INSTALLED
-from sylph.utils.database import reset_database, sync_empty_database
+from sylph.utils.database import reset_database
+from sylph.utils.markdown2 import markdown
 from utils.Configs import Configs
 
 from UserAccount import UserAccount
 
 import time
 
-# ============ Index View =================================
+# ============ Sylph Main Index ===========================
 
 def index(request):
-	"""Just supply a list of tasks."""
+	"""Index view for Sylph. Not much here"""
 
-	# This is a lame attempt at catching an empty database. 
-	sync_empty_database()
+	readme = None
+	todo = None
 
-	return render_to_response('core/backend/index.html',
+	try:
+		fh = open('README.mkd')
+		readme = fh.read()
+		fh.close()
+		readme = markdown(readme)
+	except:
+		pass
+
+	try:
+		fh = open('TODO.mkd')
+		todo = fh.read()
+		fh.close()
+		todo = markdown(todo)
+	except:
+		pass
+
+	return render_to_response('index.html', {
+									'readme': readme,
+									'todo': todo,
+								},
 								context_instance=RequestContext(request))
-
 
 # ============ Installation Procedure =====================
 
@@ -123,7 +142,6 @@ def install_main(request):
 								{'form': form},
 								context_instance=RequestContext(request))
 
-
 # ============ Reset Everything ===========================
 
 def reset(request):
@@ -141,16 +159,36 @@ def reset(request):
 	return render_to_response(template,
 					context_instance=RequestContext(request))
 
+# ============ View Markdown Docs =========================
 
-# ============ Misc =======================================
+def view_about(request):
+	return view_markdown(request, 'ABOUT.mkd')
 
-# /system/login
-def loginView(request):
-	return HttpResponse('test')
+def view_readme(request):
+	return view_markdown(request, 'README.mkd')
 
-def logoutView(request):
-	logout(request)
-	return HttpResponseRedirect('/')
+def view_todo(request):
+	return view_markdown(request, 'TODO.mkd')
+
+def view_markdown(request, document): # XXX: Security
+	"""View markdown documents."""
+
+	text = None
+	try:
+		fh = open(document)
+		text = fh.read()
+		fh.close()
+		text = markdown(text)
+	except:
+		pass
+
+	return render_to_response('core/backend/view_markdown.html', {
+									'document': document,
+									'text': text,
+								},
+								context_instance=RequestContext(request))
+
+# ============ Testing ====================================
 
 def test(request):
 	"""A view to test code. Simplifies testing process."""
@@ -161,45 +199,4 @@ def test2(request):
 	"""Another view to test code. Simplifies testing process."""
 	import sylph.test
 	return sylph.test.test2(request) # TODO/XXX: Remove in production
-
-# ============ Signup (DEPRECATED) ========================
-
-# /system/signup
-def signup(request):
-	"""Signup for this sylph node."""
-	acc = UserAccount()
-
-	# Don't allow sign up again!
-	if acc.exists():
-		return HttpResponseRedirect('/')
-
-	class CreateAccountForm(forms.Form):
-		"""Form for creating user account"""
-		username = forms.CharField(max_length=30)
-		password = forms.CharField(
-						max_length=30,
-						label=(u'Password'),
-						widget=forms.PasswordInput(render_value=False))
-		email = forms.EmailField(max_length=30)
-
-	if request.method == 'POST':
-		form = CreateAccountForm(request.POST)
-		if form.is_valid():
-			acc.create(form.cleaned_data['username'],
-						form.cleaned_data['password'],
-						form.cleaned_data['email'])
-
-			# TODO: Login here! 
-			return HttpResponseRedirect('/') # ACCOUNT CREATED!
-
-		return render_to_response('core/backend/create-account.html',
-									{'form': form},
-									context_instance=RequestContext(request))
-
-	else:
-		form = CreateAccountForm()
-		return render_to_response('core/backend/create-account.html',
-									{'form': form},
-									context_instance=RequestContext(request))
-
 

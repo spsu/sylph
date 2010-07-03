@@ -1,24 +1,18 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('sylph.core.backend.views',
-	# Just a list of tasks
-	(r'^/?$', 'index'),
- 
-	# User Functions
-	(r'signup/?$', 'signup'),
-	(r'logout/?$', 'logoutView'),
+	# XXX: Index view is simply in the root urls.py
 
-	# Management Functions
+	# Reset database
 	(r'reset/?$', 'reset'),
-	#(r'populate/?$', 'populateDb'), # Populate the DB with test/dummy data
 
-	# Test 
+	# Markdown docs
+	(r'about/$', 'view_about'),
+	(r'readme/$', 'view_readme'),
+	(r'todo/$', 'view_todo'),
+
+	# Test pages 
 	(r'test/?$', 'test'),
 	(r'test2/?$', 'test2'),
 )
 
-# Use builtin login system
-urlpatterns += patterns('',
-	(r'login/?$', 'django.contrib.auth.views.login', 
-				  {'template_name': 'core/backend/login.html'}),
-)

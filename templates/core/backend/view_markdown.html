@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Viewing {{document}}{% endblock %}
+
+{%block content %}
+	<p style="color: #800"><em>The following is from {{document}}:</em></p>
+	{{text|safe}}
+	<hr />
+{% endblock content %}
