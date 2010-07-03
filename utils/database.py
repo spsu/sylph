@@ -5,15 +5,40 @@ from django.conf import settings
 from sylph.core.resource.models import Resource
 from sylph.core.node.models import Node
 
-# TODO: perhaps mv utilities.py db_utilities.py or similar..
+# ============ Get all models ===================
 
+def get_all_models():
+	"""A (hopefully) maintained list of all models.
+	This must be kept for deleting manually on Google App Engine."""
+	from sylph.core.backend.models import BackendConfig
+	from sylph.core.node.models import Node
+	from sylph.core.resource.models import Resource
+	from sylph.core.resource.models import ResourceTree
+	from sylph.core.resource.models import ResourceType
+	from sylph.core.subscription.models import Subscription
+	from sylph.apps.blog.models import BlogItem
+	from sylph.apps.post.models import Post
+	from sylph.apps.user.models import User
+	from sylph.apps.user.models import UserEmail
+	from sylph.apps.social.models import Knows
+	from sylph.apps.social.models import ProfilePost
+
+	return [
+				BackendConfig,
+				Node,
+				Resource, ResourceTree, ResourceType,
+				Subscription,
+				BlogItem,
+				Post,
+				User, UserEmail,
+				Knows, ProfilePost
+	]
 
 # ============ Sync Database ====================
 
 def sync_database():
 	"""Simple call to sync the database."""
-	management.call_command('syncdb', interactive=False) 
-
+	management.call_command('syncdb', interactive=False)
 
 # ============ Sync On Empty Schema =============
 
@@ -27,7 +52,6 @@ def sync_empty_database():
 		# XXX BLAME: commit 50dd074c5972971eeaa3d7be59b65b3903f85ed1
 		print "Models not found, syncing database..."
 		sync_database()
-
 
 # ============ Drop/Reset Database ==============
 
@@ -53,21 +77,25 @@ def reset_database():
 				raise e
 
 
-	def delete_resources():
+	def delete_each_manually():
 		"""Crude Google App Engine delete for resources."""
 		# XXX/TODO: This won't work if there are over 1000 resources!
-		resources = Resource.objects.all()
-		for res in resources:
-			res.delete()
 
-		nodes = Node.objects.all()
-		for n in nodes:
-			n.delete()
+		for model in get_all_models():
+			try:
+				objs = model.objects.all()
+				ln = len(objs)
+				for o in objs:
+					o.delete()
+				print "%s had %d objects deleted" % (str(model), ln)
+			except Exception as e:
+				print e
+				continue
 
-	if not settings.IS_GOOGLE_APP_ENGINE:
-		drop_tables()
+	if settings.IS_GOOGLE_APP_ENGINE:
+		delete_each_manually()
 	else:
-		delete_resources()
+		drop_tables()
 
 	management.call_command('syncdb', interactive=False)
 	management.call_command('loaddata', 'fixtures/initial_configs.json',
@@ -76,5 +104,4 @@ def reset_database():
 					verbosity=1, interactive=False)
 	management.call_command('loaddata', 'fixtures/initial_user.json',
 					verbosity=1, interactive=False)
-
 

@@ -11,7 +11,7 @@ from sylph.core.node.models import Node
 from sylph.apps.user.models import User
 
 from utils.install_state import is_installed, INSTALLED
-from utils.database import reset_database, sync_empty_database
+from sylph.utils.database import reset_database, sync_empty_database
 from utils.Configs import Configs
 
 from UserAccount import UserAccount
