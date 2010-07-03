@@ -21,21 +21,9 @@ RDF_SERIALIZATION = 'xml' # xml or n3
 # Ensure local libraries can be loaded
 sys.path.insert(0, os.path.abspath(
 					os.path.join(os.path.dirname(__file__), 'libs')))
-sys.path.insert(0, os.path.abspath(os.path.dirname(__file__))) # Necessary on GAE?
 
 # XXX XXX XXX TEMPORARY FOR web2feed
 sys.path.append(os.path.abspath('../web2feed'))
-
-# Google App Engine deployment
-IS_GOOGLE_APP_ENGINE = False
-try:
-	import google.appengine.ext.webapp
-	IS_GOOGLE_APP_ENGINE = True
-except:
-	pass
-
-print "IS GOOGLE APP ENGINE: "
-print IS_GOOGLE_APP_ENGINE
 
 # ================= Common Configuration ==================
 
@@ -129,17 +117,10 @@ INSTALLED_APPS = (
 	'sylph.apps.social',
 )
 
-if IS_GOOGLE_APP_ENGINE:
-	try:
-		from djangoappengine.settings_base import *
-		has_djangoappengine = True
-	except ImportError:
-		has_djangoappengine = False
+# ================= Important DB Primary Keys =============
 
-	INSTALLED_APPS += (
-		'djangotoolbox',
-	)
-
+OUR_USER_PK = 1
+OUR_NODE_PK = 2
 
 # ================= Virtualization Helpers ================
 """

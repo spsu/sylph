@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.http import HttpResponse
 
 from sylph.apps.user.models import User
@@ -15,7 +16,7 @@ def get_profile(request):
 	more data than the simple profile serialized into this.
 	"""
 	try:
-		user = User.objects.get(pk=1)
+		user = User.objects.get(pk=settings.OUR_USER_PK)
 	except User.DoesNotExist:
 		raise Exception, "Critical error: no user!" # XXX: Core system error!
 

@@ -15,7 +15,7 @@ def post_random_message():
 	post.uri = 'http://temp/post/' + \
 						hashlib.md5(str(datetime.today())).hexdigest()
 
-	post.author = User.objects.get(pk=1)
+	post.author = User.objects.get(pk=settings.OUR_USER_PK)
 
 	post.title = 'asdf ' + str(settings.PORT) + 'sdf'
 	post.contents = 'asdf'

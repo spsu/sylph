@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Model
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -27,8 +28,8 @@ def ping_response(request):
 	node = None
 	user = None
 	try:
-		node = Node.objects.get(pk=2)
-		#user = User.objects.get(pk=1) # XXX: Temporary.
+		node = Node.objects.get(pk=settings.OUR_NODE_PK)
+		#user = User.objects.get(pk=settings.OUR_USER_PK) # XXX: Temporary.
 	except Model.DoesNotExist:
 		raise Exception # XXX: This is a critcal system error!
 

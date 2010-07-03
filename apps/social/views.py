@@ -1,6 +1,7 @@
+from django import forms
+from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
-from django import forms
 from django.template import RequestContext
 
 from models import ProfilePost
@@ -72,7 +73,7 @@ def profile_post_create(request, user_id):
 			post = form.save(commit=False)
 			post.uri = generate_uuid()
 			post.for_user = user
-			post.author = User.objects.get(pk=1)
+			post.author = User.objects.get(pk=settings.OUR_USER_PK)
 			post.datetime_created = datetime.today()
 			post.save()
 

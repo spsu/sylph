@@ -1,13 +1,12 @@
-# Post Views
-
-from django.http import HttpResponse, HttpResponseRedirect, Http404
-from django.shortcuts import render_to_response
 from django import forms
-from models import *
-from django.template import RequestContext
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
+from models import *
 from sylph.apps.user.models import User
 from sylph.utils.uri import generate_uuid
 
@@ -75,9 +74,9 @@ def create_post(request):
 			post.datetime_created = datetime.today()
 			# FIXME TEMP URL
 			post.uri = 'http://temp/post/' + \
-						hashlib.md5(str(datetime.today())).hexdigest() 
+						hashlib.md5(str(datetime.today())).hexdigest()
 
-			user = User.objects.get(pk=1)
+			user = User.objects.get(pk=settings.OUR_USER_PK)
 			post.author = user
 
 			post.save()
@@ -88,9 +87,8 @@ def create_post(request):
 
 	return render_to_response('apps/post/create.html', {
 									'form': form
-							  }, 
-							  context_instance=RequestContext(request))
-
+								},
+								context_instance=RequestContext(request))
 
 # ============ Reply Post =======================
 
@@ -125,7 +123,7 @@ def reply_post(request, post_id):
 			post.title = "Re: " + parent.title
 			post.reply_to_root = parent
 			post.uri = generate_uuid() # FIXME: TEMP URL
-			user = User.objects.get(pk=1)
+			user = User.objects.get(pk=settings.OUR_USER_PK)
 			post.author = user
 
 			post.save()

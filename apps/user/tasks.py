@@ -1,3 +1,4 @@
+from django.conf import settings
 from celery.decorators import task
 from celery.task.base import PeriodicTask
 
@@ -42,7 +43,7 @@ def push_profile_to_node(node_uri):
 	node = None
 	user = None
 	try:
-		user = User.objects.get(pk=1)
+		user = User.objects.get(pk=settings.OUR_USER_PK)
 		node = Node.objects.get(uri=node_uri)
 	except User.DoesNotExist:
 		raise Exception, "The main user MUST exist!"

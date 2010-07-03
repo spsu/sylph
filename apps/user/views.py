@@ -1,10 +1,11 @@
+from django import forms
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
-from django import forms
 from django.template import RequestContext
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from django.core import serializers
 
 from models import *
 from sylph.apps.social.models import ProfilePost
@@ -56,7 +57,7 @@ def add_person_form(request):
 def edit_own_profile(request):
 	user = None
 	try:
-		user = User.objects.get(pk=1)
+		user = User.objects.get(pk=settings.OUR_USER_PK)
 	except User.DoesNotExist:
 		raise Http404 # TODO: This is actually a core system failure!
 
@@ -127,7 +128,7 @@ def ajax_edit(request):
 		raise Exception, "No id!" # TODO: Error logging
 
 	try:
-		user = User.objects.get(pk=1)
+		user = User.objects.get(pk=settings.OUR_USER_PK)
 	except User.DoesNotExist:
 		raise Exception, "Main user does not exist!!" # TODO: System err
 
@@ -155,7 +156,7 @@ def ajax_info(request):
 	"""Load ajax info on the user profile."""
 
 	try:
-		user = User.objects.get(pk=1)
+		user = User.objects.get(pk=settings.OUR_USER_PK)
 	except User.DoesNotExist:
 		raise Exception, "Main user does not exist!!" # TODO: System err
 		# TODO: Ajax error
