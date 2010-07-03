@@ -108,12 +108,13 @@ INSTALLED_APPS = (
 	'sylph.core.backend',
 	'sylph.core.jobs',
 	'sylph.core.subscription',
+	'sylph.core.feed',
 	#'sylph.core.frontend',
 
 	'sylph.apps.post',
 	'sylph.apps.blog',
 	'sylph.apps.user',
-	'sylph.apps.bootstrap',
+	#'sylph.apps.bootstrap',
 	'sylph.apps.social',
 )
 

@@ -9,6 +9,7 @@ from sylph.utils.transport.Communicator import Communicator
 from sylph.utils.transport.Request import Request
 from sylph.utils.data.RdfParser import RdfParser
 from sylph.utils.uri import hashless
+from sylph.utils.debug import with_time
 
 from sylph.core.subscription.utils import create_subscriptions_to
 from sylph.core.subscription.utils import create_subscriptions_from
@@ -318,18 +319,16 @@ class RetryFailedNodesTask(PeriodicTask):
 
 # ============ Keep Resolving Added Nodes =================
 
-class KeepResolvingAddedNodes(PeriodicTask):
-	"""Re-resolve nodes that have been successfully added in the past"""
+class PingSylphNodes(PeriodicTask):
+	"""Re-resolve all sylph nodes that have been successfully added
+	in the past."""
 
-	run_every = timedelta(seconds=10)
+	run_every = timedelta(minutes=1)
 	#run_every = timedelta(hours=2)
 
 	def run(self, **kwargs):
-		print "KeepResolvingAddedNodes" # TODO: Debug
-		logger = self.get_logger(**kwargs)
-		logger.info("Re-resolve existing nodes")
+		print with_time("node.PingSylphNodes") # TODO: Debug
 
-		nodes = None
 		nodes = Node.objects.filter(is_yet_to_resolve=False) \
 							.exclude(node_class='sylph') \
 							.exclude(pk=settings.OUR_NODE_PK)
@@ -337,7 +336,7 @@ class KeepResolvingAddedNodes(PeriodicTask):
 
 		# TODO: Respond to server overload
 		for node in nodes:
-			print "Scheduling node %d" % node.pk
+			print "\t...scheduling node %d" % node.pk
 			ping_node.delay(node.pk)
 
 

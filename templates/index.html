@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
+{% load naturaltime %}
+
 {% block title %}Index{% endblock %}
 
 {%block content %}
-	{% if todo %}
-		<p style="color: #800"><em>The following is from TODO.mkd:</em></p>
-		{{ todo|safe }}
-		<hr />
-	{% endif %}
-	<p style="color: #800"><em>The following is from README.mkd:</em></p>
-	{{ readme|safe }}
+	<h3>Status Feed</h3>
+	{% for item in items %}
+		<div class="feed_item">
+			<p>{{item.text}}</p>
+			<span class="date">{{item.datetime_added|naturaltime}}</span>
+		</div>
+	{% endfor %}
 {% endblock content %}

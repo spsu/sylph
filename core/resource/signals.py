@@ -2,7 +2,7 @@ from models import *
 
 def auto_apply_resource_type(sender, instance, **kwargs):
 	"""Automatically apply the type to the resource"""
-	print "signal: auto_apply_type"
+	print "*********signal: auto_apply_type"
 	res = instance
 	if res.resource_type:
 		return

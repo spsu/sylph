@@ -72,6 +72,11 @@ class BlogItem(Post):
 	"""Computed value."""
 	has_summary = models.BooleanField(default=False)
 
+	"""Number of tries an attempt to grab the full story was made
+	(obviously we will limit the number of tries) This may also be used
+	in the future for counting attempts to grab comments, etc."""
+	tried_fetch_count = models.IntegerField(default=0)
+
 	"""
 	An optional excerpt from the contents that has been algorithmically
 	selected by *our* software.

@@ -7,6 +7,7 @@ from django.db.models import Q
 from models import BlogItem
 from sylph.core.node.models import Node
 from sylph.core.subscription.models import Subscription
+from sylph.utils.debug import with_time
 
 from web2feed import web2feed
 
@@ -27,8 +28,12 @@ def get_feed(node_id):
 	try:
 		feed = web2feed(node.uri)
 	except Exception as e:
+		node.just_failed(save=True)
 		print e
 		raise e
+
+	# XXX: I really need a wrapper around *all* node comms.
+	node.just_pulled_from(save=True)
 
 	print "fetched %d blogitems from %s" %(len(feed), node.uri)
 
@@ -42,10 +47,12 @@ def get_feed(node_id):
 
 			if 'date' in item:
 				blog.datetime_created = item['date']
-			if 'contents' in item:
+			if 'contents' in item and item['contents']:
 				blog.contents = item['contents']
-			if 'summary' in item:
+				blog.has_contents = True
+			if 'summary' in item and item['summary']:
 				blog.summary = item['summary']
+				blog.has_summary = True
 			if 'author' in item:
 				blog.www_author_name = item['author']
 
@@ -56,8 +63,10 @@ def get_feed(node_id):
 				get_fulltext.delay(blog.pk)
 
 		except Exception as e:
-			print type(e)
-			print e
+			exp = str(type(e))
+			if 'IntegrityError' in exp:
+				continue
+			print e # DEBUG
 			continue
 
 @task
@@ -69,14 +78,15 @@ def get_fulltext(blogitem_id):
 		print "blog.task.get_fulltext item doesn't exist"
 		return
 
+	item.tried_fetch_count += 1 # XXX: Verify increment works
+
 	try:
 		feed = web2feed(item.uri)
+		if not feed or type(feed) != dict:
+			raise Exception, "web2feed did not return a dictionary."
 	except Exception as e:
 		print e
-		return
-
-	if type(feed) != dict:
-		print "NOT DICT"
+		item.save()
 		return
 
 	if feed['uri'] != item.uri:
@@ -86,10 +96,11 @@ def get_fulltext(blogitem_id):
 		item.title = feed['title']
 	if 'date' in feed:
 		item.datetime_created = feed['date']
-	if 'contents' in feed:
+	if 'contents' in feed and feed['contents']:
 		item.contents = feed['contents']
+		item.has_contents = True
 	if 'author' in feed:
-		item.author = feed['author']
+		item.www_author_name = feed['author']
 
 	item.save()
 
@@ -99,48 +110,39 @@ def get_comments(blogitem_id):
 
 # ============ Periodic Tasks =============================
 
-class PeriodicPullBlogFeed(PeriodicTask):
+class PullBlogFeeds(PeriodicTask):
 	"""Periodically pull blog feeds."""
 
 	#run_every = timedelta(seconds=10)
 	run_every = timedelta(minutes=5)
 
 	def run(self, **kwargs):
-		print "PeriodicPullBlogFeed" # TODO: Debug
-		logger = self.get_logger(**kwargs)
-		logger.info("Pulling blog feeds")
+		print with_time("blog.PeriodicPullBlogFeed") # TODO: Debug
 
-		try:
-			subs = Subscription.objects.filter(
-									key='blog',
-									is_ours=True
-								)
-		except Subscription.DoesNotExist:
-			return
+		# TODO XXX XXX XXX: LIMIT TO ONLY 5 AT A TIME!
+		subs = Subscription.objects.filter(
+										key='blog',
+										is_ours=True
+									)
 
 		# TODO: Respond to server overload
 		for sub in subs:
 			node = sub.node
-			print "Scheduling blogfeed fetch from node %d" % node.pk
+			print "\t...Scheduling blogfeed fetch from node %d" % node.pk
 			get_feed.delay(node.pk)
 
-class PeriodicUpdateSummaryOnlyItems(PeriodicTask):
+class UpdateSummaryOnlyItems(PeriodicTask):
 	"""Periodically check for fulltext on summary-only"""
 
 	run_every = timedelta(seconds=20)
 	#run_every = timedelta(minutes=5)
 
 	def run(self, **kwargs):
-		print "PeriodicUpdateSummaryItemsOnly" # TODO: Debug
-		logger = self.get_logger(**kwargs)
-		logger.info("Pulling blog feeds (updating)")
+		print with_time("blog.PeriodicUpdateSummaryItemsOnly") # TODO: Debug
 
-		try:
-			items = BlogItem.objects.filter(has_contents=False)
-		except BlogItem.DoesNotExist:
-			return
-
-		print items
+		# XXX: Limit to a smaller number...
+		items = BlogItem.objects.filter(has_contents=False) \
+								.filter(tried_fetch_count__lt=5)
 
 		# TODO: Respond to server overload
 		for item in items:

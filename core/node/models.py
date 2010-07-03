@@ -62,10 +62,10 @@ class Node(Resource):
 
 	NODE_CLASS_CHOICES = (
 		('unknown', 'Unknown'),
-		('sylph', 'SylphNode'),
-		('webpage', 'WebPageNode'),
-		('feed', 'WebFeedNode'),
-		('service', 'WebServiceNode'),
+		('sylph', 'Sylph Node'),
+		('webpage', 'Webpage'),
+		('feed', 'Web feed'),
+		('service', 'Web service'),
 	)
 
 	"""The type of node."""
@@ -163,6 +163,16 @@ class Node(Resource):
 	def check_keys(self, our_key, their_key):
 		pass
 
+	# ============= Helper methods ========================
+
+	def is_in_class(self, class_list, assumption=True):
+		"""Check if the node is in a class type."""
+		if self.node_class in class_list:
+			return True
+		if assumption and self.node_class_guess in class_list:
+			return True
+		return False
+
 	# ============= Shortcut methods ======================
 
 	def just_failed(self, save=False):
@@ -248,6 +258,26 @@ class Node(Resource):
 		if self.status == 'AVAIL':
 			return "Good"
 		return "Bad Status"
+
+	def get_class(self):
+		"""Get the textual name of the node class"""
+		cls = self.node_class_guess
+		guess = True
+		if self.node_class and self.node_class != 'unknown':
+			cls = self.node_class
+			guess = False
+
+		ret = 'Unknown'
+		for c in self.NODE_CLASS_CHOICES:
+			if cls == c[0]:
+				ret = c[1]
+				break
+
+		if ret == 'Unknown':
+			return ret
+		if not guess:
+			return ret
+		return '%s (assumption)' % ret
 
 	# ============= Django Methods and Metadata ===========
 

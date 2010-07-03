@@ -9,6 +9,7 @@ from django.template import RequestContext
 from sylph.core.resource.models import Resource
 from sylph.core.node.models import Node
 from sylph.apps.user.models import User
+from sylph.core.feed.models import FeedItem
 
 from utils.install_state import is_installed, INSTALLED
 from sylph.utils.database import reset_database
@@ -17,35 +18,21 @@ from utils.Configs import Configs
 
 from UserAccount import UserAccount
 
-import time
+from datetime import datetime
 
 # ============ Sylph Main Index ===========================
 
 def index(request):
-	"""Index view for Sylph. Not much here"""
-
-	readme = None
-	todo = None
-
+	"""Index view for Sylph. Report recent feed items."""
+	items = []
 	try:
-		fh = open('README.mkd')
-		readme = fh.read()
-		fh.close()
-		readme = markdown(readme)
-	except:
-		pass
-
-	try:
-		fh = open('TODO.mkd')
-		todo = fh.read()
-		fh.close()
-		todo = markdown(todo)
+		items = FeedItem.objects.all() \
+								.order_by('-datetime_added')
 	except:
 		pass
 
 	return render_to_response('index.html', {
-									'readme': readme,
-									'todo': todo,
+									'items': items
 								},
 								context_instance=RequestContext(request))
 
@@ -130,6 +117,12 @@ def install_main(request):
 			configs.installation_status = INSTALLED
 			configs.save()
 
+			# Add welcome item to feed
+			feed = FeedItem()
+			feed.text = "Welcome to Sylph! More notifications will arrive " +\
+						"as you interact with other nodes."
+			feed.datetime_added = datetime.now()
+			feed.save()
 
 			# TODO: Login here! 
 			return HttpResponseRedirect('/') # ACCOUNT CREATED!
