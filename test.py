@@ -23,13 +23,11 @@ def test(request):
 	#from sylph.core.node.api import ping_response
 	#return ping_response(request)
 
-	from sylph.utils.uri import generate_uuid
+	#from sylph.utils.uri import generate_uuid
 
-	print generate_uuid()
-	print generate_uuid('posts')
-	print generate_uuid('/some/path/')
-
-
+	#print generate_uuid()
+	#print generate_uuid('posts')
+	#print generate_uuid('/some/path/')
 
 	#user = User.objects.get(pk=1)
 

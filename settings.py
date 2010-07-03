@@ -28,9 +28,11 @@ sys.path.append(os.path.abspath('../web2feed'))
 
 # Google App Engine deployment
 IS_GOOGLE_APP_ENGINE = False
+IS_RELATIONAL = True
 try:
 	import google.appengine.ext.webapp
 	IS_GOOGLE_APP_ENGINE = True
+	IS_RELATIONAL = False
 except:
 	pass
 

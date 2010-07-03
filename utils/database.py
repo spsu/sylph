@@ -24,14 +24,14 @@ def get_all_models():
 	from sylph.apps.social.models import ProfilePost
 
 	return [
-				BackendConfig,
-				Node,
-				Resource, ResourceTree, ResourceType,
-				Subscription,
-				BlogItem,
-				Post,
-				User, UserEmail,
-				Knows, ProfilePost
+		BackendConfig,
+		Node,
+		Resource, ResourceTree, ResourceType,
+		Subscription,
+		BlogItem,
+		Post,
+		User, UserEmail,
+		Knows, ProfilePost
 	]
 
 # ============ Sync Database ====================
@@ -78,9 +78,9 @@ def reset_database():
 
 
 	def delete_each_manually():
-		"""Crude Google App Engine delete for resources."""
+		"""Crudely attempt to delete every single entity from all
+		models. This is a hack for Google App Engine."""
 		# XXX/TODO: This won't work if there are over 1000 resources!
-
 		for model in get_all_models():
 			try:
 				objs = model.objects.all()
@@ -92,8 +92,17 @@ def reset_database():
 				print e
 				continue
 
+	def delete_datastore():
+		"""Attempt to delete the physical datastore for GAE."""
+		# XXX: This only works on the local dev. machine
+		for p in os.listdir('/tmp'):
+			if 'django' in p or 'sylph' in p:
+				os.remove(os.path.join('/tmp', p))
+				break
+
 	if settings.IS_GOOGLE_APP_ENGINE:
 		delete_each_manually()
+		delete_datastore()
 	else:
 		drop_tables()
 

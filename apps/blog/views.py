@@ -1,12 +1,12 @@
+from django import forms
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response
-from django import forms
 from django.template import RequestContext
-from django.core.paginator import Paginator, InvalidPage, EmptyPage
 
 # Models
-from models import BlogItem, BootstrapBlogItem
-from sylph.core.node.models import Node, WebPageNode
+from models import BlogItem
+from sylph.core.node.models import Node
 from sylph.core.subscription.models import Subscription
 
 from datetime import datetime
@@ -28,8 +28,9 @@ def blogitem_index(request):
 		raise Http404
 
 	return render_to_response('apps/blog/index.html', {
-									'items': items,													},
-							context_instance=RequestContext(request))
+										'items': items,
+								},
+								context_instance=RequestContext(request))
 
 
 def blogitem_create(request):
@@ -72,7 +73,7 @@ def blogitem_delete(request, item_id):
 # =========================================================
 
 def subscription_index(request):
-
+	"""List all current blog subscriptions"""
 	subs = []
 	try:
 		subs = Subscription.objects.filter(key='blog')
@@ -94,20 +95,21 @@ def subscription_add(request):
 		2. Create subscription
 	"""
 
-	class AddWebPageNodeForm(forms.ModelForm):
+	class AddNodeForm(forms.ModelForm):
 		"""Form for adding nodes"""
 		class Meta:
-			model = WebPageNode
+			model = Node
 			fields = ['uri', 'own_description']
 
 	if request.method == 'POST':
-		form = AddWebPageNodeForm(request.POST)
+		form = AddNodeForm(request.POST)
 		if form.is_valid():
 			node = form.save(commit=False)
 			node.datetime_added = datetime.today()
 			node.is_yet_to_resolve = True
 			node.status = 'U'
-			node.node_type = 'Z' # NON-SYLPH!
+			node.node_type = 'Z' # NON-SYLPH! (XXX DEPRECATED)
+			node.node_class = 'webpage'
 			node.save()
 
 			# Create subscription
@@ -124,7 +126,7 @@ def subscription_add(request):
 
 			return HttpResponseRedirect('/blog/subscription/')
 	else:
-		form = AddWebPageNodeForm()
+		form = AddNodeForm()
 
 	return render_to_response('apps/blog/subscription/add.html', {
 									'form': form,

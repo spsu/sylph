@@ -1,11 +1,11 @@
 from django.db import models
+from django.db.models import signals
+
 from sylph.core.resource.models import ResourceTree
 from sylph.utils.markdown2 import markdown
 
 from datetime import datetime
 
-# XXX/TODO/IMPORTANT: Should I merge Post & BlogItem? 
-# Probably not... but this is a _lot_ of segmentation.
 class Post(ResourceTree):
 	"""
 	Resource > ResourceTree > Post
@@ -44,6 +44,7 @@ class Post(ResourceTree):
 
 	# Contents of the post
 	contents = models.TextField(blank=True)
+	has_contents = models.BooleanField(default=False)
 
 	# How the content is marked up. 
 	MARKUP_TYPE_CHOICES = (
@@ -66,7 +67,7 @@ class Post(ResourceTree):
 		* Copyrighted
 		* Unknown (Assume Copyrighted)
 	"""
-	license = models.CharField(max_length=25, blank=True, null=False)
+	license = models.CharField(max_length=25, blank=True, null=False, default='Unknown')
 
 	# ============= Model-specific methods ================
 
@@ -151,4 +152,13 @@ class Post(ResourceTree):
 #	linked_resource = models.ForeignKey('resource.Resource')
 #
 #	# TODO: dynamic = models.CharField() # explain the semantics of the linkage
+
+# ============ Register Signals ===========================
+
+def register_signals():
+	"""Register signals"""
+	import signals as sig_ # To avoid circular imports
+	signals.pre_save.connect(sig_.auto_apply_presave_metadata,
+								sender=Post)
+
 

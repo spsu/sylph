@@ -4,8 +4,8 @@ from celery.task.base import PeriodicTask
 from django.conf import settings
 from django.db.models import Q
 
-from models import BlogItem, BootstrapBlogItem
-from sylph.core.node.models import Node, WebPageNode
+from models import BlogItem
+from sylph.core.node.models import Node
 from sylph.core.subscription.models import Subscription
 
 from web2feed import web2feed
@@ -32,13 +32,29 @@ def get_feed(node_id):
 
 	print "fetched %d blogitems from %s" %(len(feed), node.uri)
 
+	# uri uniqueness constraint prevents duplicates on a relational backend, 
+	# but this can't occur on a non-relational system
+	if not settings.IS_RELATIONAL:
+		uris = []
+		for item in feed:
+			uris.append(item['uri'])
+
+		blogs = BlogItem.objects.filter(uri__in=uris)
+		print blogs
+		duplicates = []
+		for b in blogs:
+			duplicates.append(b.uri)
+
+		if duplicates:
+			for k, v in feed:
+				if v['uri'] in duplicates:
+					del feed[k]
+
 	for item in feed:
 		try:
-			blog = BootstrapBlogItem()
+			blog = BlogItem()
 
-			# uniqueness constraint prevents duplicates
 			blog.uri = item['uri']
-
 			blog.title = item['title']
 
 			if 'date' in item:
@@ -65,8 +81,8 @@ def get_feed(node_id):
 def get_fulltext(blogitem_id):
 	"""Fetch the fulltext of a summary-only item."""
 	try:
-		item = BootstrapBlogItem.objects.get(pk=blogitem_id)
-	except BootstrapBlogItem.DoesNotExist:
+		item = BlogItem.objects.get(pk=blogitem_id)
+	except BlogItem.DoesNotExist:
 		print "blog.task.get_fulltext item doesn't exist"
 		return
 
@@ -90,7 +106,7 @@ def get_fulltext(blogitem_id):
 	if 'contents' in feed:
 		item.contents = feed['contents']
 	if 'author' in feed:
-		item.author = feed['author']
+		item.www_author_name = feed['author']
 
 	item.save()
 
@@ -137,10 +153,9 @@ class PeriodicUpdateSummaryOnlyItems(PeriodicTask):
 		logger.info("Pulling blog feeds (updating)")
 
 		try:
-			items = BootstrapBlogItem.objects.filter(
-								~Q('contents')
-					)
-		except BootstrapBlogItem.DoesNotExist:
+			# TODO/XXX: Limit by date
+			items = BlogItem.objects.filter(has_contents=False)
+		except BlogItem.DoesNotExist:
 			return
 
 		print items

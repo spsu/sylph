@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import signals
+
 from sylph.apps.post.models import Post
 from sylph.core.resource.models import Resource
 #from sylph.core.resource.models import register_type
@@ -66,7 +68,8 @@ class BlogItem(Post):
 	An optional description of or excerpt from the contents of the
 	posting.
 	"""
-	summary = models.CharField(max_length=255, blank=True, null=False)
+	summary = models.TextField(blank=True, null=False)
+	has_summary = models.BooleanField(default=False)
 
 	"""
 	An optional excerpt from the contents that has been algorithmically
@@ -157,4 +160,11 @@ class BlogItem(Post):
 
 #register_type(BlogItem)
 #register_type(BootstrapBlogItem)
+
+def register_signals():
+	"""Register signals"""
+	import signals as sig_ # To avoid circular imports
+	signals.pre_save.connect(sig_.auto_apply_presave_metadata,
+								sender=BlogItem)
+
 
