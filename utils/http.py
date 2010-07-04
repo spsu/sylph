@@ -25,7 +25,8 @@ class Request(object):
 			'Accept': 'text/html,application/xhtml+xml,' + \
 						'application/xml;q=0.9,*/*;q=0.8',
 			# User agent and protocol
-			'User-Agent': '%s/%s' % (settings.SOFTWARE_NAME,
+			'User-Agent': '%s (v%s/+http://github.com/echelon/sylph)' % \
+										(settings.SOFTWARE_NAME,
 										settings.SOFTWARE_VERSION),
 			'X-Sylph-Protocol-Version': settings.PROTOCOL_VERSION,
 		}
@@ -87,6 +88,12 @@ class Request(object):
 		if type(headers) != dict:
 			return
 		self.headers = headers
+
+	def get_headers(self):
+		return self.headers
+
+	def get_uri(self):
+		return self.uri
 
 # ================= Server Response =======================
 

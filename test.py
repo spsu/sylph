@@ -22,7 +22,21 @@ def test(request):
 	from sylph.utils.data.RdfParser import RdfParser
 	from sylph.utils.data.RdfSerializer import RdfSerializer
 
-"""Quick code to test."""
+	from sylph.utils.http import Request, Response
+
+	req = Request('http://slashdot.org')
+	resp = req.download()
+
+	print req
+	print "========"
+	print req.get_headers()
+	print '--------'
+	print resp
+	print resp.get_status()
+	print '========'
+	print resp.get_headers()
+	print resp.get_body()
+
 
 	print generate_uuid()
 	print generate_uuid('posts')
@@ -37,7 +51,6 @@ def test(request):
 	#rdf = x.to_rdf()
 	#p = RdfParser(rdf)
 	#udata = p.extract('User')
-	
 	#print udata
 
 
