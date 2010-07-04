@@ -129,8 +129,16 @@ class Resource(models.Model):
 			if hasattr(self, field):
 				dic[field] = getattr(self, field)
 
-		return dic
+		return self.alter_transportables(dic)
 
+	def alter_transportables(self, transportables):
+		"""Overload this if there's any dynamic introspection we want
+		to do on the transport payload data."""
+		print "Resource.AlterTransportables"
+		print "Resource.AlterTransportables"
+		return transportables
+
+	# TODO: Deprecate this as public API. Make private.
 	@classmethod
 	def get_transportable_fields(cls):
 		"""
@@ -176,8 +184,8 @@ class Resource(models.Model):
 		return fields
 
 	def get_ontology_name(self):
-		"""Generates the ontology name (THIS ONLY FITS SHORT-TERM OBJECTIVE!)"""
-		# TODO: Temp fix
+		"""Generates the RDF ontology name (THIS ONLY FITS SHORT-TERM OBJECTIVE!)"""
+		# XXX: This is a bad way to do it...
 		name = str(type(self))
 		name = '/' + name[8:-2] + '#'
 		return name.replace('.', '/').replace('/models/', '_')

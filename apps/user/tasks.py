@@ -7,7 +7,7 @@ from sylph.core.node.models import Node
 from sylph.core.subscription.models import Subscription
 
 from sylph.utils.uri import hashless
-from sylph.utils.transport.Communicator import Communicator
+#from sylph.utils.transport.Communicator import Communicator
 from sylph.utils.data.RdfSerializer import RdfSerializer
 
 from datetime import datetime

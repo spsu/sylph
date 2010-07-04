@@ -11,7 +11,7 @@ may implement) utilize a similar versioning scheme:
 major.minor.bugfix-year.month.day (as MM and DD respectively)
 """
 
-SOFTWARE_NAME = 'Sylph.py Client'
+SOFTWARE_NAME = 'Sylph X Prototype'
 SOFTWARE_VERSION = '0.1.0-10.05.25'
 PROTOCOL_VERSION = '0.1.0-10.05.25'
 RDF_SERIALIZATION = 'xml' # xml or n3

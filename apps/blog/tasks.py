@@ -41,10 +41,9 @@ def get_feed(node_id):
 			node.name = meta['title']
 		if 'description' in meta:
 			node.description = meta['description']
+		node.save()
 	except:
 		pass
-
-	node.save()
 
 	print "fetched %d blogitems from %s" %(len(feed), node.uri)
 

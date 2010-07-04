@@ -1,14 +1,13 @@
 from django.conf import settings
 import uuid
 
-def clean(uri):
+def clean(uri): # TODO
 	"""
 	Clean URIs by mapping them onto a standard resource form.
 		* Remove trailing hash
 		* TODO: Remove query string?
 	"""
-	# TODO
-	pass
+	pass # TODO
 
 def hashless(uri):
 	"""Remove any trailing hash from a URI."""
@@ -20,8 +19,10 @@ def generate_uuid(path=''):
 	uri = __append_path(uri, path)
 	return __append_path(uri, str(uuid.uuid4()))
 
-def generate_md5(content, base=None):
+def generate_md5(content, base=None): # TODO
 	pass # TODO
+
+# ============ Private, Non-API ===========================
 
 def __append_path(uri_base, path_append):
 	"""Helper function to append a path intelligently to a base URI."""

@@ -35,6 +35,15 @@
 			<td>{{ node.description }}</td>
 		</tr>
 		<tr>
+			<td>Software Version</td>
+			<td>{{node.software_name}} {{node.software_version}}</td>
+		</tr>
+		<tr>
+			<td>Protocol Version</td>
+			<td>{{node.protocol_version}}</td>
+		</tr>
+
+		<tr>
 			<td>Date Edited</td>
 			<td>{{ node.datetime_edited }} 
 				{% if node.datetime_edited %}({{node.datetime_edited|naturaltime}}) {% endif %}</td>

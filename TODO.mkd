@@ -10,40 +10,58 @@ Rules:
 
 2. **Keep it simple. Very simple.**
 
-* Task I'm working on now: pull user. (I think? or pull 
-  see the celery errors...)
-* reset page needs 'dump data without dropping tables' mode (faster)
+Immediate Concern
+-----------------
 
-Needed:
--------
-* An actual endpoint dispatcher
-* Integrated subscriptions system
-* Integrated feeds/notification system
+* **Integrate the communications API into the models.**
 
-Temp:
------
+> Node.ping()  
+> response = Node.send(....)  
+> response = Node.request(...)  
+>
+> Resource.lookup_at(Node) or   
+> Node.lookup(resource)  
+>  
+> .......................  
+> 
+> Think about how Webpage GET, sylph ping|send|request, and web apis  
+> will work -> communicator class & also multiple async connections  
+> (keepalive)
+>  
+>  
+> New Response(object):  
+> * node_type() - determined by X-Sylph header  
+> * was_redirected()  
+> * error  
+> * uri  
+> * headers  
+> * data  
 
-1. Post
-2. Subscriptions
-	1. Social (kind of goes hand in hand)
-3. Feeds
-4. Ratings
-	1. (The above two go with data mining)
-5. Bootstrap content
-6. Cache/directory servers
+* **Change ping semantics -- ping anything (ie webpages too) to figure
+  out what they are.** This will mean pings must be HTTP GET (but that
+  makes sense anyway for REST). We'll probably transmit all node info
+  in the HTTP X-headers.
 
-Ungrouped:
+* **Reddit API (look for preexisting)** to post and include "posted with
+  sylph distributed blah blah"
+* **webservices will not use web2feed** they'll each have their own classes
+  that dictate how we interact. They may even have the ability to know what
+  topics we're viewing at the moment (so as to refresh them more frequently
+  so long as we're viewing them.)
 
-* Media (images, etc.) exchange
-* Multilevel task priority
-* Tasks w/o RabbitMQ/AMQP
-* 'Channel posting' (sim. to usenet) & blog items
 
-Unnecessary items should be saved for final polish. 
+Minor:
+------
 
-_Don't worry about integrating the UI until things are mostly done._
+* reset page needs _'dump data without dropping tables'_ mode (faster)
 
-**KEEP IT SIMPLE**
+Still needed:
+-------------
+
+* Media (Image, Video, etc) application with downloading, caching
+* Multilevel task priority (multiple queues)
+* Tasks w/o RabbitMQ
+* 'Channel posting' (similar to usenet/newsgroups -- use an index server)
 
 Formal List:
 ------------
@@ -85,11 +103,12 @@ Theory
 > A user can have an endpoint URI be their resource URI if we wish, since 
 > essentially they are different data models. 
 
+Short term
+==========
 
 Core/backend system
 -------------------
 * Improve and expand upon "Utilities" libraries
-* Move core/ -> apps/
 * Extensible API dispatcher system
 * Make tasks/API easier to debug
 
@@ -103,17 +122,18 @@ Organization
 ------------
 * API and Task design must be sensible.
 
+Long term
+=========
+
 Django apps
 -----------
-* **"Certify" app**, designed to certify that information is accurate. Could 
-  work in addition to PGP signing. Protected info may require indentification 
-  from the requester. 
-* **"Following" app**, designed to manage subscriptions to various resource
-  feeds. (Should this be 'core'?)
+* **"Certify" app**, designed to certify that information is accurate by 
+  tracking it down at its original source. Could  work in addition to PGP 
+  signing. Protected info may require indentification from the requester. 
 * **"Ratings" app**, designed to rate resources and aggregate the ratings of
   third parties.
 
 Libraries to explore
 --------------------
 * [Django-South](http://south.aeracode.org/) for updating models when they 
-  change. 
+  change. Once users start using Sylph, this is important. 

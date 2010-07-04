@@ -71,6 +71,11 @@ $(window).load(function () {
 		<a href="/node/edit/" class="button">Edit Own Node</a>
 	</div>
 	<h1> Node Index </h1>
+
+	<p><em>Nodes can be Sylph endpoints, webpages, feeds, services... anything
+		URI-dereferenceable that contains content we can interact with 
+		semantically. (Nodes are a type of Resource subclasses.)</em></p>
+
 	<table class="table">
 	{% for node in nodes %}
 		<tr class="row_{% cycle 'odd' 'even' %}" id="node_{{ node.pk }}">

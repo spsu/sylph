@@ -10,20 +10,19 @@ from django.template import RequestContext
 from sylph.apps.post.models import Post
 from sylph.apps.user.models import User
 
-from sylph.apps.post.tasks import post_random_message
-from sylph.core.backend.models import BackendConfig
-from sylph.core.backend.utils.Configs import Configs
-from sylph.core.resource.models import Resource
-from sylph.utils.data.RdfParser import RdfParser
-from sylph.utils.data.RdfSerializer import RdfSerializer
-
-"""Quick code to test."""
 
 def test(request):
 	#from sylph.core.node.api import ping_response
 	#return ping_response(request)
 
 	from sylph.utils.uri import generate_uuid
+	from sylph.core.backend.models import BackendConfig
+	from sylph.core.backend.utils.Configs import Configs
+	from sylph.core.resource.models import Resource
+	from sylph.utils.data.RdfParser import RdfParser
+	from sylph.utils.data.RdfSerializer import RdfSerializer
+
+"""Quick code to test."""
 
 	print generate_uuid()
 	print generate_uuid('posts')

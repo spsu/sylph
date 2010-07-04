@@ -48,7 +48,7 @@ def install_main(request):
 		user = User.objects.get(pk=settings.OUR_USER_PK)
 	except:
 		# TODO
-		raise Exception, "TODO: resync-database!"
+		raise Exception, "Installer: Core user doesn't exist!!"
 
 	# TODO: This should be broken down into a multi-step creation process
 	class NewUserInstallForm(forms.Form):

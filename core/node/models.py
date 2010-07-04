@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.db.models import signals
 from django.dispatch import dispatcher
@@ -23,8 +24,6 @@ class Node(Resource):
 	There can be user-owned Nodes, cache Nodes, directory Nodes, and
 	so forth.
 	"""
-
-	# XXX NOTE: A user has a node, not a node has a user!
 
 	# ============= Sylph Metadata ========================
 
@@ -75,6 +74,8 @@ class Node(Resource):
 	"""The type of node the user tells us it is."""
 	node_class_guess = models.CharField(max_length=10, choices=NODE_CLASS_CHOICES,
 									null=False, blank=True)
+
+	# ======== XXX: There's an API for these ... ====================
 
 	"""Sylph Protocol version"""
 	protocol_version = models.CharField(max_length=15, null=False, blank=True)
@@ -175,6 +176,52 @@ class Node(Resource):
 			return True
 		return False
 
+	def get_protocol_version(self):
+		return self._get_current_versions()[0]
+
+	def get_software_version(self):
+		return self._get_current_versions()[1]
+
+	def get_software_name(self):
+		return self._get_current_versions()[2]
+
+	def _get_current_versions(self):
+		"""Ensure that the software and protocol versions are always
+		in-sync on our deployment."""
+		if not self.is_ours():
+			return (
+				self.protocol_version,
+				self.software_version,
+				self.software_name
+			)
+
+		pver = self.protocol_version
+		sver = self.software_version
+		name = self.software_name
+
+		stale = False
+		if settings.PROTOCOL_VERSION != pver:
+			stale = True
+		elif settings.SOFTWARE_VERSION != sver:
+			stale = True
+		elif settings.SOFTWARE_NAME != name:
+			stale = True
+
+		if stale:
+			# Must update separately of the self instance
+			# (It might be changed, but not going to be saved.)
+			node = Node.objects.get(pk=settings.OUR_NODE_PK)
+			node.protocol_version = pver
+			node.software_version = sver
+			node.software_name = name
+			node.save()
+
+			self.protocol_version = pver
+			self.software_version = sver
+			self.software_name = name
+
+		return (pver, sver, name)
+
 	# ============= Shortcut methods ======================
 
 	def just_failed(self, save=False):
@@ -219,6 +266,18 @@ class Node(Resource):
 
 	# ============= RDF Serilization Helpers ==============
 
+	def alter_transportables(self, transportables):
+		"""Overloaded to dynamically replace data with the correct
+		server version params."""
+		print "Node.AlterTransportables"
+		print "Node.AlterTransportables"
+		print "Node.AlterTransportables"
+		info = self._get_current_versions()
+		transportables['protocol_version'] = info[0]
+		transportables['software_version'] = info[1]
+		transportables['software_name'] = info[2]
+		return transportables
+
 	def get_ontology_name(self):
 		"""Heuristic to generate the ontology name."""
 		# TODO: Temp fix, and does it actually work??
@@ -234,15 +293,15 @@ class Node(Resource):
 
 	def is_ours(self):
 		"""Returns whether this node is ours."""
-		return self.pk == 2
+		return self.pk == settings.OUR_NODE_PK
 
 	def is_not_ours(self):
 		"""Returns whether this node is not ours."""
-		return self.pk != 2
+		return self.pk != settings.OUR_NODE_PK
 
 	def status_color(self):
 		"""Return a status color for visualization. Temporary."""
-		if self.pk == 2:
+		if self.pk == settings.OUR_NODE_PK:
 			return 'white'
 		if self.node_class == 'unknown':
 			return 'gray'
@@ -253,7 +312,7 @@ class Node(Resource):
 		return 'red'
 
 	def get_status(self):
-		if self.pk == 2:
+		if self.pk == settings.OUR_NODE_PK:
 			return 'Our node'
 		if self.is_yet_to_resolve:
 			return 'Unresolved'

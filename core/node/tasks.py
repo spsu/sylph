@@ -5,7 +5,7 @@ from django.conf import settings
 
 from models import *
 from sylph.apps.user.models import User
-from sylph.utils.transport.Communicator import Communicator
+#from sylph.utils.transport.Communicator import Communicator
 from sylph.utils.transport.Request import Request
 from sylph.utils.data.RdfParser import RdfParser
 from sylph.utils.uri import hashless

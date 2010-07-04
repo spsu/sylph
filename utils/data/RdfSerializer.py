@@ -105,7 +105,7 @@ class RdfSerializer(object):
 				# TODO/XXX: This is slow as hell. Hits the database every 
 				# single time this codepath is reached. 
 				# For now, forget performance. Work on this later...
-				obj = URIRef(v.uri)
+				obj = URIRef(v.uri) # XXX: Wouldn't this work with just hasattr?
 
 			if not obj:
 				obj = Literal(v) # Handles int, float, etc.
