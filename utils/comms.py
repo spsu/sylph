@@ -1,46 +1,64 @@
-from sylph.utils.http import Request, Response
+from sylph.utils.http import Message, Request, Response
+from sylph.utils.http import send as http_send
 from sylph.utils.data.RdfSerializer import RdfSerializer
 
-class SylphRequest(object):
-	"""Make a Sylph Request to another node. This is built on top of
-	the basic HTTP library."""
+class SylphMessage(Message):
+	"""
+	Message is a content store relayed between two endpoints.
 
-	def __init__(self, uri, timeout=10, serializer='RDF'):
+	Sylph messages are an extension of the lower-level HTTP Message
+	store. They add the ability to store Models or QuerySets as well as
+	determine what the type of the sender or receiver is based on
+	analysis of the headers or content.
+	"""
 
-		self.request = Request(uri, timeout=timeout)
-		self.serializer = None
+	def __init__(self):
+		super(SylphMessage, self).__init__()
+
+		# High-level serialized and parsed info (respectively)
 		self.payload = []
+		self.extracted = None
 
-	def send(self):
-		"""Perform the communication. We only serialize data at this
-		point."""
-		if self.payload:
-			self.__add_payload_to_request()
+		# Serializer/Parser objects.
+		self.serializer = None
+		self.parser = None
 
-		response = None
-		try:
-			response = self.request.send()
-		except Exception as e:
-			print e # XXX DEBUG
-			pass
-
-		if self.payload:
-			self.__remove_payload_from_request()
-
-		return SylphResponse(response)
+	# ============= Add/Get Payloads ======================
 
 	def add(self, transportable):
-		"""Add a model object or QuerySet to the payload in
-		preparation to be sent to the remote node."""
+		"""Add a model object or QuerySet to the payload in preparation
+		to be sent to the remote node."""
 		self.payload.append(transportable)
 
-	def __add_payload_to_request(self):
-		"""Add the object payload to the request. This performs the
+	def extract(self, type):
+		"""Extract all data of a known type. (eg. Node, User, etc.)"""
+		# XXX: This is not a nice interface / good practice. 
+		if not self.body:
+			return None # Nothing to extract
+		if not self.parser:
+			# TODO: Parser shouldn't contain content!!! BAD! REUSE IS GOOD!
+			self.parser = RdfParser(self.body)
+		return self.parser.extract(type) # XXX: BAD
+
+	def sync(self):
+		if self.payload:
+			self.__add_payload_to_message()
+		elif self.body:
+			pass # TODO: Try to parse out content to payload!
+
+	def unsync(self):
+		if self.payload:
+			self.__remove_payload_from_message()
+		elif self.body:
+			pass # TODO: Read above todo
+
+	def __add_payload_to_message(self):
+		"""Add the object payload to the message. This performs the
 		serialization work."""
 		if not self.payload:
 			return
 
-		serialize_format = None # TODO: Just make a serializer method
+		serialize_format = None # TODO: Convert to serializer method
 		if not self.serializer:
 			self.serializer = RdfSerializer()
 			serialize_format = 'RDF/XML'
@@ -50,17 +68,16 @@ class SylphRequest(object):
 			self.serializer.add(obj)
 
 		# TODO: should be serializer.serialize() !!
-		self.request.add_post_var('data', self.serializer.to_rdf())
-		self.request.add_post_var('format', serialize_format)
+		self.add_post_var('data', self.serializer.to_rdf())
+		self.add_post_var('format', serialize_format)
 
-		# TODO: Remove data from the serializer...
+		# TODO: Remove data from the serializer to keep state pure
 		# self.serializer.flush()
 
-	def __remove_payload_from_request(self):
-		"""Remove the payload from the request."""
-		# XXX/TODO: Breaks abstraction...
-		del self.request.post['data']
-		del self.request.post['format']
+	def __remove_payload_from_message(self):
+		"""Remove the payload from the message."""
+		del self.post['data']
+		del self.post['format']
 
 	# TODO: Set an alternate serializer (eg. JSON)
 	#def set_serializer(self, serializer):
@@ -68,33 +85,32 @@ class SylphRequest(object):
 	#	serialier of any existing data."""
 	#	pass
 
-# ============ Response =========================
-
-# XXX: This should represent all responses: Sylph, Webpage, etc.
-class SylphResponse(Response):
-
-	def __init__(self, django_response=None):
-		# member vars: uri, headers, status, body 
-		super(SylphResponse, self).__init__()
-
-
+	# ============= Content/Node Type Analysis ============
 
 	def is_sylph_node(self):
-		"""Returns whether the page is a sylph node."""
+		"""Returns whether the sender/receiver is a sylph node."""
 		if 'X-Sylph-Protocol-Version' in self.headers:
 			return True
 		return False
 
-	def is_feed(self):
-		"""Returns whether the page is an RSS/Atom feed."""
-		return None # TODO
+	def is_feed(self): # TODO
+		"""Returns whether the content is an RSS/Atom feed."""
+		return None
 
-	def is_webpage(self):
-		"""Returns whether the page is a webpage via analysis
-		of the payload"""
-		return None # TODO
+	def is_webpage(self): # TODO
+		"""Returns whether the content is a webpage."""
+		# This is going to be imperfect...
+		# First check the headers 
+		mimetypes = ['text/html', 'application/xhtml+xml']
+		if 'Content-Type' in self.headers and \
+			self.headers['Content-Type'] in mimetypes:
+				return True
+		# This is a really poor heuristic...
+		if len(self.body) > 100 and "<html" in self.body[0:100]:
+			return True
+		return False
 
-	def get_node_type(self):
+	def get_node_type(self): # TODO: Depends on above.
 		"""Return the type of node the page is."""
 		if self.is_sylph_node():
 			return 'sylph'
@@ -104,13 +120,40 @@ class SylphResponse(Response):
 			return 'webpage'
 		return 'unknown'
 
-	def get_protocol_version(self):
+	def get_protocol_version(self): # TODO
+		"""Gets from headers."""
 		pass
 
-	def get_software_name(self):
+	def get_software_name(self): # TODO
+		"""Gets from headers."""
 		pass
 
-	def get_software_version(self):
+	def get_software_version(self): # TODO
+		"""Gets from headers."""
 		pass
 
+# ============ Subtypes =========================
+
+class SylphRequest(SylphMessage):
+	pass
+
+class SylphResponse(SylphMessage):
+	pass
+
+# ============ Communications Methods ===========
+
+def get(uri, timeout=10, response_class=SylphResponse):
+	"""Simple fetch of a URI. No request message payload"""
+	return http_send(SylphRequest(), uri, 'GET', timeout, response_class)
+
+def send(message, uri=None, method='GET', timeout=10, response_class=SylphResponse):
+	"""Send a Request Message and get a Response Message."""
+	message.sync()
+	response = http_send(message, uri, method, timeout, response_class)
+	message.unsync()
+	return response
+
+def django_receive(request):
+	"""Process a Django request object into a message we can use."""
+	pass
 
