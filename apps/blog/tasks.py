@@ -28,7 +28,7 @@ def get_feed(node_id):
 	# When blogitems are shared in sylph (very soon), then we'll use
 	# the sylph protocol
 	try:
-		msg = get(node.uri)
+		msg = get(node.uri, timeout=20)
 		if msg.has_errors():
 			node.just_failed(save=True)
 			print "Just failed to grab from node"

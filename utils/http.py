@@ -15,7 +15,8 @@ level. See 'comms.py'.
 # TODO: Cookies
 # TODO: File transfers
 # TODO: GET - proper support
-# TODO: Handle redirects
+# TODO: Handle redirects -- will report failure on redirects!
+#       NOTE: Node/Resource location should be updated?
 # TODO: Connection pool (keepalive, etc.)
 # TODO: Error handling/store
 
@@ -176,6 +177,9 @@ def send(message, uri=None, method='GET', timeout=10, response_class=Message):
 		# XXX: Temporary debugging...
 		response.status = resp.status
 		if response.status != 200:
+			print "Response is not 200 OK!"
+			print response.status
+			print response.headers
 			from sylph.utils.debug import parse_endpoint_trace
 			print parse_endpoint_trace(resp.read(), 'TODO:URI') # XXX Debug trace
 			raise Exception, "An exception occurred in comms."
@@ -185,9 +189,8 @@ def send(message, uri=None, method='GET', timeout=10, response_class=Message):
 
 	except Exception as e:
 		print "CONNECTION ERROR"
-		print e
-		pass
 		raise e
+
 	return response
 
 def django_receive(request):

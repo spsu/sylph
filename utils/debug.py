@@ -16,10 +16,13 @@ def parse_endpoint_trace(html, uri=''):
 	from BeautifulSoup import BeautifulSoup
 	from sylph.utils.termcolor import colored
 
-	# Print Trace
-	soup = BeautifulSoup(html)
-	trace = soup.find('textarea', id='traceback_area').string
-	trace = trace.split('Traceback:')[1]
-	head = 'Remote Trace for %s:\n' % uri
-	return colored(head+trace, 'yellow')
+	try:
+		# Print Trace
+		soup = BeautifulSoup(html)
+		trace = soup.find('textarea', id='traceback_area').string
+		trace = trace.split('Traceback:')[1]
+		head = 'Remote Trace for %s:\n' % uri
+		return colored(head+trace, 'yellow')
+	except:
+		return colored(html[:100], 'yellow')
 

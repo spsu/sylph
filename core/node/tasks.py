@@ -322,14 +322,14 @@ class PingSylphNodes(PeriodicTask):
 	"""Re-resolve all sylph nodes that have been successfully added
 	in the past."""
 
-	run_every = timedelta(minutes=1)
-	#run_every = timedelta(hours=2)
+	#run_every = timedelta(minutes=1)
+	run_every = timedelta(hours=2)
 
 	def run(self, **kwargs):
 		print with_time("node.PingSylphNodes") # TODO: Debug
 
 		nodes = Node.objects.filter(is_yet_to_resolve=False) \
-							.exclude(node_class='sylph') \
+							.filter(node_class='sylph') \
 							.exclude(pk=settings.OUR_NODE_PK)
 
 
