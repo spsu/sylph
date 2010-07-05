@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from sylph.core.endpoint.exceptions import ProtocolErrorException
+from sylph.utils.comms import django_receive
 
 import datetime
 
@@ -52,50 +53,68 @@ def index(request):
 		print "No dispatch postdata!"
 		raise ProtocolErrorException, "No dispatch postdata!" # TODO
 
+	print 'test1'
 	dispatch = request.POST['dispatch']
+	if type(dispatch) == list:
+		dispatch = dispatch[0]
 
 	# TODO: I need to write an actual dispatcher!!!
 
+	print 'test2'
+
+	print dispatch
+	print request.POST
+	print '------'
+
+	print request
+
+	request_msg = django_receive(request)
+
+	print 'test2.1'
+
 	# ======== Node Disptaching ===========================
+	print dispatch
 
 	print "Attempting to dispatch: %s" %dispatch # TODO DEBUG
 
+	# TODO: PING is about to no longer rely on HTTP POST... simple GET works
 	if dispatch in ['ping', 'node_ping']:
+		print 'test3'
 		from sylph.core.node.api import ping_response
-		return ping_response(request)
+		return ping_response(request_msg)
 
 	if dispatch == 'node_add':
 		from sylph.core.node.api import add
-		return add(request)
+		return add(request_msg)
 
 	if dispatch == 'node_delete':
 		from sylph.core.node.api import delete
-		return delete(request)
+		return delete(request_msg)
 
 	if dispatch == 'node_ask_to_add':
 		from sylph.core.node.api import ask_to_add
-		return ask_to_add(request)
+		return ask_to_add(request_msg)
 
 	# ======== User Dispatching ===========================
 
 	if dispatch in ['user_update', 'user_pull']: # TODO
 		"""Simply ask for the user's profile, updates, etc."""
 		from sylph.apps.user.api import get_profile
-		return get_profile(request)
+		return get_profile(request_msg)
 
 	if dispatch == 'user_push':
 		from sylph.apps.user.api import push_profile
-		return push_profile(request)
+		return push_profile(request_msg)
 
 	if dispatch == 'user_get': # TODO
 		"""Get a user profile from the user's URI."""
 		from sylph.apps.user.api import get
-		return get(request)
+		return get(request_msg)
 
 	if dispatch == 'user_get_by_node': # TODO
 		"""Look up a user for a node URI."""
 		from sylph.core.user.api import get_by_node
-		return get_by_node(request)
+		return get_by_node(request_msg)
 
 	return HttpResponse('TODO')
 

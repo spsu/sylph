@@ -6,8 +6,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 
 from sylph.core.endpoint.exceptions import ProtocolErrorException
-from sylph.utils.data.RdfSerializer import RdfSerializer
-
+from sylph.utils.data.RdfSerializer import RdfSerializer # TODO: DEPRECATE
+from sylph.utils.comms import Message
 from sylph.apps.user.models import User
 from sylph.core.node.models import Node
 
@@ -37,7 +37,6 @@ def ping_response(request):
 	#rs.add(user) # TODO: Only share minimal info per user's preferences
 
 	return HttpResponse(rs.to_rdf(), mimetype='text/plain')
-
 
 # ============ Ask Node to Add Us =========================
 

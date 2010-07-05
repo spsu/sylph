@@ -10,16 +10,16 @@ def with_time(msg):
 	st = "%s [%s]" % (msg, st)
 	return colored(st, 'white', 'on_blue')
 
-def parse_endpoint_trace(html):
+def parse_endpoint_trace(html, uri=''):
 	"""Return the backtrace for remote node failure.
 	(This is only for use in development.)"""
 	from BeautifulSoup import BeautifulSoup
-	soup = BeautifulSoup(hmtl)
+	from sylph.utils.termcolor import colored
 
 	# Print Trace
 	soup = BeautifulSoup(html)
 	trace = soup.find('textarea', id='traceback_area').string
 	trace = trace.split('Traceback:')[1]
-	head = 'Remote Trace for %s:\n' % str(self.uri.geturl())
+	head = 'Remote Trace for %s:\n' % uri
 	return colored(head+trace, 'yellow')
 

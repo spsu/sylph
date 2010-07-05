@@ -1,6 +1,11 @@
-from sylph.utils.http import Message, Request, Response
+from sylph.utils.http import Message
 from sylph.utils.http import send as http_send
+from sylph.utils.http import django_receive as http_django_receive
 from sylph.utils.data.RdfSerializer import RdfSerializer
+from sylph.utils.data.RdfParser import RdfParser
+
+# TODO: Parser should be more decoupled.
+# TODO: Alternative parser/serializers, eg. JSON
 
 class SylphMessage(Message):
 	"""
@@ -12,12 +17,12 @@ class SylphMessage(Message):
 	analysis of the headers or content.
 	"""
 
-	def __init__(self):
-		super(SylphMessage, self).__init__()
+	def __init__(self, uri=''): # TODO: Fix/standardize args
+		super(SylphMessage, self).__init__(uri)
 
 		# High-level serialized and parsed info (respectively)
 		self.payload = []
-		self.extracted = None
+		self.extracted = None # TODO
 
 		# Serializer/Parser objects.
 		self.serializer = None
@@ -32,27 +37,30 @@ class SylphMessage(Message):
 
 	def extract(self, type):
 		"""Extract all data of a known type. (eg. Node, User, etc.)"""
-		# XXX: This is not a nice interface / good practice. 
+		# XXX: This is not a nice interface / good practice.
+		# TODO: See self.extracted wrt. self.payload. Make them analogous for
+		# the two modalities of transfer. (response->extracted)
 		if not self.body:
 			return None # Nothing to extract
 		if not self.parser:
-			# TODO: Parser shouldn't contain content!!! BAD! REUSE IS GOOD!
+			# XXX/TODO: Parser shouldn't contain content!!! BAD! REUSE IS GOOD!
 			self.parser = RdfParser(self.body)
 		return self.parser.extract(type) # XXX: BAD
 
-	def sync(self):
+	# XXX/TODO: If something new is added to payload, **mark headers stale** instead
+	def _sync(self):
 		if self.payload:
-			self.__add_payload_to_message()
+			self.__add_payload_to_headers()
 		elif self.body:
-			pass # TODO: Try to parse out content to payload!
+			pass # TODO: Try to parse out all content to self.extracted!
 
-	def unsync(self):
+	def _unsync(self):
 		if self.payload:
-			self.__remove_payload_from_message()
+			self.__remove_payload_from_headers()
 		elif self.body:
-			pass # TODO: Read above todo
+			pass # TODO: Read above todo (remove from self.extracted?)
 
-	def __add_payload_to_message(self):
+	def __add_payload_to_headers(self):
 		"""Add the object payload to the message. This performs the
 		serialization work."""
 		if not self.payload:
@@ -74,7 +82,7 @@ class SylphMessage(Message):
 		# TODO: Remove data from the serializer to keep state pure
 		# self.serializer.flush()
 
-	def __remove_payload_from_message(self):
+	def __remove_payload_from_headers(self):
 		"""Remove the payload from the message."""
 		del self.post['data']
 		del self.post['format']
@@ -132,28 +140,32 @@ class SylphMessage(Message):
 		"""Gets from headers."""
 		pass
 
-# ============ Subtypes =========================
-
-class SylphRequest(SylphMessage):
-	pass
-
-class SylphResponse(SylphMessage):
-	pass
-
 # ============ Communications Methods ===========
 
-def get(uri, timeout=10, response_class=SylphResponse):
+def get(uri, timeout=10, response_class=SylphMessage):
 	"""Simple fetch of a URI. No request message payload"""
-	return http_send(SylphRequest(), uri, 'GET', timeout, response_class)
+	return http_send(SylphMessage(), uri, 'GET', timeout, response_class)
 
-def send(message, uri=None, method='GET', timeout=10, response_class=SylphResponse):
+def send(message, uri=None, method='GET', timeout=10, response_class=SylphMessage):
 	"""Send a Request Message and get a Response Message."""
-	message.sync()
+	message._sync()
 	response = http_send(message, uri, method, timeout, response_class)
-	message.unsync()
+	message._unsync()
 	return response
 
 def django_receive(request):
-	"""Process a Django request object into a message we can use."""
-	pass
+	return http_django_receive(request)
+
+# XXX/TODO: Once fixed, this belongs in http.py
+def django_respond(message):
+	"""Send a message over as the HTTP response from a django view."""
+	from django.http import HttpResponse
+
+	# XXX XXX XXX: This is very bad/messy...
+	message._sync()
+	data = message.headers['data']
+	message._unsync()
+
+	# TODO: Mimetype should be based on serialization format
+	return HttpResponse(data, mimetype='text/plain')
 

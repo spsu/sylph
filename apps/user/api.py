@@ -31,15 +31,10 @@ def get_profile(request):
 # XXX/TODO: This is subject to spam and/or fraud.
 def push_profile(request):
 	"""Handle a profile that has been pushed to us."""
-	p = request.POST
-
 	try:
-		ps = RdfParser(p['data'])
-		udata = ps.extract('User')[0]
-
+		udata = request.extract('User')[0]
 		uri = udata['uri']
 		node_uri = udata['node']
-
 	except:
 		raise Exception, "Improper payload."
 

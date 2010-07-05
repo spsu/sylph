@@ -12,6 +12,13 @@ pathetic at this point.) Sylph requests are built upon this at a higher
 level. See 'comms.py'.
 """
 
+# TODO: Cookies
+# TODO: File transfers
+# TODO: GET - proper support
+# TODO: Handle redirects
+# TODO: Connection pool (keepalive, etc.)
+# TODO: Error handling/store
+
 class Message(object):
 	"""A message object is a store for basic information sent over HTTP
 	This represents both Request and Response, as it's basically the
@@ -25,6 +32,17 @@ class Message(object):
 		self.post = post
 		self.headers = headers
 		self.body = body
+
+	# ============= Errors ================================
+
+	# TODO: There can be an error store that takes on errors on both ends as well
+	# as during communication itself.
+
+	def has_errors(self):
+		return False # XXX/TODO
+
+	def set_error(self, key, val): # TODO: this and etc. methods
+		pass
 
 	# ============= URI/Body ==============================
 
@@ -87,27 +105,22 @@ class Message(object):
 		for k, v in post.iteritems():
 			self.post[k] = v
 
-	def set_post(self, post):
-		self.post = post
+	def set_post(self, *args):
+		if len(args) == 1 and type(args[0]) == dict:
+			self.post = args[0]
+		elif len(args) == 2:
+			self.post[args[0]] = args[1]
 
 	def get_post(self):
 		return self.post
 
-# ============ Subtypes =========================
-
-class Request(Message):
-	pass
-
-class Response(Message):
-	pass
-
 # ============ Communication Functions ====================
 
-def get(uri, timeout=10, response_class=Response):
+def get(uri, timeout=10, response_class=Message):
 	"""Simple fetch of a URI. No request message payload"""
-	return send(Request(), uri, 'GET', timeout, response_class)
+	return send(Message(), uri, 'GET', timeout, response_class)
 
-def send(message, uri=None, method='GET', timeout=10, response_class=Response):
+def send(message, uri=None, method='GET', timeout=10, response_class=Message):
 	"""Send a Request Message and get a Response Message."""
 	if not uri:
 		uri = message.uri
@@ -129,14 +142,15 @@ def send(message, uri=None, method='GET', timeout=10, response_class=Response):
 	post = None
 	if message.post or method.upper() == 'POST':
 		method = 'POST'
-		post = urlencode(messsage.post)
+		post = urlencode(message.post)
 		outheaders['Content-type'] = 'application/x-www-form-urlencoded'
 
 	# Use the appropriate message store
 	if response_class:
-		response = response_class(uri)
+		response = response_class()
+		response.set_uri(uri)
 	else:
-		response = Response(uri)
+		response = Message(uri)
 
 	try:
 		uri = urlparse(uri)
@@ -158,7 +172,7 @@ def send(message, uri=None, method='GET', timeout=10, response_class=Response):
 		response.status = resp.status
 		if response.status != 200:
 			from sylph.utils.debug import parse_endpoint_trace
-			print parse_endpoint_trace(resp.read()) # XXX Debug trace
+			print parse_endpoint_trace(resp.read(), 'TODO:URI') # XXX Debug trace
 			raise Exception, "An exception occurred in comms."
 
 		response.body = resp.read()
@@ -168,6 +182,53 @@ def send(message, uri=None, method='GET', timeout=10, response_class=Response):
 		print "CONNECTION ERROR"
 		print e
 		pass
-
+		raise e
 	return response
+
+def django_receive(request):
+	"""Process a Django request object into a message we can use."""
+	ret = Message()
+
+	print "DJANGO RECEIVE"
+
+	print 'GET'
+	get = {}
+	for k, v in request.GET:
+		if type(v) == list: # XXX: Why is django doing this?
+			v = v[0]
+		get[k] = v
+
+	print 'POST'
+
+	post = {}
+	for k, v in request.POST.iteritems():
+		print k
+		print v
+		if type(v) == list: # XXX: Why is django doing this?
+			v = v[0]
+		post[k] = v
+
+	print "HEADERS"
+
+	# Django screws with the headers... **and** stores them in bad place!
+	headers = {}
+	for k, v in request.META.iteritems():
+		print k
+		print v
+		# XXX/TODO: This skips a few headers that are arbitrarily not 'HTTP_'
+		if len(k) < 5 or k[0:5] != 'HTTP_':
+			continue
+		nk = k[5:] # remove the 'HTTP_'
+		if nk != k.replace('HTTP_', ''):
+			nk = k
+		# Fix case (Assume it is always Some-Http-Method)
+		nk = nk.replace('_', '-').lower().title()
+		headers[nk] = v
+
+	ret.set_get(get)
+	ret.set_post(post)
+	ret.set_headers(headers)
+
+	# TODO: Cookies, Files... anything else?
+	return ret
 

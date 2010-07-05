@@ -51,6 +51,7 @@ class RdfParser(object):
 		"""Guess the format of the input string."""
 		# TODO: At present, it can only guess between XML and n3, even
 		# then this is a vague heuristic.
+		print st[0:100] # XXX: TODO TEMP DEBUG
 		if st.startswith('<'):
 			return 'xml'
 		return 'n3'

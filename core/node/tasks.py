@@ -5,9 +5,8 @@ from django.conf import settings
 
 from models import *
 from sylph.apps.user.models import User
-#from sylph.utils.transport.Communicator import Communicator
-from sylph.utils.transport.Request import Request
 from sylph.utils.data.RdfParser import RdfParser
+from sylph.utils.comms import SylphMessage, get, send
 from sylph.utils.uri import hashless
 from sylph.utils.debug import with_time
 
@@ -61,6 +60,8 @@ def add_node(uri):
 		post['key_yours'] = node.display_key_theirs
 		new_state = '3'
 
+	print "TODO"*50
+	return
 	comm = Communicator(node.uri)
 	ret = comm.send_post(post)
 
@@ -81,8 +82,6 @@ def add_node(uri):
 
 	# Unknown other state...
 	raise Exception, "Unknown state."
-
-
 
 # ============ Initial Node Adding ========================
 
@@ -139,10 +138,11 @@ def do_add_node_lookup(uri):
 		user = User()
 
 	# Perform communications
-	comm = Communicator(uri)
-	ret = comm.send_post({'dispatch': 'ping'})
+	message = SylphMessage(uri)
+	message.set_post('dispatch', 'ping')
+	response = send(message)
 
-	if not ret:
+	if response.has_errors():
 		print "No communication return data!!" # TODO: Error log
 		on_failure(node)
 		return
@@ -151,15 +151,15 @@ def do_add_node_lookup(uri):
 	node_data = None
 
 	try:
-		node_data = ret.extract('Node')[0]
+		node_data = response.extract('Node')[0]
 	except:
-		print "Error parsing RDF" # TODO: Error log
+		print "Error parsing payload" # TODO: Error log
 		on_failure(node)
 		return
 
 	user_data = None
 	try:
-		user_data = ret.extract('User')[0]
+		user_data = response.extract('User')[0]
 	except:
 		print "1. No user data, or error. Ignoring."
 
@@ -233,11 +233,17 @@ def ping_node(id):
 	#	user = User()
 
 	# Perform communications. 
-	comm = Communicator(node.uri)
-	ret = comm.send_post({'dispatch': 'ping'})
+	#comm = Communicator(node.uri)
+	#ret = comm.send_post({'dispatch': 'ping'})
 
-	if not ret:
+	# Perform communications
+	message = SylphMessage(uri)
+	message.set_post('dispatch', 'ping')
+	response = send(message)
+
+	if response.has_errors():
 		print "No communication return data!!" # TODO: Error log
+		#on_failure(node)
 		node.just_failed(save=True)
 		return
 
