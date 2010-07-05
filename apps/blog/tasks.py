@@ -10,12 +10,14 @@ from sylph.core.subscription.models import Subscription
 from sylph.utils.debug import with_time
 
 from web2feed import web2feed
+from sylph.utils.comms import get
 
 from datetime import datetime, timedelta
 
 @task
 def get_feed(node_id):
 	"""Get the feed of 'latest' blogitem posts."""
+	print "task: get_feed"
 	try:
 		node = Node.objects.get(pk=node_id)
 	except Node.DoesNotExist:
@@ -26,16 +28,21 @@ def get_feed(node_id):
 	# When blogitems are shared in sylph (very soon), then we'll use
 	# the sylph protocol
 	try:
-		data = web2feed(node.uri)
+		msg = get(node.uri)
+		if msg.has_errors():
+			node.just_failed(save=True)
+			print "Just failed to grab from node"
+			return
+		data = web2feed(node.uri, content=msg.get_body())
 		feed = data['feed']
 		meta = data['meta']
 	except Exception as e:
 		node.just_failed(save=True)
-		print e
-		raise e
+		raise
+		#print e
+		#raise e
 
 	node.just_pulled_from(save=False)
-
 	try:
 		if 'title' in meta:
 			node.name = meta['title']
@@ -43,7 +50,7 @@ def get_feed(node_id):
 			node.description = meta['description']
 		node.save()
 	except:
-		pass
+		node.save()
 
 	print "fetched %d blogitems from %s" %(len(feed), node.uri)
 
@@ -91,7 +98,11 @@ def get_fulltext(blogitem_id):
 	item.tried_fetch_count += 1 # XXX: Verify increment works
 
 	try:
-		data = web2feed(item.uri)
+		msg = get(item.uri)
+		if msg.has_errors():
+			print "Just failed to grab web item"
+			return
+		data = web2feed(node.uri, content=msg.get_body())
 		feed = data['feed']
 		meta = data['meta']
 		if not feed or type(feed) != dict:

@@ -133,9 +133,7 @@ class Resource(models.Model):
 
 	def alter_transportables(self, transportables):
 		"""Overload this if there's any dynamic introspection we want
-		to do on the transport payload data."""
-		print "Resource.AlterTransportables"
-		print "Resource.AlterTransportables"
+		to do on the transport payload data before it ships."""
 		return transportables
 
 	# TODO: Deprecate this as public API. Make private.

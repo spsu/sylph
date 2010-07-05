@@ -231,7 +231,7 @@ def ping_node(id):
 	#	user = User()
 
 	# Perform communications
-	message = SylphMessage(uri)
+	message = SylphMessage(node.uri)
 	message.set_post('dispatch', 'ping')
 	response = send(message)
 

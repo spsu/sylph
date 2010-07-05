@@ -83,6 +83,7 @@ def pull_profile_from_node(node_id):
 	try:
 		user = User.objects.get(node=node)
 	except User.DoesNotExist:
+		print "We don't have a user for the node..."
 		user = User() # We may not yet have a user for the node (rare)
 		save = True
 
