@@ -4,9 +4,13 @@ import httplib
 from urllib import urlencode
 from urlparse import urlparse
 
-# This is the low-level wrapper around HTTP.
-# The sylph protocol can be layered on top of this.
-# XXX: Work in progress...
+"""
+DON'T USE THIS DIRECTLY!
+
+This is the low-level wrapper around making HTTP requests. (It's rather
+pathetic at this point.) Sylph requests are built upon this at a higher
+level. See 'comms.py'.
+"""
 
 class Request(object):
 	"""Perform a synchronous HTTP request.
@@ -16,7 +20,8 @@ class Request(object):
 		print result.get_node_type()
 	"""
 
-	def __init__(self, uri, get={}, post={}, headers={}, timeout=10):
+	def __init__(self, uri, get={}, post={}, headers={}, timeout=10,
+					response_class=None):
 		self.uri = uri
 		self.get = get
 		self.post = post
@@ -35,7 +40,11 @@ class Request(object):
 		for hk, hv in headers.iteritems():
 			self.headers[hk] = hv
 
-	def download(self, method='GET'):
+		self.response_class = response_class
+
+	# ============= Download ==============================
+
+	def send(self, method='GET'):
 		"""Perform the download.
 		This is a synchronous request."""
 		if self.post or method.upper() == 'POST':
@@ -77,14 +86,24 @@ class Request(object):
 			print "CONNECTION ERROR"
 			pass
 
-		return Response(self.uri, headers, status, body)
+		if not self.response_class:
+			return Response.from_data(self.uri, headers, status, body)
+		return self.response_class.from_data(self.uri, headers, status, body)
 
-	# ============= Accessors / Mutators ==================
+	# ============= HTTP Headers ==========================
 
 	def add_header(self, key, value):
 		self.headers[key] = value
 
+	def add_headers(self, headers):
+		"""Add a dictionary of headers. Overrides previous keys."""
+		if type(headers) != dict:
+			return
+		for k, v in headers.iteritems():
+			self.headers[k] = v
+
 	def set_headers(self, headers):
+		"""Set headers. Overrides all previous headers."""
 		if type(headers) != dict:
 			return
 		self.headers = headers
@@ -92,46 +111,74 @@ class Request(object):
 	def get_headers(self):
 		return self.headers
 
+	# ============= GET dictionary ========================
+
+	def add_get_var(self, key, value):
+		self.get[key] = value
+
+	def add_get_vars(self, get):
+		if type(get) != dict:
+			return
+		for k, v in get.iteritems():
+			self.get[k] = v
+
+	def set_get(self, get):
+		self.get = get
+
+	def get_get(self):
+		return self.get
+
+	# ============= POST dictionary =======================
+
+	def add_post_var(self, key, value):
+		self.post[key] = value
+
+	def add_post_vars(self, post):
+		if type(post) != dict:
+			return
+		for k, v in post.iteritems():
+			self.post[k] = v
+
+	def set_post(self, post):
+		self.post = post
+
+	def get_post(self):
+		return self.post
+
+	# ============= Misc Accessors/Mutators ===============
+
 	def get_uri(self):
 		return self.uri
+
+	def set_uri(self, uri):
+		self.uri = uri
+
+	def set_response_class(self, cls):
+		self.response_class = cls
 
 # ================= Server Response =======================
 
 class Response(object):
 	"""Response from a download request."""
 
-	def __init__(self, uri, headers={}, status=0, body=''):
-		self.uri = uri
-		self.headers = headers
-		self.status = status
-		self.body = body
+	def __init__(self):
+		"""Creates a blank response object."""
+		self.uri = ''
+		self.headers = {}
+		self.status = 0
+		self.body = ''
 
-	def is_sylph_node(self):
-		"""Returns whether the page is a sylph node."""
-		if 'X-Sylph-Protocol-Version' in self.headers:
-			return True
-		return False
-
-	def is_feed(self):
-		"""Returns whether the page is an RSS/Atom feed."""
-		return None # TODO
-
-	def is_webpage(self):
-		"""Returns whether the page is a webpage via analysis
-		of the payload"""
-		return None # TODO
-
-	def get_node_type(self):
-		"""Return the type of node the page is."""
-		if self.is_sylph_node():
-			return 'sylph'
-		elif self.is_feed():
-			return 'feed'
-		elif self.is_webpage():
-			return 'webpage'
-		return 'unknown'
-
-	# ============= Accessors / etc. ======================
+	@classmethod
+	def from_data(cls, uri, headers={}, status=0, body=''):
+		"""Create a Response object from the data provided.
+		This type of factory constructor is required since Python
+		does not allow method overloading"""
+		response = cls()
+		response.uri = uri
+		response.headers = headers
+		response.status = status
+		response.body = body
+		return response
 
 	def get_headers(self):
 		return self.headers

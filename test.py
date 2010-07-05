@@ -25,7 +25,7 @@ def test(request):
 	from sylph.utils.http import Request, Response
 
 	req = Request('http://slashdot.org')
-	resp = req.download()
+	resp = req.send()
 
 	print req
 	print "========"
@@ -35,7 +35,6 @@ def test(request):
 	print resp.get_status()
 	print '========'
 	print resp.get_headers()
-	print resp.get_body()
 
 
 	print generate_uuid()
