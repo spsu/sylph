@@ -53,33 +53,20 @@ def index(request):
 		print "No dispatch postdata!"
 		raise ProtocolErrorException, "No dispatch postdata!" # TODO
 
-	print 'test1'
 	dispatch = request.POST['dispatch']
 	if type(dispatch) == list:
 		dispatch = dispatch[0]
 
 	# TODO: I need to write an actual dispatcher!!!
 
-	print 'test2'
-
-	print dispatch
-	print request.POST
-	print '------'
-
-	print request
-
 	request_msg = django_receive(request)
 
-	print 'test2.1'
-
 	# ======== Node Disptaching ===========================
-	print dispatch
 
 	print "Attempting to dispatch: %s" %dispatch # TODO DEBUG
 
 	# TODO: PING is about to no longer rely on HTTP POST... simple GET works
 	if dispatch in ['ping', 'node_ping']:
-		print 'test3'
 		from sylph.core.node.api import ping_response
 		return ping_response(request_msg)
 

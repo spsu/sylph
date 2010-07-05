@@ -44,9 +44,11 @@ def ask_to_add(request):
 	"""Ask to add a node. Just have to provide the node uri.
 	Note: this is very insecure and subject to spamming, thus
 	this should only be considered a temporary solution."""
-	p = request.POST
-
-	uri = hashless(p['uri'])
+	print request
+	print request.post
+	uri = request.get_post('uri')
+	print uri
+	uri = hashless(uri) # XXX: BAD API DESIGN!!
 	node = None
 	try:
 		node = Node.objects.get(uri=uri)

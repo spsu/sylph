@@ -109,12 +109,6 @@ def do_add_node_lookup(uri):
 	Pinging a node does not require us to give identity unless the
 	remote node requests it.
 	"""
-
-	def on_failure(node):
-		node.status = 'EERR' # TODO
-		node.datetime_last_failed = datetime.today()
-		node.save()
-
 	node = None
 	try:
 		node = Node.objects.get(uri=uri)
@@ -144,7 +138,7 @@ def do_add_node_lookup(uri):
 
 	if response.has_errors():
 		print "No communication return data!!" # TODO: Error log
-		on_failure(node)
+		node.just_failed(save=True)
 		return
 
 	parser = None
@@ -152,15 +146,17 @@ def do_add_node_lookup(uri):
 
 	try:
 		node_data = response.extract('Node')[0]
-	except:
+	except Exception as e:
+		print e
 		print "Error parsing payload" # TODO: Error log
-		on_failure(node)
+		node.just_failed(save=True)
 		return
 
 	user_data = None
 	try:
 		user_data = response.extract('User')[0]
-	except:
+	except Exception as e:
+		print e
 		print "1. No user data, or error. Ignoring."
 
 	# Update the node's status
@@ -192,10 +188,17 @@ def do_add_node_lookup(uri):
 		user.save()
 
 	# Now have the node add us
-	comm = Communicator(uri)
-	post = {'dispatch': 'node_ask_to_add'}
-	post['uri'] = settings.FULL_ENDPOINT_URI
-	ret = comm.send_post(post)
+	message = SylphMessage(uri)
+	post = {
+		'dispatch': 'node_ask_to_add',
+		'uri': settings.FULL_ENDPOINT_URI, # XXX XXX XXX: Very bad protocol!
+	}
+	message.set_post(post)
+	response = send(message)
+
+	if response.has_errors():
+		print "Failed to ask node to add us!!"
+		node.just_failed(save=True)
 
 	print "CREATING SUBSCRIPTIONS:"
 	create_subscriptions_to(node)
@@ -211,17 +214,12 @@ def query_node_status(uri):
 def ping_node(id):
 	"""Ping a node that has already been added and succesfully resolved
 	in the past. This keeps info up to date."""
-
-	#def on_failure(node):
-	#	node.status = 'EERR' # TODO
-	#	node.datetime_last_failed = datetime.today()
-	#	node.save()
-
+	print "node.ping_node"
 	node = None
 	try:
 		node = Node.objects.get(pk=id)
 	except Node.DoesNotExist:
-		# TODO: ERROR LOG FILE
+		# TODO: Error logging facility (log to db)
 		print "Node does not exist!!!"
 		return
 
@@ -232,10 +230,6 @@ def ping_node(id):
 	#except User.DoesNotExist:
 	#	user = User()
 
-	# Perform communications. 
-	#comm = Communicator(node.uri)
-	#ret = comm.send_post({'dispatch': 'ping'})
-
 	# Perform communications
 	message = SylphMessage(uri)
 	message.set_post('dispatch', 'ping')
@@ -243,7 +237,6 @@ def ping_node(id):
 
 	if response.has_errors():
 		print "No communication return data!!" # TODO: Error log
-		#on_failure(node)
 		node.just_failed(save=True)
 		return
 

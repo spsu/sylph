@@ -9,6 +9,7 @@ from sylph.core.subscription.models import Subscription
 from sylph.utils.uri import hashless
 #from sylph.utils.transport.Communicator import Communicator
 from sylph.utils.data.RdfSerializer import RdfSerializer
+from sylph.utils.comms import SylphMessage, send
 
 from datetime import datetime
 from datetime import timedelta
@@ -33,7 +34,6 @@ def push_profile():
 		push_profile_to_node.delay(node.uri)
 
 
-# TODO: Eventually this will be controlled via subscription.
 @task
 def push_profile_to_node(node_uri):
 	"""Send an updated copy of our profile to a specified node."""
@@ -50,23 +50,19 @@ def push_profile_to_node(node_uri):
 	except Node.DoesNotExist:
 		raise Exception, "The node requested does not exist."
 
-	post = {'dispatch': 'user_push'}
-
 	# TODO: Granularized Privacy
-	rs = RdfSerializer(user)
-	post['data'] = rs.to_rdf()
 
-	comm = Communicator(node_uri)
-	ret = comm.send_post(post)
+	message = SylphMessage(node_uri)
+	message.set_post('dispatch', 'user_push')
+	message.add(user)
+	response = send(message)
 
-	if not ret:
+	if not response.has_errors():
+		node.just_failed(save=True)
 		print "User profile push failed." # TODO: Error log
+		return
 
-	time = datetime.today()
-
-	node.datetime_last_resolved = time
-	node.datetime_last_pushed_to = time
-	node.save()
+	node.just_pushed_to(save=True)
 
 @task
 def pull_profile_from_node(node_id):
@@ -75,12 +71,6 @@ def pull_profile_from_node(node_id):
 	print "pull_profile_from_node %d" % node_id
 
 	save = False # Flag to save user
-
-	def on_failure(node):
-		node.status = 'EERR' # TODO
-		node.datetime_last_failed = datetime.today()
-		node.save()
-
 	node = None
 	try:
 		node = Node.objects.get(pk=node_id)
@@ -96,22 +86,28 @@ def pull_profile_from_node(node_id):
 		user = User() # We may not yet have a user for the node (rare)
 		save = True
 
-	# Perform communications. 
-	comm = Communicator(node.uri)
-	ret = comm.send_post({'dispatch': 'user_pull'})
+	# Perform communications
+	message = SylphMessage(node.uri)
+	message.set_post('dispatch', 'user_pull')
+	response = send(message)
 
-	if not ret:
+	if response.has_errors():
 		print "No communication return data!!" # TODO: Error log
-		on_failure(node)
+		node.just_failed(save=True)
 		return
 
 	try:
-		user_data = ret.extract('User')
+		user_data = response.extract('User')
 		if not user_data or len(user_data) != 1:
 			raise Exception, "Error with data"
 		user_data = user_data[0]
-	except:
+	except Exception as e:
 		print "No user data, or error. Ignoring."
+		node.just_failed(save=True)
+		print e
+		return
+
+	node.just_pulled_from(save=True)
 
 	for k, v in user_data.iteritems():
 		chk = getattr(user, k)

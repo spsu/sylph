@@ -20,7 +20,11 @@ class RdfParser(object):
 		if format == 'guess':
 			format = self.__guess_format(rdf)
 			print 'RdfParser guesses format to be: %s' % format
-		self.graph.load(StringIO(rdf), format=format)
+		try:
+			self.graph.load(StringIO(rdf), format=format)
+		except:
+			print "Failed to parse RDF:"
+			print rdf[0:100]
 
 	def extract(self, datatype):
 		"""Extract all of the data of a given datatype."""
@@ -51,7 +55,6 @@ class RdfParser(object):
 		"""Guess the format of the input string."""
 		# TODO: At present, it can only guess between XML and n3, even
 		# then this is a vague heuristic.
-		print st[0:100] # XXX: TODO TEMP DEBUG
 		if st.startswith('<'):
 			return 'xml'
 		return 'n3'

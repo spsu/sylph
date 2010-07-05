@@ -15,33 +15,24 @@ def test(request):
 	#from sylph.core.node.api import ping_response
 	#return ping_response(request)
 
-	from sylph.utils.uri import generate_uuid
-	from sylph.core.backend.models import BackendConfig
-	from sylph.core.backend.utils.Configs import Configs
 	from sylph.core.resource.models import Resource
 	from sylph.utils.data.RdfParser import RdfParser
 	from sylph.utils.data.RdfSerializer import RdfSerializer
 
-	from sylph.utils.http import Request, Response
+	#from sylph.utils.http import Message, Request, Response
+	#from sylph.utils.http import get, send
 
-	req = Request('http://slashdot.org')
-	resp = req.send()
+	from sylph.utils.comms import SylphMessage, get, send
 
-	print req
-	print "========"
-	print req.get_headers()
-	print '--------'
-	print resp
-	print resp.get_status()
+	response = get('http://slashdot.org')
+
+	print response
 	print '========'
-	print resp.get_headers()
+	print response.get_headers()
 
 
-	print generate_uuid()
-	print generate_uuid('posts')
-	print generate_uuid('/some/path/')
 
-
+	return HttpResponse('view terminal output...')
 
 	#user = User.objects.get(pk=1)
 

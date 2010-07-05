@@ -111,8 +111,13 @@ class Message(object):
 		elif len(args) == 2:
 			self.post[args[0]] = args[1]
 
-	def get_post(self):
-		return self.post
+	def get_post(self, *args):
+		if len(args) == 0:
+			return self.post
+		elif len(args) == 1:
+			return self.post[args[0]]
+		else:
+			raise Exception, "Message.get_post(): Too many arguments"
 
 # ============ Communication Functions ====================
 
@@ -189,32 +194,21 @@ def django_receive(request):
 	"""Process a Django request object into a message we can use."""
 	ret = Message()
 
-	print "DJANGO RECEIVE"
-
-	print 'GET'
 	get = {}
 	for k, v in request.GET:
 		if type(v) == list: # XXX: Why is django doing this?
 			v = v[0]
 		get[k] = v
 
-	print 'POST'
-
 	post = {}
 	for k, v in request.POST.iteritems():
-		print k
-		print v
 		if type(v) == list: # XXX: Why is django doing this?
 			v = v[0]
 		post[k] = v
 
-	print "HEADERS"
-
 	# Django screws with the headers... **and** stores them in bad place!
 	headers = {}
 	for k, v in request.META.iteritems():
-		print k
-		print v
 		# XXX/TODO: This skips a few headers that are arbitrarily not 'HTTP_'
 		if len(k) < 5 or k[0:5] != 'HTTP_':
 			continue
