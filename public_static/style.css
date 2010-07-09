@@ -11,7 +11,7 @@ body {
 
 #wrap {
 	width: 870px;
-	background-color: #000;
+	background-color: #000000;
 	margin: 0 auto;
 	padding: 0 0 40px 0;
 	}
@@ -149,7 +149,7 @@ p.announce {
 	
 #main {
 	width: 530px;
-	margin: 40px 0 0 10px;
+	margin: 24px 0 0 10px;
 	}
 	
 #main a, .credit a {
@@ -218,7 +218,7 @@ h4 {
 	}
 
 .clearer {
-	clear: both; 
+	clear: both;
 	line-height: 0; 
 	height: 0;
 	font-size: 0;

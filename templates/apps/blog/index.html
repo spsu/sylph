@@ -30,12 +30,10 @@
 	<p><b><a href="/blog/subscription/">Manage subscriptions</a></b></p>
 
 	{% for item in items.object_list %}
-		<div class="blogitem">
-			<h3><a href="/blog/view/{{item.pk}}">{{item.title}}</a></h3>
-
-			<div class="blogitem_contents">
-				{{item.contents_or_summary|safe}}
-			</div>
+		<div class="entry">
+			<h2><span>Posted on {{item.datetime_created}}</span>{{item.title}}</h2>
+			
+			{{item.contents_or_summary|safe}}	
 
 			<div class="blogitem_management">
 				<small>Published at {{item.uri}}</small><br />
@@ -44,6 +42,8 @@
 				<a href="/blog/delete/{{item.pk}}/">delete</a>
 			</div>
 
+			<div class="comment"><a href="#">Comments (0)</a> | 
+			<a href="/blog/view/{{item.pk}}/#">Permalink</a></div>
 		</div>
 	{% endfor %}
 
