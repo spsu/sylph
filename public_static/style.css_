@@ -1,0 +1,138 @@
+/* TODO: Redesign template and organize CSS. */
+
+body {
+	font-family: arial;
+	padding: 10px;
+}
+#main { 
+	border: 1px solid #ccc; 
+	margin: 0px auto 0px auto;
+	/*width: 800px;*/
+}
+#topbar {
+	margin-bottom: 8px;
+}
+#topbar h1 {
+	margin: 0px 0px 0px 5px;
+	color: #666;
+	font-family: arial;
+}
+#topbar hr {
+	margin: 5px 0px 0px 0px;
+	color: #fff;
+}
+#userbar {
+	width: 350px;
+	text-align: right;
+	float: right;
+	padding: 8px 30px 0px 30px;
+}
+#logo {
+	float: left;
+	width: 250px;
+}
+#logo a {
+	text-decoration: none;
+	color: #333;
+}
+#sidebar {
+	width: 160px;
+	float: right;
+	border-left: 1px solid #aaa;
+	padding: 0px 10px 10px 7px;
+}
+#sidebar ul { padding: 0px 0px 0px 20px; }
+#sidebar li {
+	padding: 0px 0px 5px 0px;
+	list-style-type: square;
+	font-size: 0.8em;
+}
+#sidebar ul ul { padding: 7px 0px 0px 20px; }
+#sidebar a {
+	text-decoration: none;
+}
+#sidebar p {
+	margin: 0px 0px 8px;
+}
+#content {
+	padding-right: 200px;
+	padding-left: 10px;
+}
+#aftercontent {
+	clear: both;
+}
+.error { color: #f00; }
+
+a:link, a:visited { color: #00e; }
+a:active, a:hover { color: #aae; }
+
+.buttons a:link, .buttons a:visited { 
+	border: 1px solid #333; 
+	font-size: 1.2em;
+	font-family: arial;
+	color: #333;
+	background-color: #ccc;
+	padding: 3px 4px 3px 4px;
+	margin: 4px;
+}
+.buttons a:active, .buttons a:hover { 
+	border: 1px solid #444; 
+	font-size: 1.2em;
+	font-family: arial;
+	color: #444;
+	background-color: #aaa;
+	padding: 3px 4px 3px 4px;
+	margin: 4px;
+}
+
+.buttons {
+	margin: 12px 20px 10px 10px;
+	text-align: right;
+	float: right;
+	width: 300px;
+}
+
+#content h1 { font-size: 1.8em; }
+#content h2 { font-size: 1.5em; }
+#content h3 { font-size: 1.3em; }
+
+.table {
+	border: 1px solid #ccc;
+	padding: 0px;
+}
+.table div {
+	padding: 4px;
+	font-size: 1.2em;
+}
+.table div a {
+	font-weight: bold;
+}
+table.table {
+	width: 100%;
+}
+table.table td {
+	padding: 4px;
+}
+table.table th {
+	padding: 3px;
+	background-color: #ddd;
+	font-size: 1.2em;
+}
+
+table.table p {
+	margin: 2px 0px 0px 0px;
+}
+	
+
+.row_odd {
+	background-color: #ddd;
+}
+
+.row_even {
+	background-color: #ccc;
+}
+
+.post {
+	background-color: #eee;
+}
+
