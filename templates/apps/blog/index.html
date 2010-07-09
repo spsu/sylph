@@ -30,20 +30,20 @@
 	<p><b><a href="/blog/subscription/">Manage subscriptions</a></b></p>
 
 	{% for item in items.object_list %}
-		<div class="blogitem">
-			<h3><a href="/blog/view/{{item.pk}}">{{item.title}}</a></h3>
-
-			<div class="blogitem_contents">
-				{{item.contents_or_summary|safe}}
-			</div>
+		<div class="entry">
+			<h2><a href="/blog/view/{{item.pk}}/">{{item.title}}</a></h2>
+			
+			{{item.contents_or_summary|safe}}	
 
 			<div class="blogitem_management">
-				<small>Published at {{item.uri}}</small><br />
-				<strike><a href="#">share</a></strike> |
-				<a href="/blog/edit/{{item.pk}}/">edit</a> |
-				<a href="/blog/delete/{{item.pk}}/">delete</a>
+				<small>From {{item.uri}}</small>
 			</div>
 
+			<div class="comment"><a href="#">Comments (0)</a> | 
+				<a href="/blog/view/{{item.pk}}/">Permalink</a> |
+				<a href="/blog/edit/{{item.pk}}/">Manage</a> |
+				<a href="/blog/share/{{item.pk}}/">Share</a>	
+			</div>
 		</div>
 	{% endfor %}
 

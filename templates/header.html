@@ -1,24 +1,12 @@
-	<div id="logo">
-		<h1><a href="/">sylph prototype</a></h1>
-	</div>
-	<div id="userbar">
-		<!-- TODO: Hide entirely when in "to_install" state. -->
-		{% comment %} <!-- {% if user.is_authenticated %}
-			<strong>{{ user.username }}</strong> 
-			| <a href="/system/logout/">Logout</a>
-		{% else %}
-			<a href="/system/login/">Login</a> |
-			<a href="/system/signup/">Signup</a> 
-		{% endif %}
-		| --> {% endcomment %}
-		{% if owner %}
-			<strong><a 
-				href="{{ owner.get_absolute_url }}"
-				>{{ owner.get_name_or_username }}</a></strong> |
-		{% endif %}
-		<strong><a href="/reset/">Reset</a></strong>
-	</div>
-	<hr style="clear:both" />
-	{% block topbar %}
-	{% endblock topbar %}
-
+<h1><a href="/">[Sylph Prototype]</a></h1>
+<!--<ul>
+	<li><a href="#">Link1<span>Blah</span></a></li>
+	<li><a href="#">Link 2<span>Blah</span></a></li>
+	<li><a href="#" class="active">Link 3<span>Blah blah</span></a></li>
+</ul>-->
+<p id="layoutdims">
+	{% if owner %}
+		<strong><a href="{{ owner.get_absolute_url }}">{{ owner.get_name_or_username }}</a></strong> |
+	{% endif %}
+	<strong><a href="/reset/">Reset</a></strong>
+</p>
