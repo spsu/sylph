@@ -146,8 +146,7 @@ def do_add_node_lookup(uri):
 
 	try:
 		node_data = response.extract('Node')[0]
-	except Exception as e:
-		print e
+	except Exception:
 		print "Error parsing payload" # TODO: Error log
 		node.just_failed(save=True)
 		return
@@ -155,8 +154,7 @@ def do_add_node_lookup(uri):
 	user_data = None
 	try:
 		user_data = response.extract('User')[0]
-	except Exception as e:
-		print e
+	except Exception:
 		print "1. No user data, or error. Ignoring."
 
 	# Update the node's status

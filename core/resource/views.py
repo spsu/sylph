@@ -15,7 +15,7 @@ def resource_index(request):
 	try:
 		resources = Resource.objects.all() \
 									.order_by('pk')
-	except Exception as e:
+	except Exception:
 		pass
 	return render_to_response('core/resource/index.html', {
 									'resources': resources,

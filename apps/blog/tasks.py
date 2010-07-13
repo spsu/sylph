@@ -36,7 +36,7 @@ def get_feed(node_id):
 		data = web2feed(node.uri, content=msg.get_body())
 		feed = data['feed']
 		meta = data['meta']
-	except Exception as e:
+	except Exception:
 		node.just_failed(save=True)
 		raise
 		#print e
@@ -79,11 +79,11 @@ def get_feed(node_id):
 			if not blog.contents:
 				get_fulltext.delay(blog.pk)
 
-		except Exception as e:
-			exp = str(type(e))
-			if 'IntegrityError' in exp:
-				continue
-			print e # DEBUG
+		except Exception:
+			#exp = str(type(e))
+			#if 'IntegrityError' in exp:
+			#	continue
+			#print e # DEBUG
 			continue
 
 @task
@@ -107,8 +107,7 @@ def get_fulltext(blogitem_id):
 		meta = data['meta']
 		if not feed or type(feed) != dict:
 			raise Exception, "web2feed did not return a dictionary."
-	except Exception as e:
-		print e
+	except Exception:
 		item.save()
 		return
 

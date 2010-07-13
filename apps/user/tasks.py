@@ -102,10 +102,9 @@ def pull_profile_from_node(node_id):
 		if not user_data or len(user_data) != 1:
 			raise Exception, "Error with data"
 		user_data = user_data[0]
-	except Exception as e:
+	except Exception: 
 		print "No user data, or error. Ignoring."
 		node.just_failed(save=True)
-		print e
 		return
 
 	node.just_pulled_from(save=True)

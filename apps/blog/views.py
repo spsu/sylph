@@ -76,8 +76,7 @@ def subscription_index(request):
 	subs = []
 	try:
 		subs = Subscription.objects.filter(key='blog')
-	except Exception as e:
-		print e
+	except Exception:
 		pass
 
 	return render_to_response('apps/blog/subscription/index.html', {

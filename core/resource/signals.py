@@ -9,8 +9,7 @@ def auto_apply_resource_type(sender, instance, **kwargs):
 	name = str(type(res))
 	try:
 		name = name.strip('<>\'\"').split('.')[-1]
-	except Exception as e:
-		print e
+	except Exception:
 		pass
 
 	res.resource_type = name

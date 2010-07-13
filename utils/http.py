@@ -187,9 +187,8 @@ def send(message, uri=None, method='GET', timeout=10, response_class=Message):
 		response.body = resp.read()
 		conn.close() # XXX/TODO: In the future, keep this open. 
 
-	except Exception as e:
+	except Exception:
 		print "CONNECTION ERROR"
-		raise e
 
 	return response
 
