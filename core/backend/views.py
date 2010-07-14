@@ -46,7 +46,7 @@ def install_main(request):
 	user = None
 	try:
 		user = User.objects.get(pk=settings.OUR_USER_PK)
-	except:
+	except User.DoesNotExist:
 		# TODO
 		raise Exception, "Installer: Core user doesn't exist!!"
 
