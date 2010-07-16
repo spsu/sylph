@@ -154,7 +154,7 @@ def reset(request):
 
 # ============ Jobs Management (Celery) ===================
 
-def run_jobs(request):
+def run_jobs(request, args=None):
 	"""Run some jobs that are scheduled to run."""
 
 	#from sylph.utils.jobs import process_n_messages_pool

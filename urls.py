@@ -15,6 +15,7 @@ urlpatterns = patterns('',
 	(r'^/?$', 'sylph.core.backend.views.index'),
 	(r'^reset/$', 'sylph.core.backend.views.reset'),
 	(r'^endpoint/$', 'sylph.core.endpoint.views.index'),
+	(r'^cron(job)?s?/$', 'sylph.core.backend.views.run_jobs'), # An alias
 
 	# Application level
 	(r'^bootstrap/', include('sylph.apps.bootstrap.urls')),	# bootstrap -> www?
