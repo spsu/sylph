@@ -3,6 +3,10 @@
 import os
 import sys
 
+def rel_to_abspath(path):
+	"""Convert relative path to abspath"""
+	return os.path.abspath(os.path.join(os.path.dirname(__file__), path))
+
 # ================= Version Information ===================
 """
 Both the software and Sylph protocol (which multiple softwares
@@ -19,22 +23,22 @@ RDF_SERIALIZATION = 'xml' # xml or n3
 # ================= Environment ===========================
 
 # Ensure local libraries can be loaded
-sys.path.insert(0, os.path.abspath(
-					os.path.join(os.path.dirname(__file__), 'libs')))
+sys.path.insert(0, rel_to_abspath('libs')) 
 
 # XXX XXX XXX TEMPORARY FOR web2feed
-sys.path.append(os.path.abspath('../web2feed'))
+# XXX XXX XXX Don't assume we want it here!
+sys.path.append(rel_to_abspath('../web2feed'))
+
+os.environ['CELERY_LOADER'] = 'django'
 
 # ================= Common Configuration ==================
 
 ROOT_URLCONF = 'sylph.urls'
 
-TEMPLATE_DIRS = (os.path.join(os.path.abspath('.'), 'templates'),)
-MEDIA_ROOT = os.path.join(os.path.abspath('.'), 'public_static')
+TEMPLATE_DIRS = (rel_to_abspath('templates'),)
+MEDIA_ROOT = rel_to_abspath('public_static')
 
 APPEND_SLASH = True
-
-# TODO: Utility to generate *ALL* absolute and relative system urls.
 
 LOGIN_URL = '/system/login/'
 LOGIN_REDIRECT_URL = '/'
@@ -99,8 +103,9 @@ INSTALLED_APPS = (
 	# Django debug toolbar
 	#'debug_toolbar',
 
-	# Celery
-	'djcelery', # Use 'celery' for older versions
+	# Celery Message Queue
+	'djcelery',
+	'ghettoq', # Ghettoq is a Celery/Carrot fix to run on a database backend
 
 	'sylph.core.endpoint',
 	'sylph.core.resource',
@@ -178,12 +183,38 @@ def get_rabbit_mq_vhost(prefix="sylph", port=None):
 	RabbitMQ. Essentially generated the same way database names are."""
 	return get_db(prefix, port)
 
+def get_db_uri(globs=globals()):
+	"""Return the Celery/Ghettoq database URI. Supply the globals when
+	calling from another settings file."""
+	engine, name, user, passwd, host, port = ('', '', '', '', '', '')
+	try:
+		engine = globs['DATABASE_ENGINE']
+		name = globs['DATABASE_NAME']
+		user = globs['DATABASE_USER']
+		passwd = globs['DATABASE_PASSWORD']
+		host = globs['DATABASE_HOST']
+		port = globs['DATABASE_PORT']
+	except KeyError:
+		return ''
+
+	# Contract these into a simple string 
+	if passwd:
+		user = '%s:%s' % (user, passwd)
+	if port:
+		host = '%s:%s' % (host, port)
+
+	uri = ''
+	if engine == 'sqlite3':
+		uri = 'sqlite:///%s' % name
+	else:
+		uri = '%s://%s@%s/%s' % (engine, user, host, name)
+
+	return uri
 
 PORT = get_port() # XXX: Temporary for templates
 
 FULL_BASE_URI = get_url()
 FULL_ENDPOINT_URI = get_url('/endpoint/')
-
 
 # ================= Import Specific Configs ===============
 

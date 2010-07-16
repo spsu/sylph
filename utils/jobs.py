@@ -1,49 +1,47 @@
+import logging
+import socket
+
+from celery import log
 from celery.messaging import establish_connection, get_consumer_set
-from celery.worker.job import TaskWrapper
-from celery.worker import process_initializer
-from celery.worker.pool import TaskPool
+from celery.worker.job import TaskRequest
 
 """
-This code was from Ask in #celery at freenode.
+Code is from Ask
 """
 
-def process_n_messages(n=1):
+class CronCelery(object):
+	hostname = socket.gethostname()
 
-    def callback(message, message_data):
-        task = TaskWrapper.from_message(message, message_data)
-        task.execute()
+	def __init__(self, logger=None):
+		self.logger = log.get_default_logger(loglevel=logging.INFO)
+		self._setup_consumer()
 
-    conn = establish_connection()
-    consumer = get_consumer_set(conn)
-    consumer.register_callback(callback)
-    it = consumer.iterconsume(limit=n)
+	def _setup_consumer(self):
+		self.connection = establish_connection()
+		self.consumer = get_consumer_set(self.connection)
 
-    for message in it:
-        pass
+	def close(self):
+		self.consumer.close()
+		self.connection.close()
 
-    consumer.close()
-    connection.close()
+	def process_n(self, n=1):
+		for i in xrange(n):
+			#message = self.consumer.fetch()
+			consumer = self.consumer.consumers[0]
+			message = consumer.fetch()
+			if message is None:
+				# No more messages for us
+				return
+			self.on_message(message.payload, message)
+		
+	def on_message(self, message_data, message):
+		try:
+			task = TaskRequest.from_message(message, message_data,
+											logger=self.logger,
+											hostname=self.hostname)
+		except Exception, exc:
+			message.ack()
+			raise
 
-
-def process_n_messages_pool(n=10):
-
-    p = TaskPool(n, process_initializer)
-    p.start()
-
-    def callback(message, message_data):
-        task = TaskWrapper.from_message(message, message_data)
-        task.execute_using_pool(pool)
-
-    conn = establish_connection()
-    consumer = get_consumer_set(conn)
-    consumer.register_callback(callback)
-    it = consumer.iterconsume(limit=n)
-
-    try:
-        for message in it:
-            pass
-    finally:
-        consumer.close()
-        conn.close()
-        p.stop()
+		task.execute()
 

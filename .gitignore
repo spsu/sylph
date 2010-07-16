@@ -11,3 +11,8 @@ celerybeat-schedule
 # Lib dir and linked external libs
 libs/
 utils/web2feed.py
+
+# Misc
+database.db
+
+

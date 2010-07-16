@@ -6,6 +6,10 @@ urlpatterns = patterns('sylph.core.backend.views',
 	# Reset database
 	(r'reset/?$', 'reset'),
 
+	# Process Jobs 
+	# XXX: Also aliased in the root urls.py
+	(r'runjobs/$', 'run_jobs'),
+
 	# Markdown docs
 	(r'about/$', 'view_about'),
 	(r'readme/$', 'view_readme'),

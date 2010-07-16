@@ -152,6 +152,22 @@ def reset(request):
 	return render_to_response(template,
 					context_instance=RequestContext(request))
 
+# ============ Jobs Management (Celery) ===================
+
+def run_jobs(request):
+	"""Run some jobs that are scheduled to run."""
+
+	#from sylph.utils.jobs import process_n_messages_pool
+	#from sylph.utils.jobs import process_n_messages
+	from sylph.utils.jobs import CronCelery
+
+	try:
+		cr = CronCelery()
+		cr.process_n(10)
+		return HttpResponse('Done')
+	except:
+		return HttpResponse('NACK')
+
 # ============ View Markdown Docs =========================
 
 def view_about(request):
