@@ -34,6 +34,35 @@ class Message(object):
 		self.headers = headers
 		self.body = body
 
+	# ============= High-level ============================
+
+	def get_content_type(self):
+		"""Heuristic to guess content type.
+		First checks headers, then magic number, then XML/HTML meta."""
+		mimetype = ''
+		for h, v in self.headers.iteritems():
+			if 'content-type' == h.lower():
+				mimetype = v
+				break
+
+		if mimetype:
+			if ';' not in mimetype:
+				return mimetype.strip()
+			return mimetype.split(';')[0].strip()
+
+		if len(self.body) == 0:
+			return 'application/x-empty'
+
+		# XXX: This is NOT cross-platform:
+		if os.name == 'posix':
+			try:
+				import magic
+				return magic.from_buffer(self.body, mime=True)
+			except:
+				pass
+		
+		return 'unknown'	
+
 	# ============= Errors ================================
 
 	# TODO: There can be an error store that takes on errors on both ends as well
@@ -149,7 +178,7 @@ def send(message, uri=None, method='GET', timeout=10, response_class=Message):
 	if message.post or method.upper() == 'POST':
 		method = 'POST'
 		post = urlencode(message.post)
-		outheaders['Content-type'] = 'application/x-www-form-urlencoded'
+		outheaders['Content-Type'] = 'application/x-www-form-urlencoded'
 
 	# Use the appropriate message store
 	if response_class:
