@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import signals
 from sylph.core.resource.models import ResourceTree
-from sylph.utils.markdown2 import markdown
+from markdown2 import markdown
 
 from datetime import datetime
 

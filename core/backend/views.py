@@ -13,7 +13,7 @@ from sylph.core.feed.models import FeedItem
 
 from utils.install_state import is_installed, INSTALLED
 from sylph.utils.database import reset_database
-from sylph.utils.markdown2 import markdown
+from markdown2 import markdown
 from utils.Configs import Configs
 
 from UserAccount import UserAccount

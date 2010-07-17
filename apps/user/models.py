@@ -3,7 +3,7 @@ from django.db.models import signals
 from django.dispatch import dispatcher
 from sylph.core.resource.models import Resource, ResourceDigraphEdge
 
-from sylph.utils.markdown2 import markdown
+from markdown2 import markdown
 
 from datetime import datetime
 
