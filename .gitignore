@@ -8,6 +8,9 @@
 settings_local.py
 celerybeat-schedule
 
+# Uploads directory
+public_static/uploads/*
+
 # Lib dir and linked external libs
 libs/
 utils/web2feed.py

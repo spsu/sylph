@@ -36,14 +36,20 @@ os.environ['CELERY_LOADER'] = 'django'
 ROOT_URLCONF = 'sylph.urls'
 
 TEMPLATE_DIRS = (rel_to_abspath('templates'),)
-MEDIA_ROOT = rel_to_abspath('public_static')
+
+# Static files (NOT A DJANGO DIRECTIVE!)
+STATIC_ROOT = rel_to_abspath('public_static')
+STATIC_URI = '/static/'
+
+# Uploads
+MEDIA_ROOT = rel_to_abspath('public_static/uploads/')
+MEDIA_URL = '/static/uploads/'
 
 APPEND_SLASH = True
 
 LOGIN_URL = '/system/login/'
 LOGIN_REDIRECT_URL = '/'
 
-MEDIA_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/media/'
 ENDPOINT_URI = '/endpoint/'
 
