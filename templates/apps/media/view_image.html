@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block title %}Viewing Image{% endblock %}
+
+{% block css %}
+{% endblock css %}
+
+{% block javascript %}
+{% endblock javascript %}
+
+{%block content %}
+	<h1>Image</h1>
+	<p title="taken from">http://i.imgur.com/WcclR.jpg</p>
+	<p title="WidthxHeight">{{image.width}}x{{image.height}}</p>
+	<img src="{{image.cached.url}}" />
+{% endblock content %}

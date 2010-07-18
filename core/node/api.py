@@ -40,7 +40,9 @@ def ping_response(request):
 
 # ============ Ask Node to Add Us =========================
 
+# TODO
 def ask_to_add(request):
+	
 	"""Ask to add a node. Just have to provide the node uri.
 	Note: this is very insecure and subject to spamming, thus
 	this should only be considered a temporary solution."""

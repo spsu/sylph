@@ -23,6 +23,7 @@ urlpatterns = patterns('',
 	(r'^user/', include('sylph.apps.user.urls')),
 	(r'^social/', include('sylph.apps.social.urls')),
 	(r'^blog/', include('sylph.apps.blog.urls')),
+	(r'^files/', include('sylph.apps.media.urls')),
 
 	# System Level
 	(r'^node/', include('sylph.core.node.urls')),

@@ -53,6 +53,8 @@ def resource_redirect(request, res_type, res_id):
 		return HttpResponseRedirect('/node/view/%d/'%res_id)
 	elif res_type == 'BlogItem':
 		return HttpResponseRedirect('/blog/view/%d/'%res_id)
+	elif res_type == 'Image':
+		return HttpResponseRedirect('/files/image/view/%d/'%res_id)
 
 	# Unknown types
 	return HttpResponseRedirect('/resource/view/%d/'%res_id)

@@ -25,7 +25,6 @@ def index(request):
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
 
-
 # ============ Edit Own Node ==============================
 
 def edit_own_node(request):
@@ -79,7 +78,6 @@ def edit_own_node(request):
 								},
 								context_instance=RequestContext(request))
 
-
 # ============ Edit Other Node ============================
 
 def edit_other_node(request, node_id):
@@ -115,7 +113,6 @@ def edit_other_node(request, node_id):
 								{'node': node, 'form': form},
 								context_instance=RequestContext(request))
 
-
 # ============ View Node ===============================
 
 def view_node(request, node_id):
@@ -131,7 +128,6 @@ def view_node(request, node_id):
 							},
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
-
 
 # ============ Add Node ===================================
 
@@ -168,7 +164,6 @@ def add_node(request):
 								},
 								context_instance=RequestContext(request))
 
-
 # ============ Delete Node ================================
 
 def delete_node(request, node_id):
@@ -188,7 +183,6 @@ def delete_node(request, node_id):
 
 	return render_to_response('core/node/delete.html',
 								context_instance=RequestContext(request))
-
 
 # ============ Ajax =======================================
 

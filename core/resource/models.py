@@ -212,7 +212,6 @@ class Resource(models.Model):
 	def __unicode__(self):
 		return self.uri
 
-
 # ============ Resource Tree ==============================
 
 class ResourceTree(Resource):

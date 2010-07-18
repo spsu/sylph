@@ -6,6 +6,7 @@ from sylph.utils.data.RdfParser import RdfParser
 
 # TODO: Parser should be more decoupled.
 # TODO: Alternative parser/serializers, eg. JSON
+# TODO**: Mechanism to determine what the type of resource is!
 
 class SylphMessage(Message):
 	"""

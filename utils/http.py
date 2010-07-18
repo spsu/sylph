@@ -33,12 +33,17 @@ class Message(object):
 		self.post = post
 		self.headers = headers
 		self.body = body
+		self._mimetype = None # cached
 
 	# ============= High-level ============================
 
 	def get_content_type(self):
 		"""Heuristic to guess content type.
 		First checks headers, then magic number, then XML/HTML meta."""
+		# TODO: cache invalidation if body changes
+		if self._mimetype:
+			return self._mimetype
+
 		mimetype = ''
 		for h, v in self.headers.iteritems():
 			if 'content-type' == h.lower():
@@ -47,21 +52,31 @@ class Message(object):
 
 		if mimetype:
 			if ';' not in mimetype:
-				return mimetype.strip()
-			return mimetype.split(';')[0].strip()
+				self._mimetype = mimetype.strip()
+			else:
+				self._mimetype = mimetype.split(';')[0].strip()
+			return self._mimetype
 
 		if len(self.body) == 0:
-			return 'application/x-empty'
+			self._mimetype = 'application/x-empty'
+			return self._mimetype
 
 		# XXX: This is NOT cross-platform:
 		if os.name == 'posix':
 			try:
 				import magic
-				return magic.from_buffer(self.body, mime=True)
+				self._mimetype = magic.from_buffer(self.body, mime=True)
+				return self._mimetype
 			except:
 				pass
-		
-		return 'unknown'	
+	
+		self._mimetype = 'unknown'
+		return self._mimetype
+
+	def is_image(self):
+		"""If the body contains an image."""
+		imgs = ['image/jpeg', 'image/png', 'image/gif']
+		return self.get_content_type() in imgs
 
 	# ============= Errors ================================
 
@@ -86,6 +101,7 @@ class Message(object):
 		return self.body
 
 	def set_body(self, body):
+		self._mimetype = None
 		self.body = body
 
 	# ============= HTTP Headers ==========================
@@ -100,6 +116,7 @@ class Message(object):
 			self.headers[k] = v
 
 	def set_headers(self, headers):
+		self._mimetype = None # in case 'content-type'
 		if type(headers) != dict:
 			return
 		self.headers = headers

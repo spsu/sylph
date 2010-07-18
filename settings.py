@@ -127,6 +127,7 @@ INSTALLED_APPS = (
 	'sylph.apps.user',
 	#'sylph.apps.bootstrap',
 	'sylph.apps.social',
+	'sylph.apps.media',
 )
 
 # ================= Important DB Primary Keys =============
