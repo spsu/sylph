@@ -116,6 +116,13 @@ class User(Resource):
 		if not name or type(name) not in [str, unicode]:
 			raise Exception, "Invalid input"
 
+		# XXX: Quick shortcut to clear/blank name
+		if name.strip() in ['NONE', 'CLEAR']:
+			self.first_name = ''
+			self.middle_name = ''
+			self.last_name = ''
+			return
+		
 		parts = name.split()
 		ln = len(parts)
 
@@ -131,7 +138,6 @@ class User(Resource):
 		elif ln == 3:
 			self.middle_name = parts[1]
 			self.last_name = parts[2]
-
 
 	def get_name(self):
 		"""Get a western-formatted name (if available)."""
@@ -221,7 +227,6 @@ class User(Resource):
 	def get_absolute_url(self):
 		return '/user/view/%s/' % self.pk
 
-
 class UserEmail(models.Model):
 	"""Emails are not resources, this is just a 1:m field for users."""
 
@@ -237,7 +242,6 @@ class UserEmail(models.Model):
 
 	# TODO: organization = models.ForeignKey('Org') (as opposed to User)
 	# OR perhaps just use a different table strictly for organizations!
-
 
 # ============ Signal registration ========================
 

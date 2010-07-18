@@ -25,7 +25,6 @@ def index(request):
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
 
-
 # ============ Add Person Form ============================
 
 def add_person_form(request):
@@ -48,9 +47,6 @@ def add_person_form(request):
 	Keep this a separate view from simply adding a friend of a friend.
 	"""
 	pass
-
-
-
 
 # ============ Edit Profile ===============================
 
@@ -91,7 +87,6 @@ def edit_own_profile(request):
 								{'form': form},
 								context_instance=RequestContext(request))
 
-
 # ============ View Profile ===============================
 
 def view_profile(request, user_id):
@@ -115,7 +110,6 @@ def view_profile(request, user_id):
 							},
 							context_instance=RequestContext(request),
 							mimetype='application/xhtml+xml')
-
 
 # ============ Ajax editing ===============================
 
@@ -150,7 +144,6 @@ def ajax_edit(request):
 		return HttpResponse(user.get_username())
 
 	raise Exception, "Unknown request..."
-
 
 def ajax_info(request):
 	"""Load ajax info on the user profile."""

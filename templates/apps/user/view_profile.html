@@ -60,6 +60,8 @@ $(document).ready(function() {
 
 	<h1> <a href="/user/">Index</a> &gt; View Profile </h1>
 
+	<p>Uri: <em title="The user's URI">{{user.uri}}</em></p>
+
 	{% if user.datetime_edited %}
 		<p><small>Last edited: {{ user.datetime_edited }}.</small></p>
 	{% endif %}

@@ -43,18 +43,19 @@ def resource_view(request, res_id):
 def resource_redirect(request, res_type, res_id):
 	"""Redirect to the resource's appropriate view page
 	(assuming it has one.)"""
-
-	print res_type
+	
 	res_id = int(res_id)
 
-	if res_type == 'User':
-		return HttpResponseRedirect('/user/view/%d/'%res_id)
-	elif res_type == 'Node':
-		return HttpResponseRedirect('/node/view/%d/'%res_id)
-	elif res_type == 'BlogItem':
-		return HttpResponseRedirect('/blog/view/%d/'%res_id)
-	elif res_type == 'Image':
-		return HttpResponseRedirect('/files/image/view/%d/'%res_id)
+	typemap= {
+		'User': '/user/view/%d/',
+		'Node': '/node/view/%d/',
+		'BlogItem': '/blog/view/%d/',
+		'Image': '/files/image/view/%d/',
+		'File': '/files/view/%d/',
+	}
+
+	if res_type in typemap:
+		return HttpResponseRedirect(typemap[res_type] % res_id)
 
 	# Unknown types
 	return HttpResponseRedirect('/resource/view/%d/'%res_id)

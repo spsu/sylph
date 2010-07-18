@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}File index{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{%block content %}
+	<h1>File Index</h1>
+
+	<p>There's lots of media on the web that Sylph can create semantic metadata for. Import it, then share it with the distributed web. <em>There's no concept of a 'filename'. Only the original (or access) URI, and associated checksums.</em></p>
+
+	<p>
+		Specific Indices:
+		<a href="/files/image/">Images</a> | 
+		<strike><a href="#">Videos</a></strike> |
+		<strike><a href="#">Audio</a></strike>
+	</p>
+	{% if files %}
+	<table class="table">
+		<tr>
+			<th>
+				File
+			</th>
+			<th>
+				Extra info	
+			</th>
+			<th>
+				Dates
+			</th>
+		</tr>
+		{% for file in files %}
+			<tr class="row_{% cycle 'odd' 'even' %}">
+				<td>
+					<b><a href="/files/view/{{file.pk}}/">File ID #{{file.pk}}</a> ({{file.resource_type}})</b><br />
+					{{file.wrap_uri}}
+				</td>
+				<td>	
+					Type: {{file.mimetype}}<br />
+					<em title="SHA-1 Cryptographic Hash">{{file.sha1_hexdigest}}</em>
+				</td>
+				<td>
+					Added: {{file.datetime_added}}<br />
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+	{% else %}
+		<p><strong>No files currently in system.</strong></p>
+	{% endif %}
+
+{% endblock %}

@@ -78,6 +78,10 @@ class Message(object):
 		imgs = ['image/jpeg', 'image/png', 'image/gif']
 		return self.get_content_type() in imgs
 
+	def is_html(self):
+		html_types = ['text/html', 'application/xhtml+xml']
+		return self.get_content_types() in html_types
+
 	# ============= Errors ================================
 
 	# TODO: There can be an error store that takes on errors on both ends as well

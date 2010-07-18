@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Image index{% endblock %}
+
+{% block javascript %}
+{% endblock %}
+
+{%block content %}
+	<h1> <a href="/files/">Files</a> &gt; Image Index </h1>
+
+	{% if images %}
+	<table class="table">
+		<tr>
+			<th colspan="2">
+				Image
+			</th>
+			<th>
+				File info	
+			</th>
+			<th>
+				Dates
+			</th>
+		</tr>
+		{% for img in images %}
+			<tr class="row_{% cycle 'odd' 'even' %}">
+				<td>
+					thumb<br />
+					(TODO)
+				</td>
+				<td>
+					<b><a href="/files/image/view/{{img.pk}}/">Image ID #{{img.pk}}</a> ({{img.width}} x {{img.height}})</b><br />
+					{{img.wrap_uri}}
+				</td>
+				<td>	
+					Type: {{img.mimetype}}<br />
+					<em name="SHA-1 Cryptographic Hash">{{img.sha1_hexdigest}}</em>
+				</td>
+				<td>
+					Added: {{img.datetime_added}}<br />
+				</td>
+			</tr>
+		{% endfor %}
+	</table>
+	{% else %}
+		<p><strong>No files currently in system.</strong></p>
+	{% endif %}
+
+{% endblock %}

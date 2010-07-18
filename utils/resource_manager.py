@@ -5,6 +5,8 @@ from sylph.utils.uri import hashless
 from sylph.core.resource.models import Resource
 from sylph.apps.media.models import Image
 
+from web2feed import Web2Feed
+
 """
 Resource Manager is a very high level downloader for Resources.
 """
@@ -25,6 +27,13 @@ def obtain(uri):
 	# XXX TODO: Handle resources.
 	if message.is_image():
 		res = Image.new_from_message(message, save=True)
+
+	elif message.is_html():
+		# TODO/XXX: Try web2feed extraction
+		web = Web2Feed(uri)
+		web.set_contents(message.get_body)
+		feed = web.get_feed()
+		# XXX: TODO
 
 	#typ = message.get_content_type()
 	#if typ in ['image/jpeg', 'image/png', 'image/gif']:

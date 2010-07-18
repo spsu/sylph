@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% load humanize %}
+
+{% block title %}Viewing Image{% endblock %}
+
+{% block css %}
+{% endblock css %}
+
+{% block javascript %}
+<script type="text/javascript" src="/static/jquery.imagefit.js"></script>
+<script type="text/javascript">
+	$(window).load(function(){
+		$('#image').imagefit();
+	});
+</script>
+{% endblock javascript %}
+
+{%block content %}
+	<h1>Image</h1>
+	<div id="image"><img src="{{image.cached.url}}" /></div>
+	<table class="table">
+		<tr>
+			<th colspan="2">
+				File Info
+			</th>
+		</tr>
+		<tr>
+			<th>Mimetype</th>
+			<td>{{image.mimetype}}</td>
+		</tr>
+		<tr>
+			<th>Dimensions</th>
+			<td>{{image.width}} x {{image.height}}</td>
+		</tr>
+		<tr>
+			<th>Origin URI</th>
+			<td>{{image.uri}}</td>
+		</tr>
+	</table>
+	<br />
+
+	<table class="table">
+		<tr>
+			<th colspan="2">
+				Storage Info
+			</th>
+		</tr>
+			<tr>
+			<th>Cache URI</th>
+			<td>{{image.cached.url}}</td>
+		</tr>
+		<tr>
+			<th>Cache Filepath</th>
+			<td>{{image.cached.file}}</td>
+		</tr>
+		<tr>
+			<th>SHA-1</th>
+			<td>{{image.sha1_hexdigest}}
+		</tr>
+	</table>
+{% endblock content %}

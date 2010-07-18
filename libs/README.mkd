@@ -1,31 +1,28 @@
-If a library is not installed on the system, or another version is preferred,
-we keep them here. This directory is placed in the python path.
+If a library is not installed on the system, or another version is preferred, we keep them here. This directory is placed in the python path.
 
-_For practical considerations, we will not distribute any software packages in
-this directory._ The links are included so you can download them. 
+_For practical considerations, we will not distribute all software packages with sylph._ Only a few scripts will be included, and the rest must be installed (if they are not already included in your Python version).
 
 Required Libraries
 ------------------
-* [Django](http://www.djangoproject.com/) version 1.1.x to 1.2.x _(Unless using
-  a non-relational database, see below.)
+* [**Django**](http://www.djangoproject.com/) web framework, version 1.1.x to 1.2.x 
+* [**Celery**](http://celeryproject.org/) messaging framework [[src](http://github.com/ask/celery)], as well as the following support libraries:
+	* [django-celery](http://pypi.python.org/pypi/django-celery) adapter for django [[src](http://github.com/ask/django-celery/)]
+	* [**carrot**](http://github.com/ask/carrot/)
+	* [**anyjson**](http://pypi.python.org/pypi/anyjson)
+* [**BeautifulSoup**](http://www.crummy.com/software/BeautifulSoup/), but make sure it's ***version 3.0.8.1***
+* [**RDFLib 2.4 series**](http://www.rdflib.net/2.4.0/) (will update to 3.0 soon)
 
-Optional Libraries
-------------------
-**If you want to use a message queue:**
+Choose Between...
+-----------------
 
-* [Celery](http://celeryproject.org/) [[src](http://github.com/ask/celery)]
-	* [django-celery](http://pypi.python.org/pypi/django-celery) 
-	  [[src](http://github.com/ask/django-celery/)]
-* RabbitMQ or similar (see Celery for info on what it supports)
+_Running Celery on RabbitMQ or a plain SQL backend:_
 
-Experimental / Work in progress
--------------------------------
+* [**amqplib**](http://code.google.com/p/py-amqplib/) for RabbitMQ/AMQP
+* [**ghettoq**](http://github.com/ask/ghettoq) if you want to run celery on a plain SQL backend
 
-**If you want to run on Google App Engine or use a Non-Relational backend:**
+For older versions of Python
+----------------------------
 
-* [django-nonrel](http://www.allbuttonspressed.com/projects/django-nonrel) 
-  (experimental) [[src](http://bitbucket.org/wkornewald/django-nonrel/src)]
-	* [djangoappengine](http://www.allbuttonspressed.com/projects/djangoappengine)
-	  [[src](http://bitbucket.org/wkornewald/djangoappengine/src)]
-	* [djangotoolbox](http://bitbucket.org/wkornewald/djangotoolbox/src)
+* [**importlib**](http://pypi.python.org/pypi/importlib) as it's only included versions 3.1+ (Python 2.7 includes importlib's import\_module, which may be enough.) 
+
 
