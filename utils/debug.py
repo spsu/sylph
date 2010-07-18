@@ -4,7 +4,7 @@ def with_time(msg):
 	"""Apply a timestamp and color to an important debug message.
 	eg. print with_time('important message')
 	"""
-	from sylph.utils.termcolor import colored # XXX: GPL LICENSE
+	from termcolor import colored # XXX: GPL LICENSE
 
 	st = datetime.now().strftime("%H:%M:%S")
 	st = "%s [%s]" % (msg, st)
@@ -14,7 +14,7 @@ def parse_endpoint_trace(html, uri=''):
 	"""Return the backtrace for remote node failure.
 	(This is only for use in development.)"""
 	from BeautifulSoup import BeautifulSoup
-	from sylph.utils.termcolor import colored
+	from termcolor import colored
 
 	try:
 		# Print Trace
